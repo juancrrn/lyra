@@ -1,0 +1,38 @@
+/**
+ * Estilos de mensajes toast.
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+ 
+/**
+ * Toasts
+ */
+
+#toasts-container {
+    min-width: 350px;
+    z-index: 1051;
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+}
+
+.type-indicator {
+    border-radius: 50%;
+    background-color: #999;
+    width: 12px;
+    height: 12px;
+    margin-right: 1rem;
+    display: inline-block;
+}
+
+.type-indicator.exito {
+    background-color: #44c05d;
+}
+
+.type-indicator.error {
+    background-color: #c45060;
+}

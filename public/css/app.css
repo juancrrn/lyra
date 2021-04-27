@@ -1,0 +1,73 @@
+/**
+ * Estilos principales.
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
+:root {
+
+}
+
+*, html, body, header,footer, section, aside, div, ul, li, a, p, h1, h2, h3, h4, span, table, tr, td {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: "Ubuntu", "Helvetica", Arial, sans-serif;
+    border-collapse: collapse;
+}
+
+.material-icons {
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: inherit;
+    line-height: inherit;
+    font-size: inherit;
+}
+
+.rcs-pretext {
+    text-transform: uppercase;
+    color: var(--bs-gray);
+    font-size: 1em;
+    margin-bottom: .9rem;
+    margin-left: 2px;
+}
+
+.rcs-main-content-inner {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+/*
+ * Formulario de cierre de sesión.
+ */
+
+#form-logout {
+    background: transparent;
+    padding: 0;
+    border: none;
+    margin: 0;
+    border-radius: 0;
+}
+
+#form-logout button {
+    cursor: pointer;
+    color: rgb(123, 31, 162);
+    font-family: inherit;
+    line-height: 24px;
+    background: none;
+    border: none;
+    font-size: inherit;
+    display: block;
+    padding: .5rem 1rem;
+}
+
+.rcs-user-type-badge {
+    margin: 10px 10px 10px 0;
+    text-transform: uppercase;
+}
