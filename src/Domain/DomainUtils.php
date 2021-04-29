@@ -2,6 +2,16 @@
 
 namespace Juancrrn\Lyra\Domain;
 
+/**
+ * Clase para agrupar utilidades delacionadas con el dominio de la aplicación
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class DomainUtils
 {
     

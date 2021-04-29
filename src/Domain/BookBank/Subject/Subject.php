@@ -4,6 +4,16 @@ namespace Juancrrn\Lyra\Domain\BookBank\Request;
 
 use DateTime;
 
+/**
+ * Clase para representar una asignatura
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class Subject
 {
 

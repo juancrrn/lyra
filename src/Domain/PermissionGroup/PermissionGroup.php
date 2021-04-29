@@ -4,6 +4,16 @@ namespace Juancrrn\Lyra\Domain\PermissionGroup;
 
 use DateTime;
 
+/**
+ * Clase para representar un grupo de permisos
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class PermissionGroup
 {
 

@@ -4,6 +4,16 @@ namespace Juancrrn\Lyra\Domain\BookBank\Donation;
 
 use DateTime;
 
+/**
+ * Clase para representar una donación
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class Donation
 {
 

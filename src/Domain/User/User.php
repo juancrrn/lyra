@@ -4,6 +4,16 @@ namespace Juancrrn\Lyra\Domain\User;
 
 use DateTime;
 
+/**
+ * Clase para representar un usuario
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class User
 {
 

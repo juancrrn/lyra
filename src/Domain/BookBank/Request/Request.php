@@ -4,6 +4,16 @@ namespace Juancrrn\Lyra\Domain\BookBank\Request;
 
 use DateTime;
 
+/**
+ * Clase para representar una solicitud
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class Request
 {
 
@@ -68,7 +78,6 @@ class Request
      * @var string $locked
      */
     private $locked;
-
 
     public function __construct(
         int         $id,

@@ -2,6 +2,16 @@
 
 namespace Juancrrn\Lyra\Common;
 
+/**
+ * Clase para agrupar utilidades de la aplicación en general
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class CommonUtils
 {
     

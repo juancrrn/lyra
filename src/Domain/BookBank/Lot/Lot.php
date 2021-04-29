@@ -4,6 +4,16 @@ namespace Juancrrn\Lyra\Domain\BookBank\Lot;
 
 use DateTime;
 
+/**
+ * Clase para representar un paquete de libros
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class Lot
 {
 

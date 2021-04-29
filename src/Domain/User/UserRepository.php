@@ -5,6 +5,16 @@ namespace Juancrrn\Lyra\Domain\User;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Domain\Repository;
 
+/**
+ * Repositorio de usuarios
+ * 
+ * @package lyra
+ *
+ * @author juancrrn
+ *
+ * @version 0.0.1
+ */
+
 class UserRepository implements Repository
 {
 
