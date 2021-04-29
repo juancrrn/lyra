@@ -2,7 +2,9 @@
 
 namespace Juancrrn\Lyra\Domain\User;
 
-abstract class User
+use DateTime;
+
+class User
 {
 
     /**
@@ -91,7 +93,7 @@ abstract class User
      * 
      * En formato Juancrrn\Lyra\Common\Tools::MYSQL_DATE_FORMAT.
      * 
-     * @var \DateTime $birthDate
+     * @var DateTime $birthDate
      */
     private $birthDate;
 
@@ -100,7 +102,7 @@ abstract class User
      * 
      * En formato Juancrrn\Lyra\Common\Tools::MYSQL_DATETIME_FORMAT.
      * 
-     * @var \DateTime $registrationDate
+     * @var DateTime $registrationDate
      */
     private $registrationDate;
 
@@ -109,23 +111,18 @@ abstract class User
      * 
      * En formato Juancrrn\Lyra\Common\Tools::MYSQL_DATETIME_FORMAT.
      * 
-     * @var \DateTime $lastLoginDate
+     * @var DateTime $lastLoginDate
      */
     private $lastLoginDate;
 
-    /*
-        id
-        gov_id
-        type
-        first_name
-        last_name
-        phone_number
-        email_address
-        hashed_password
-        birth_date
-        registration_date
-        last_login_date
+    /**
+     * Grupos de permisos asociados al usuario, si se ha solicitado su carga.
+     * 
+     * En caso de existir, es un array de PermissionGroup.
+     * 
+     * @var null|array $permissionGroups
      */
+    private $permissionGroups;
 
     public function __construct(
         int         $id,
@@ -135,9 +132,10 @@ abstract class User
         string      $lastName,
         string      $phoneNumber,
         string      $emailAddress,
-        \DateTime   $birthDate,
-        \DateTime   $registrationDate,
-        ?\DateTime  $lastLoginDate,
+        DateTime    $birthDate,
+        DateTime    $registrationDate,
+        ?DateTime   $lastLoginDate,
+        ?array      $permissionGroups
     )
     {
         $this->id               = $id;
@@ -150,17 +148,14 @@ abstract class User
         $this->birthDate        = $birthDate;
         $this->registrationDate = $registrationDate;
         $this->lastLoginDate    = $lastLoginDate;
+        $this->permissionGroups = $permissionGroups;
     }
 
-    /**
-     * Comprueba si el usuario es de un tipo.
+    /*
      * 
-     * @param string $testType  Tipo de usuario a comprobar, utilizando las
-     *                          constantes de tipos definidas arriba.
+     * Getters
      * 
-     * @return bool
      */
-    abstract function isType(string $testType): bool;
 
     public function getId(): int
     {
@@ -202,21 +197,25 @@ abstract class User
         return $this->emailAddress;
     }
 
-    public function getBirthDate(): \DateTime
+    public function getBirthDate(): DateTime
     {
         return $this->birthDate;
     }
 
-    public function getRegistrationDate(): \DateTime
+    public function getRegistrationDate(): DateTime
     {
         return $this->registrationDate;
     }
 
-    public function getLastLoginDate(): \DateTime
+    public function getLastLoginDate(): DateTime
     {
         return $this->lastLoginDate;
     }
 
+    public function getPermissionGroups(): null|array
+    {
+        return $this->permissionGroups;
+    }
 }
 
 ?>
