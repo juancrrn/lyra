@@ -91,7 +91,7 @@ class User
     /**
      * Fecha de nacimiento.
      * 
-     * En formato Juancrrn\Lyra\Common\Tools::MYSQL_DATE_FORMAT.
+     * En formato Juancrrn\Lyra\Common\CommonUtils::MYSQL_DATE_FORMAT.
      * 
      * @var DateTime $birthDate
      */
@@ -100,7 +100,7 @@ class User
     /**
      * Fecha y hora de registro.
      * 
-     * En formato Juancrrn\Lyra\Common\Tools::MYSQL_DATETIME_FORMAT.
+     * En formato Juancrrn\Lyra\Common\CommonUtils::MYSQL_DATETIME_FORMAT.
      * 
      * @var DateTime $registrationDate
      */
@@ -109,7 +109,7 @@ class User
     /**
      * Fecha y hora de registro.
      * 
-     * En formato Juancrrn\Lyra\Common\Tools::MYSQL_DATETIME_FORMAT.
+     * En formato Juancrrn\Lyra\Common\CommonUtils::MYSQL_DATETIME_FORMAT.
      * 
      * @var DateTime $lastLoginDate
      */

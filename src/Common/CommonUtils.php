@@ -2,7 +2,7 @@
 
 namespace Juancrrn\Lyra\Common;
 
-class Tools
+class CommonUtils
 {
     
     /**

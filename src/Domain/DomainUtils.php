@@ -2,7 +2,7 @@
 
 namespace Juancrrn\Lyra\Domain;
 
-class GlobalUtils
+class DomainUtils
 {
     
     /**
