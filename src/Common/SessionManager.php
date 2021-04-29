@@ -144,17 +144,27 @@ class SessionManager
      *                          por lo que, en lugar de redirigir, debería
      *                          mostrar un error HTTP.
      */
-    public function requireLoggedInType(string $testType, ?bool $negate = false, ?bool $api = false): void
+    public function requirePermissionGroups(array $testPermissionGroups, ?bool $negate = false, ?bool $api = false): void
     {
         $this->requireLoggedIn($api);
 
-        if ($this->getLoggedInUser()->isType($testType) == $negate) {
+        $missingPermissionGroups = array();
+
+        foreach ($testPermissionGroups as $testPermissionGroup) {
+            if (in_array($testPermissionGroup, $this->getLoggedInUser()->getPermissionGroups()) == $negate) {
+                $missingPermissionGroups[] = $testPermissionGroup;
+            }
+        }
+
+        if (! empty($missingPermissionGroups)) {
+            $app = App::getSingleton();
+
             if (! $api) {
-                ddl(null, null);
-                //Vista::encolaMensajeError('No tienes permisos suficientes para acceder a este contenido.', '');
+                App::getSingleton()
+                    ->getViewManagerInstance()
+                    ->addErrorMessage('No tienes permiso para acceder a este contenido.', '');
             } else {
-                ddl(null, null);
-                //HTTP::apiRespondError(403, array('No autorizado.'));
+                Http::apiRespondError(403, array('No autorizado.'));
             }
         }
     }
