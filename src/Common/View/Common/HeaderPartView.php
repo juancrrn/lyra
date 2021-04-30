@@ -63,7 +63,7 @@ class HeaderPartView extends ViewModel
             // TODO
 
             $userMenuBuffer .= $viewManager->generateUserMenuItem('<a class="nav-link" href="' . $profileUrl . '">' . $fullName . '</a>');
-            //$userMenuBuffer .= $viewManager->generateUserMenuItem('<span class="badge bg-secondary rcs-user-type-badge">' . $userTypeTitle . '</span>');
+            //$userMenuBuffer .= $viewManager->generateUserMenuItem('<span class="badge bg-secondary lyra-user-type-badge">' . $userTypeTitle . '</span>');
             $userMenuBuffer .= $viewManager->generateUserMenuItem($logoutForm->getHtml());
         } else {
             $loginUrl = $app->getUrl() . '/auth/login/';

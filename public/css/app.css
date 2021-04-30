@@ -30,7 +30,7 @@
     font-size: inherit;
 }
 
-.rcs-pretext {
+.lyra-pretext {
     text-transform: uppercase;
     color: var(--bs-gray);
     font-size: 1em;
@@ -38,7 +38,7 @@
     margin-left: 2px;
 }
 
-.rcs-main-content-inner {
+.lyra-main-content-inner {
     margin-top: 3rem;
     margin-bottom: 3rem;
 }
@@ -67,7 +67,7 @@
     padding: .5rem 1rem;
 }
 
-.rcs-user-type-badge {
+.lyra-user-type-badge {
     margin: 10px 10px 10px 0;
     text-transform: uppercase;
 }
