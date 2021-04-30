@@ -23,7 +23,7 @@ require_once __DIR__ . '/config.php';
 /**
  * Habilitar errores para depuración.
  */
-if (RCS_DEV_MODE) {
+if (LYRA_DEV_MODE) {
     ini_set('display_errors', 'On');
     error_reporting(E_ALL);
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
