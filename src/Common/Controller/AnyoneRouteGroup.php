@@ -8,6 +8,7 @@ use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
 use Juancrrn\Lyra\Common\View\Error\Error404View;
+use Juancrrn\Lyra\Common\View\Home\DashboardView;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
 
 /**
@@ -36,7 +37,13 @@ class AnyoneRouteGroup implements RouteGroupModel
         
         // Página de inicio
         $this->controllerInstance->get('/?', function () use ($viewManager) {
-            $viewManager->render(new HomeView);
+            $sessionManager = App::getSingleton()->getSessionManagerInstance();
+    
+            if ($sessionManager->isLoggedIn()) {
+                $viewManager->render(new DashboardView);
+            } else {
+                $viewManager->render(new HomeView);
+            }
         });
         
         // Inicio de sesión
