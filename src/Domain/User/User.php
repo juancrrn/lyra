@@ -18,23 +18,23 @@ class User
 {
 
     /**
-     * Constantes de tipos de usuario.
+     * Posibles estados de un usuario:
      * 
-     * Realmente, deberían ser un enumerado, pero PHP no dispone, aún, de ese
-     * tipo de datos.
+     * - Inactivo: recién creado, necesita hacer clic en un mensaje en su email
+     *   para activar su cuenta. Existe un token.
+     * - Activo: puede acceder normalmente.
+     * - Restablecimiento: ha solicitado el restablecimiento de su contraseña.
+     *   Tiene que hacer clic en un mensaje en su email para restablecerla.
+     *   Existe un token.
      */
-    public const TYPE_LAB_STAFF         = 'user_type_lab_staff';
-    public const TYPE_MANAGEMENT_STAFF  = 'user_type_management_staff';
-    public const TYPE_MEDICAL_STAFF     = 'user_type_medical_staff';
-    public const TYPE_NURSING_STAFF     = 'user_type_nursing_staff';
-    public const TYPE_PATIENT           = 'user_type_patient';
+    public const STATUS_INACTIVE    = 'user_status_inactive';
+    public const STATUS_ACTIVE      = 'user_status_active';
+    public const STATUS_RESET       = 'user_status_reset';
 
-    public const TYPES = array(
-        self::TYPE_LAB_STAFF,
-        self::TYPE_MANAGEMENT_STAFF,
-        self::TYPE_MEDICAL_STAFF,
-        self::TYPE_NURSING_STAFF,
-        self::TYPE_PATIENT
+    public const STATUSES = array(
+        self::STATUS_INACTIVE,
+        self::STATUS_ACTIVE,
+        self::STATUS_RESET
     );
 
     /**
@@ -53,15 +53,6 @@ class User
     private $govId;
 
     /**
-     * Tipo de usuario.
-     * 
-     * De tipo self::TYPES.
-     * 
-     * @var string $type
-     */
-    private $type;
-
-    /**
      * Nombre.
      * 
      * @var string $firstName
@@ -76,18 +67,13 @@ class User
     private $lastName;
 
     /**
-     * Número de teléfono.
+     * Fecha de nacimiento.
      * 
-     * @var string $phoneNumber
-     */
-    private $phoneNumber;
-
-    /**
-     * Dirección de correo electrónico.
+     * En formato Juancrrn\Lyra\Common\CommonUtils::MYSQL_DATE_FORMAT.
      * 
-     * @var string $emailAddress
+     * @var DateTime $birthDate
      */
-    private $emailAddress;
+    private $birthDate;
 
     /**
      * Contraseña hasheada.
@@ -99,13 +85,25 @@ class User
     // private $hashedPassword;
 
     /**
-     * Fecha de nacimiento.
+     * Dirección de correo electrónico.
      * 
-     * En formato Juancrrn\Lyra\Common\CommonUtils::MYSQL_DATE_FORMAT.
-     * 
-     * @var DateTime $birthDate
+     * @var string $emailAddress
      */
-    private $birthDate;
+    private $emailAddress;
+
+    /**
+     * Número de teléfono.
+     * 
+     * @var string $phoneNumber
+     */
+    private $phoneNumber;
+
+    /**
+     * Identificador del usuario representante.
+     * 
+     * @var null|int $representativeId
+     */
+    private $representativeId;
 
     /**
      * Fecha y hora de registro.
@@ -126,6 +124,23 @@ class User
     private $lastLoginDate;
 
     /**
+     * Token utilizado para la activación y para el restablecimiento de la
+     * contraseña.
+     * 
+     * @var string $token
+     */
+    private $token;
+
+    /**
+     * Estado del usuario.
+     * 
+     * De self::STATUSES.
+     * 
+     * @var string $status
+     */
+    private $status;
+
+    /**
      * Grupos de permisos asociados al usuario, si se ha solicitado su carga.
      * 
      * En caso de existir, es un array de PermissionGroup.
@@ -137,27 +152,32 @@ class User
     public function __construct(
         int         $id,
         string      $govId,
-        string      $type,
         string      $firstName,
         string      $lastName,
-        string      $phoneNumber,
-        string      $emailAddress,
         DateTime    $birthDate,
+        // string   $hashedPassword,
+        string      $emailAddress,
+        string      $phoneNumber,
+        ?int        $representativeId,
         DateTime    $registrationDate,
         ?DateTime   $lastLoginDate,
+        ?string     $token,
+        string      $status,
         ?array      $permissionGroups
     )
     {
         $this->id               = $id;
         $this->govId            = $govId;
-        $this->type             = $type;
         $this->firstName        = $firstName;
         $this->lastName         = $lastName;
-        $this->phoneNumber      = $phoneNumber;
-        $this->emailAddress     = $emailAddress;
         $this->birthDate        = $birthDate;
+        $this->emailAddress     = $emailAddress;
+        $this->phoneNumber      = $phoneNumber;
+        $this->representativeId = $representativeId;
         $this->registrationDate = $registrationDate;
         $this->lastLoginDate    = $lastLoginDate;
+        $this->token            = $token;
+        $this->status           = $status;
         $this->permissionGroups = $permissionGroups;
     }
 
@@ -177,11 +197,6 @@ class User
         return $this->govId;
     }
 
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
     public function getFirstName(): string
     {
         return $this->firstName;
@@ -197,9 +212,9 @@ class User
         return $this->firstName . ' ' . $this->lastName;
     }
 
-    public function getPhoneNumber(): string
+    public function getBirthDate(): DateTime
     {
-        return $this->phoneNumber;
+        return $this->birthDate;
     }
 
     public function getEmailAddress(): string
@@ -207,9 +222,14 @@ class User
         return $this->emailAddress;
     }
 
-    public function getBirthDate(): DateTime
+    public function getPhoneNumber(): string
     {
-        return $this->birthDate;
+        return $this->phoneNumber;
+    }
+
+    public function getRepresentativeId(): null|int
+    {
+        return $this->representativeId;
     }
 
     public function getRegistrationDate(): DateTime
@@ -220,6 +240,16 @@ class User
     public function getLastLoginDate(): DateTime
     {
         return $this->lastLoginDate;
+    }
+
+    public function getToken(): null|string
+    {
+        return $this->token;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     public function getPermissionGroups(): null|array
