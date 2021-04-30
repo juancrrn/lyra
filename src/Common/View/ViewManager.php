@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\Common\FooterPartView;
 use Juancrrn\Lyra\Common\View\Common\HeaderPartView;
+use RuntimeException;
 
 /**
  * Métodos relacionados con las vistas y la generación de contenido visible 
@@ -396,7 +397,7 @@ class ViewManager
     public function generateMainMenuLink(string $viewClass): string
     {
         if (! class_exists($viewClass)) {
-            throw new InvalidArgumentException('Specified view class ($viewClass) does not exist.');
+            throw new InvalidArgumentException('Specified view class ($viewClass = ' . $viewClass . ') does not exist.');
         }
 
         if (
@@ -404,7 +405,7 @@ class ViewManager
             ! defined($viewClass . '::VIEW_NAME') ||
             ! defined($viewClass . '::VIEW_ROUTE')
         ) {
-            throw new InvalidArgumentException('Specified view class ($viewClass) must have VIEW_ID, VIEW_NAME and VIEW_ROUTE constants defined and public.');
+            throw new InvalidArgumentException('Specified view class ($viewClass = ' . $viewClass . ') must have VIEW_ID, VIEW_NAME and VIEW_ROUTE constants defined and public.');
         }
 
         $viewId = $viewClass::VIEW_ID;
@@ -468,10 +469,16 @@ class ViewManager
 		array $filling
 	): string
 	{
-		$result = file_get_contents($this->viewResourcesPath . DIRECTORY_SEPARATOR . $fileName . self::TEMPLATE_FILE_EXTENSION);
+        $fullPath = $this->viewResourcesPath . DIRECTORY_SEPARATOR . $fileName . self::TEMPLATE_FILE_EXTENSION;
 		
-		if (! $result || empty($result)) {
-			ddl("File not found or empty", $this->viewResourcesPath . DIRECTORY_SEPARATOR . $fileName . self::TEMPLATE_FILE_EXTENSION);
+		if (! file_exists($fullPath)) {
+            throw new RuntimeException('Template file not found: ' . $fullPath . '.');
+        }
+        
+        $file = file_get_contents($fullPath);
+        
+        if (empty($file)) {
+            throw new RuntimeException('Empty template file: ' . realpath($fullPath) . '.');
 		} else {
             // Preparar los nombres de los placeholders.
 
@@ -481,7 +488,7 @@ class ViewManager
                 $names[$i] = '#' . $names[$i] . '#';
             }
 
-			return str_replace($names, array_values($filling), $result);
+			return str_replace($names, array_values($filling), $file);
 		}
 	}
 }
