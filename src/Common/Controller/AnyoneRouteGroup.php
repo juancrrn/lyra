@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\Home\HomeView;
 
 /**
  * Vistas de usuarios de cualquier tipo (todos)
@@ -33,7 +34,7 @@ class AnyoneRouteGroup implements RouteGroupModel
         
         // Página de inicio
         $this->controllerInstance->get('/?', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+            $viewManager->render(new HomeView);
         });
         
         // Inicio de sesión
