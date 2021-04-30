@@ -102,18 +102,18 @@ class UserRepository implements Repository
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
         $stmt->execute();
-        $resultado = $stmt->get_result();
+        $result = $stmt->get_result();
         
-        $mysqli_object = $resultado->fetch_object();
+        $mysqli_object = $result->fetch_object();
 
-        $user = User::constructFromMysqliObject($mysqli_object);
+        $element = User::constructFromMysqliObject($mysqli_object);
 
         if ($loadPermissionGroups)
-            $user->setPermissionGroups($this->retrievePermissionGroupsById($user->getId()));
+            $element->setPermissionGroups($this->retrievePermissionGroupsById($element->getId()));
 
         $stmt->close();
 
-        return $user;
+        return $element;
     }
 
     public function retrievePermissionGroupsById(int $userId): array
@@ -132,17 +132,17 @@ class UserRepository implements Repository
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $permissionGroups = array();
+        $elements = array();
 
         $permissionGroupRepository = new PermissionGroupRepository($this->db);
 
         while($mysqli_object = $result->fetch_object()) {
-            $permissionGroups[] = $permissionGroupRepository->retrieveById($mysqli_object->permission_group_id);
+            $elements[] = $permissionGroupRepository->retrieveById($mysqli_object->permission_group_id);
         }
 
         $stmt->close();
 
-        return $permissionGroups;
+        return $elements;
     }
 
     public function retrieveJustHashedPasswordById(int $id): string
@@ -163,11 +163,11 @@ class UserRepository implements Repository
 
         $result = $stmt->get_result();
         
-        $hashedPassword = $result->fetch_object()->hashed_password;
+        $element = $result->fetch_object()->hashed_password;
 
         $stmt->close();
 
-        return $hashedPassword;
+        return $element;
     }
 
     public function retrieveAll(?bool $loadPermissionGroups = false): array
@@ -193,22 +193,22 @@ class UserRepository implements Repository
 
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        $resultado = $stmt->get_result();
+        $result = $stmt->get_result();
 
-        $users = array();
+        $elements = array();
 
-        while ($mysqli_object = $resultado->fetch_object()) {
-            $user = User::constructFromMysqliObject($mysqli_object);
+        while ($mysqli_object = $result->fetch_object()) {
+            $currentElement = User::constructFromMysqliObject($mysqli_object);
 
             if ($loadPermissionGroups)
-                $user->setPermissionGroups($this->retrievePermissionGroupsById($user->getId()));
+                $currentElement->setPermissionGroups($this->retrievePermissionGroupsById($currentElement->getId()));
 
-            $users[] = $user;
+            $elements[] = $currentElement;
         }
 
         $stmt->close();
 
-        return $users;
+        return $elements;
     }
 
     public function verifyConstraintsById(int $id): bool|array
