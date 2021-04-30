@@ -46,6 +46,13 @@ abstract class StaticFormModel
     private $html = '';
 
     /**
+     * @var string CSRF_PREFIX           CSRF prefix for $_SESSION storing.
+     * @var string CSRF_TOKEN_FIELD      CSRF token field name.
+     */
+    private const CSRF_PREFIX = 'csrf';
+    private const CSRF_TOKEN_FIELD = 'csrf-token';
+
+    /**
      * Crea un nuevo formulario.
      * 
      * @param string $id
@@ -79,7 +86,15 @@ abstract class StaticFormModel
     public function handle()
     {   
         if ($this->isSent($_POST)) {
-            $this->process($_POST);
+            $submittedCsrfToken = $_POST[self::CSRF_TOKEN_FIELD] ?? null;
+
+            if ($this->CsrfValidateToken($submittedCsrfToken)) {
+                $this->process($_POST);
+            } else {
+                App::getSingleton()
+                    ->getViewManagerInstance()
+                    ->addErrorMessage('Hubo un fallo en una verificación de seguridad. Por favor, vuelve a intentarlo.');
+            }
         }  
     }
   
@@ -141,9 +156,12 @@ abstract class StaticFormModel
 
         $actionUrl = $this->actionUrl;
         $id = $this->id;
+        $csrfTokenFieldName = self::CSRF_TOKEN_FIELD;
+        $csrfToken = $this->CsrfGenerateToken();
 
         $this->html = <<< HTML
         <form method="post" action="$actionUrl" id="$id" class="default-form">
+            <input type="hidden" name="$csrfTokenFieldName" value="$csrfToken">
             <input type="hidden" name="action" value="$id" />
             $campos
         </form>
@@ -164,6 +182,42 @@ abstract class StaticFormModel
     public function getHtml(): string
     {
         return $this->html;
+    }
+
+    /**
+     * Generates a CSRF token and stores it in $_SESSION
+     * 
+     * @return string Generated token
+     */
+    private function CsrfGenerateToken(): string
+    {
+        $token = hash('sha512', mt_rand(0, mt_getrandmax()));
+
+        $_SESSION[self::CSRF_PREFIX . '_' . $this->id] = $token;
+
+        return $token;
+    }
+
+    /**
+     * Validates a CSRF token
+     * 
+     * @param string $token Token to be validated
+     * 
+     * @return bool True if valid, else false
+     */
+    private function CsrfValidateToken(null|string $token): bool
+    {
+        if (! $token) return false;
+
+        if (isset($_SESSION[self::CSRF_PREFIX . '_' . $this->id])
+            && $_SESSION[self::CSRF_PREFIX . '_' . $this->id] === $token) {
+            
+            unset($_SESSION[self::CSRF_PREFIX . '_' . $this->id]);
+
+            return true;
+        }
+
+        return false;
     }
 }
 
