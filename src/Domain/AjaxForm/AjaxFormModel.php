@@ -408,12 +408,14 @@ abstract class AjaxFormModel
     /**
      * Validates a CSRF token
      * 
-     * @param string $token Token to be validated
+     * @param null|string $token Token to be validated
      * 
      * @return bool True if valid, else false
      */
-    private function CsrfValidateToken(string $token): bool
+    private function CsrfValidateToken(null|string $token): bool
     {
+        if (! $token) return false;
+
         if (isset($_SESSION[self::CSRF_PREFIX . '_' . $this->id])
             && $_SESSION[self::CSRF_PREFIX . '_' . $this->id] === $token) {
             
