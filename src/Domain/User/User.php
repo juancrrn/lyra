@@ -224,6 +224,41 @@ class User
     }
 
     /*
+     *
+     * Otros
+     * 
+     */
+
+    /**
+     * Comprueba si el usuario tiene un permiso especificado, es decir, si entre
+     * sus grupos de permisos, figura uno en concreto.
+     * 
+     * @param string $testPermissionGroupShortName  Nombre corto del grupo de
+     *                                              permisos a comprobar.
+     * 
+     * @return bool 
+     */
+    public function hasPermission(string $testPermissionGroupShortName): bool
+    {
+        if (is_array($this->permissionGroups))
+            foreach ($this->permissionGroups as $permissionGroup)
+                if ($permissionGroup->getShortName() == $testPermissionGroupShortName)
+                    return true;
+
+        return false;
+    }
+    
+    /**
+     * Genera un token para activar un usuario o restablecer su contraseña.
+     * 
+     * @return string Token generado.
+     */
+    private static function generateToken(): string
+    {
+        return md5(uniqid('49195253r', true));
+    }
+
+    /*
      * 
      * Setters
      * 
