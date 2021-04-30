@@ -14,6 +14,13 @@ use Juancrrn\Lyra\Common\Controller\StudentRouteGroup;
 $controllerInstance = App::getSingleton()->getControllerInstance();
 
 /**
+ * Pruebas y demostración
+ */
+$controllerInstance->get('/demo/sandbox/', function () {
+    require_once __DIR__ . '/../demo/SandBox.php';
+});
+
+/**
  * Vistas de usuarios de cualquier tipo (todos)
  */
 (new AnyoneRouteGroup($controllerInstance))->runAll();
