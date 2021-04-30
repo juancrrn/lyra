@@ -73,7 +73,7 @@ class LoginForm extends StaticFormModel
             } else {
                 $sessionManager = $app->getSessionManagerInstance();
 
-                $sessionManager->doLogIn($userRepository->retrieveById($userId));
+                $sessionManager->doLogIn($userRepository->retrieveById($userId, true));
 
                 header("Location: " . $app->getUrl());
                 die();
