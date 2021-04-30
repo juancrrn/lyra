@@ -28,16 +28,16 @@ class LoginForm extends StaticFormModel
     
     protected function generateFields(array & $preloadedData = array()): string
     {
-        $nif = '';
+        $govId = '';
 
         if (! empty($preloadedData)) {
-            $nif = isset($preloadedData['nif']) ? $preloadedData['nif'] : $nif;
+            $govId = isset($preloadedData['gov_id']) ? $preloadedData['gov_id'] : $govId;
         }
 
         return App::getSingleton()->getViewManagerInstance()->generateTemplateRender(
             'forms/auth/inputs_login_form',
             array(
-                'nif' => $nif
+                'gov_id' => $govId
             )
         );
     }
@@ -49,11 +49,11 @@ class LoginForm extends StaticFormModel
 
         $userRepository = new UserRepository($app->getDbConn());
         
-        $nif = isset($postedData['nif']) ? $postedData['nif'] : null;
-                
-        if (empty($nif)) {
+        $govId = isset($postedData['gov_id']) ? $postedData['gov_id'] : null;
+        dd($userRepository->findByGovId($govId));
+        if (empty($govId)) {
             $view->addErrorMessage('El NIF o NIE no puede estar vacío.');
-        } elseif (! $userRepository->findByGovId($nif)) {
+        } elseif (! $userRepository->findByGovId($govId)) {
             $view->addErrorMessage('El NIF o NIE y la contraseña introducidos no coinciden.');
         }
         
@@ -65,7 +65,7 @@ class LoginForm extends StaticFormModel
 
         // Si no hay ningún error, continuar.
         if (! $view->anyErrorMessages()) {
-            $userId = $userRepository->findByGovId($nif);
+            $userId = $userRepository->findByGovId($govId);
 
             // Comprobar si la contraseña es correcta.
             if (! password_verify($password, $userRepository->retrieveJustHashedPasswordById($userId))) {
