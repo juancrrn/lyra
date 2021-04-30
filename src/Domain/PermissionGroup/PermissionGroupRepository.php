@@ -65,20 +65,46 @@ class PermissionGroupRepository implements Repository
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
         $stmt->execute();
-        $resultado = $stmt->get_result();
+        $result = $stmt->get_result();
         
-        $mysqli_object = $resultado->fetch_object();
+        $mysqli_object = $result->fetch_object();
 
-        $user = PermissionGroup::constructFromMysqliObject($mysqli_object);
+        $element = PermissionGroup::constructFromMysqliObject($mysqli_object);
 
         $stmt->close();
 
-        return $user;
+        return $element;
     }
 
     public function retrieveAll(): array
     {
-        throw new \Exception('Not implemented');
+        $query = <<< SQL
+        SELECT
+            id,
+            type,
+            short_name,
+            full_name,
+            description,
+            parent,
+            creation_date,
+            creator_id
+        FROM
+            permission_groups
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $elements = array();
+
+        while($mysqli_object = $result->fetch_object()) {
+            $elements[] = PermissionGroup::constructFromMysqliObject($mysqli_object);
+        }
+
+        $stmt->close();
+
+        return $elements;
     }
 
     public function verifyConstraintsById(int $id): bool|array
