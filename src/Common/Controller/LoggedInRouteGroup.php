@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Domain\StaticForm\Auth\LogoutForm;
 
 /**
  * Vistas de usuarios que hayan iniciado sesión
@@ -33,7 +34,7 @@ class LoggedInRouteGroup implements RouteGroupModel
         
         // Cierre de sesión (POST del formulario)
         $this->controllerInstance->post('/auth/logout/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+            (new LogoutForm('/auth/logout/'))->handle();
         });
         
         // Perfil propio
