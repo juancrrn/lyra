@@ -79,12 +79,12 @@ class Lot
     private $schoolYear;
 
     /**
-     * @var DateTime $pickupDate
+     * @var null|DateTime $pickupDate
      */
     private $pickupDate;
 
     /**
-     * @var DateTime $returnDate
+     * @var null|DateTime $returnDate
      */
     private $returnDate;
 
@@ -111,8 +111,8 @@ class Lot
         int         $creatorId,
         string      $educationLevel,
         int         $schoolYear,
-        DateTime    $pickupDate,
-        DateTime    $returnDate,
+        ?DateTime   $pickupDate,
+        ?DateTime   $returnDate,
         bool        $locked,
         ?array      $contents
     )
@@ -177,12 +177,12 @@ class Lot
         return $this->schoolYear;
     }
 
-    public function getPickupDate(): DateTime
+    public function getPickupDate(): null|DateTime
     {
         return $this->pickupDate;
     }
 
-    public function getReturnDate(): DateTime
+    public function getReturnDate(): null|DateTime
     {
         return $this->returnDate;
     }
