@@ -170,21 +170,23 @@ class UserRepository implements Repository
         return $hashedPassword;
     }
 
-    public function retrieveAll(): array
+    public function retrieveAll(?bool $loadPermissionGroups = false): array
     {
-        throw new \Exception('Not implemented');
-        /*$query = <<< SQL
-        SELECT 
+        $query = <<< SQL
+        SELECT
             id,
             gov_id,
-            type,
             first_name,
             last_name,
-            phone_number,
-            email_address,
             birth_date,
+            hashed_password,
+            email_address,
+            phone_number,
+            representative_id,
             registration_date,
-            last_login_date
+            last_login_date,
+            token,
+            status
         FROM
             users
         SQL;
@@ -196,12 +198,17 @@ class UserRepository implements Repository
         $users = array();
 
         while ($mysqli_object = $resultado->fetch_object()) {
-            $users[] = $this->switchAndCompleteType($mysqli_object);
+            $user = User::constructFromMysqliObject($mysqli_object);
+
+            if ($loadPermissionGroups)
+                $user->setPermissionGroups($this->retrievePermissionGroupsById($user->getId()));
+
+            $users[] = $user;
         }
 
         $stmt->close();
 
-        return $users;*/
+        return $users;
     }
 
     public function verifyConstraintsById(int $id): bool|array
