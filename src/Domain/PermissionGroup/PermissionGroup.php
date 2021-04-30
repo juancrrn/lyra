@@ -20,8 +20,10 @@ class PermissionGroup
     /**
      * Posibles tipos de grupo de permisos
      */
-    public const TYPES = array(
+    public const TYPE_DEFAULT = 'permission_group_type_default';
 
+    public const TYPES = array(
+        self::TYPE_DEFAULT
     );
 
     /**
