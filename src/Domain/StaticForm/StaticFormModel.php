@@ -201,7 +201,7 @@ abstract class StaticFormModel
     /**
      * Validates a CSRF token
      * 
-     * @param string $token Token to be validated
+     * @param null|string $token Token to be validated
      * 
      * @return bool True if valid, else false
      */
