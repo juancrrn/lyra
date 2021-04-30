@@ -147,8 +147,7 @@ class UserRepository implements Repository
 
     public function retrieveJustHashedPasswordById(int $id): string
     {
-        throw new \Exception('Not implemented');
-        /*$query = <<< SQL
+        $query = <<< SQL
         SELECT
             hashed_password
         FROM
@@ -168,7 +167,7 @@ class UserRepository implements Repository
 
         $stmt->close();
 
-        return $hashedPassword;*/
+        return $hashedPassword;
     }
 
     public function retrieveAll(): array
