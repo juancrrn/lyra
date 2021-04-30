@@ -75,7 +75,7 @@ class UserRepository implements Repository
         return $return;
     }
 
-    public function retrieveById(int $id, ?bool $loadPermissionGroups = false)/*: static*/
+    public function retrieveById(int $id, ?bool $loadPermissionGroups = false): User
     {
         $query = <<< SQL
         SELECT

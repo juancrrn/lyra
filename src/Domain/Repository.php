@@ -49,13 +49,13 @@ interface Repository
     /**
      * Recoge un objeto de la base de datos.
      * 
-     * @param int $id       Identificador del objeto.
+     * @requires        Existe un usuario con el identificador especificado.
      * 
-     * @return bool|static  Objeto o false si no existe. El tipo de retorno está
-     *                      comentado ya que PHP no permite especificar "static"
-     *                      (late static binding) como tipo.
+     * @param int $id   Identificador del objeto.
+     * 
+     * @return mixed    Objeto recogido.
      */
-    public function retrieveById(int $id)/*: bool|static*/;
+    public function retrieveById(int $id): mixed;
 
     /**
      * Recoge todos los objetos de la base de datos.

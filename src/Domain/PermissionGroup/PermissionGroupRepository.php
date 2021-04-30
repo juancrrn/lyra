@@ -43,7 +43,7 @@ class PermissionGroupRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    public function retrieveById(int $id)/*: static*/
+    public function retrieveById(int $id): PermissionGroup
     {
         $query = <<< SQL
         SELECT
