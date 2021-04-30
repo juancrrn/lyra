@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>#current-page-name# - #app-name#</title>
+
+        <!-- Favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="#app-url#/img/fav/apple-touch-icon.png#cache-version#">
+        <link rel="icon" type="image/png" sizes="32x32" href="#app-url#/img/fav/favicon-32x32.png#cache-version#">
+        <link rel="icon" type="image/png" sizes="16x16" href="#app-url#/img/fav/favicon-16x16.png#cache-version#">
+        <link rel="manifest" href="#app-url#/img/fav/site.webmanifest#cache-version#">
+        <link rel="mask-icon" href="#app-url#/img/fav/safari-pinned-tab.svg#cache-version#" color="#561080">
+        <link rel="shortcut icon" href="#app-url#/img/fav/favicon.ico#cache-version#">
+        <meta name="apple-mobile-web-app-title" content="Reacsampler">
+        <meta name="application-name" content="Reacsampler">
+        <meta name="msapplication-TileColor" content="#561080">
+        <meta name="msapplication-config" content="#app-url#/img/fav/browserconfig.xml#cache-version#">
+        <meta name="theme-color" content="#561080">
+
+        <!-- Fuentes -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700&display=swap">
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="#app-url#/css/bootstrap-v5.0.0-beta3.min.css">
+
+        <!-- Estilos -->
+        <link rel="stylesheet" href="#app-url#/css/toast.css#cache-version#">
+        <link rel="stylesheet" href="#app-url#/css/app.css#cache-version#">
+    </head>
+    <body class="actual-#current-page-id#">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#app-url#">
+                    <span class="d-inline-block align-middle">#app-name#</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        #main-menu-items#
+                    </ul>
+                    <div class="ml-auto" id="user-menu">
+                        <ul class="navbar-nav">
+                            #user-menu-items#
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
