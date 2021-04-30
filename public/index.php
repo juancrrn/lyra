@@ -59,4 +59,9 @@ $controllerInstance->get('/demo/sandbox/', function () {
  */
 (new StudentRouteGroup($controllerInstance))->runAll();
 
+/**
+ * Ruta por defecto (error 404)
+ */
+(new AnyoneRouteGroup($controllerInstance))->runDefault();
+
 ?>

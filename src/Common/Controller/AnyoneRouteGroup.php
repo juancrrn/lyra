@@ -7,6 +7,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
+use Juancrrn\Lyra\Common\View\Error\Error404View;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
 
 /**
@@ -65,7 +66,7 @@ class AnyoneRouteGroup implements RouteGroupModel
         
         // Ruta por defecto (error 404)
         $this->controllerInstance->default(function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+            $viewManager->render(new Error404View);
         });
     }
 }
