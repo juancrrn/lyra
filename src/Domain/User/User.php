@@ -117,11 +117,13 @@ class User
     private $registrationDate;
 
     /**
-     * Fecha y hora de registro.
+     * Fecha y hora del último inicio de sesión.
      * 
      * En formato Juancrrn\Lyra\Common\CommonUtils::MYSQL_DATETIME_FORMAT.
      * 
-     * @var DateTime $lastLoginDate
+     * Puede ser null si el usuario nunca ha iniciado sesión.
+     * 
+     * @var null|DateTime $lastLoginDate
      */
     private $lastLoginDate;
 
@@ -239,7 +241,7 @@ class User
         return $this->registrationDate;
     }
 
-    public function getLastLoginDate(): DateTime
+    public function getLastLoginDate(): null|DateTime
     {
         return $this->lastLoginDate;
     }
