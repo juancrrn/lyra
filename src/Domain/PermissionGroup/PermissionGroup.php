@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\PermissionGroup;
 
 use DateTime;
+use Juancrrn\Lyra\Common\CommonUtils;
 
 /**
  * Clase para representar un grupo de permisos
@@ -68,7 +69,7 @@ class PermissionGroup
      */
     private $creatorId;
 
-    public function __constructor(
+    public function __construct(
         int         $id,
         string      $type,
         string      $shortName,
@@ -87,6 +88,25 @@ class PermissionGroup
         $this->parent       = $parent;
         $this->creationDate = $creationDate;
         $this->creatorId    = $creatorId;
+    }
+
+    public static function constructFromMysqliObject(object $mysqli_object): self
+    {
+        $creationDate = DateTime::createFromFormat(
+            CommonUtils::MYSQL_DATETIME_FORMAT,
+            $mysqli_object->creation_date
+        );
+
+        return new self(
+            $mysqli_object->id,
+            $mysqli_object->type,
+            $mysqli_object->short_name,
+            $mysqli_object->full_name,
+            $mysqli_object->description,
+            $mysqli_object->parent,
+            $creationDate,
+            $mysqli_object->creator_id
+        );
     }
 
     /*

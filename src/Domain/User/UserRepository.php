@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\User;
 
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Domain\PermissionGroup\PermissionGroupRepository;
 use Juancrrn\Lyra\Domain\Repository;
 
 /**
@@ -24,7 +25,7 @@ class UserRepository implements Repository
     protected $db;
 
     /**
-     * Constructor.
+     * Constructor
      * 
      * @param \mysqli $db   Conexión a la base de datos.
      */
@@ -45,7 +46,7 @@ class UserRepository implements Repository
 
     public function findByGovId(string $testGovId): bool|int
     {
-        $testGovId = mb_strtoupper($testGovId);
+        $testGovId = mb_strtolower($testGovId);
 
         $query = <<< SQL
         SELECT 
@@ -74,21 +75,23 @@ class UserRepository implements Repository
         return $return;
     }
 
-    public function retrieveById(int $id)/*: static*/
+    public function retrieveById(int $id, ?bool $loadPermissionGroups = false)/*: static*/
     {
-        throw new \Exception('Not implemented');
-        /*$query = <<< SQL
-        SELECT 
+        $query = <<< SQL
+        SELECT
             id,
             gov_id,
-            type,
             first_name,
             last_name,
-            phone_number,
-            email_address,
             birth_date,
+            hashed_password,
+            email_address,
+            phone_number,
+            representative_id,
             registration_date,
-            last_login_date
+            last_login_date,
+            token,
+            status
         FROM
             users
         WHERE
@@ -103,11 +106,43 @@ class UserRepository implements Repository
         
         $mysqli_object = $resultado->fetch_object();
 
-        $user = $this->switchAndCompleteType($mysqli_object);
+        $user = User::constructFromMysqliObject($mysqli_object);
+
+        if ($loadPermissionGroups)
+            $user->setPermissionGroups($this->retrievePermissionGroupsById($user->getId()));
 
         $stmt->close();
 
-        return $user;*/
+        return $user;
+    }
+
+    public function retrievePermissionGroupsById(int $userId): array
+    {
+        $query = <<< SQL
+        SELECT
+            permission_group_id
+        FROM
+            user_permission_group_links
+        WHERE
+            user_id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $permissionGroups = array();
+
+        $permissionGroupRepository = new PermissionGroupRepository($this->db);
+
+        while($mysqli_object = $result->fetch_object()) {
+            $permissionGroups[] = $permissionGroupRepository->retrieveById($mysqli_object->permission_group_id);
+        }
+
+        $stmt->close();
+
+        return $permissionGroups;
     }
 
     public function retrieveJustHashedPasswordById(int $id): string

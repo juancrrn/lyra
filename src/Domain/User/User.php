@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\User;
 
 use DateTime;
+use Juancrrn\Lyra\Common\CommonUtils;
 
 /**
  * Clase para representar un usuario
@@ -182,6 +183,54 @@ class User
         $this->lastLoginDate    = $lastLoginDate;
         $this->token            = $token;
         $this->status           = $status;
+        $this->permissionGroups = $permissionGroups;
+    }
+
+    public static function constructFromMysqliObject(object $mysqli_object): self
+    {
+        $birthDate = DateTime::createFromFormat(
+            CommonUtils::MYSQL_DATE_FORMAT,
+            $mysqli_object->birth_date
+        );
+
+        $registrationDate = DateTime::createFromFormat(
+            CommonUtils::MYSQL_DATETIME_FORMAT,
+            $mysqli_object->registration_date
+        );
+
+        $lastLoginDate =
+            isset($mysqli_object->last_login_date) ?
+            DateTime::createFromFormat(
+                CommonUtils::MYSQL_DATETIME_FORMAT,
+                $mysqli_object->last_login_date
+            )
+            : null;
+
+        return new self(
+            $mysqli_object->id,
+            $mysqli_object->gov_id,
+            $mysqli_object->first_name,
+            $mysqli_object->last_name,
+            $birthDate,
+            $mysqli_object->email_address,
+            $mysqli_object->phone_number,
+            $mysqli_object->representative_id,
+            $registrationDate,
+            $lastLoginDate,
+            $mysqli_object->token,
+            $mysqli_object->status,
+            null
+        );
+    }
+
+    /*
+     * 
+     * Setters
+     * 
+     */
+
+    public function setPermissionGroups(array $permissionGroups): void
+    {
         $this->permissionGroups = $permissionGroups;
     }
 
