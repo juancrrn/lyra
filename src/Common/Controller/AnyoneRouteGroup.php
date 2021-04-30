@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\Auth\LoginView;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
 
 /**
@@ -39,12 +40,12 @@ class AnyoneRouteGroup implements RouteGroupModel
         
         // Inicio de sesión
         $this->controllerInstance->get('/auth/login/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+            $viewManager->render(new LoginView);
         });
         
         // Inicio de sesión (POST del formulario)
         $this->controllerInstance->post('/auth/login/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+            $viewManager->render(new LoginView);
         });
         
         // Restablecimiento de contraseña
