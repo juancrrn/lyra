@@ -48,7 +48,9 @@ class User
      * Número de identificación fiscal (NIF) o número de identificación de
      * extranjero (NIE).
      * 
-     * @var string $govId
+     * El usuario puede no disponer de este identificador, en cuyo caso es null.
+     * 
+     * @var null|string $govId
      */
     private $govId;
 
@@ -151,7 +153,7 @@ class User
 
     public function __construct(
         int         $id,
-        string      $govId,
+        ?string     $govId,
         string      $firstName,
         string      $lastName,
         DateTime    $birthDate,
@@ -192,7 +194,7 @@ class User
         return $this->id;
     }
 
-    public function getGovId(): string
+    public function getGovId(): null|string
     {
         return $this->govId;
     }
