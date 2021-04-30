@@ -50,7 +50,7 @@ class LoginForm extends StaticFormModel
         $userRepository = new UserRepository($app->getDbConn());
         
         $govId = isset($postedData['gov_id']) ? $postedData['gov_id'] : null;
-        dd($userRepository->findByGovId($govId));
+
         if (empty($govId)) {
             $view->addErrorMessage('El NIF o NIE no puede estar vacío.');
         } elseif (! $userRepository->findByGovId($govId)) {
