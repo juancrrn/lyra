@@ -1,0 +1,18 @@
+{
+    "name": "juancrrn/lyra",
+    "description": "Book bank management system.",
+    "authors": [
+        {
+            "name": "Juan Carrión",
+            "email": "hola@juancrrn.io"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Juancrrn\\Lyra\\": "src/"
+        }
+    },
+    "require": {
+        "phpmailer/phpmailer": "^6.4"
+    }
+}

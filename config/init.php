@@ -68,43 +68,7 @@ function ddl(?string $message, mixed $var)
     die();
 }
 
-/**
- * Preparar autocarga de clases registrando una función anónima como
- * implementación de __autoload().
- *
- * @see https://www.php.net/manual/en/function.spl-autoload-register.php
- * @see https://www.php-fig.org/psr/psr-4/
- */
-spl_autoload_register(function ($class)
-{
-    // Prefijo de espacio de nombres específico del proyecto.
-    $prefix = 'Juancrrn\\Lyra\\';
-
-    // Directorio base para el prefijo del espacio de nombres.
-    $baseDir = __DIR__ . '/../src/';
-
-    // ¿La clase utiliza el prefijo del espacio de nombres?
-    $len = strlen($prefix);
-
-    if (strncmp($prefix, $class, $len) !== 0) {
-        // No, entonces ir al siguiente autoloader.
-        return;
-    }
-
-    // Obtener el nombre relativo de la clase.
-    $relative_class = substr($class, $len);
-
-    // Reemplazar el prefijo del espacio de nombres con directorio base,
-    // reemplazar los separadores del espacio de nombres con separadores de
-    // directorio en el nombre relativo de la clase y añadir la extensión de
-    // PHP.
-    $file = str_replace('/', DIRECTORY_SEPARATOR, $baseDir) . str_replace('\\', DIRECTORY_SEPARATOR, $relative_class) . '.php';
-
-    // Si el fichero existe, cargarlo.
-    if (file_exists($file)) {
-        require $file;
-    }
-});
+require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Inicialización de la instancia de la aplicación.
