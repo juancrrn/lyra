@@ -68,12 +68,14 @@ function ddl(?string $message, mixed $var)
     die();
 }
 
+/**
+ * Cargar dependencias con Composer.
+ */
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Inicialización de la instancia de la aplicación.
  */
-
 $app = Juancrrn\Lyra\Common\App::getSingleton();
 
 $app->init(
