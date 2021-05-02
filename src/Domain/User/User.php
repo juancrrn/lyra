@@ -251,11 +251,13 @@ class User
     /**
      * Genera un token para activar un usuario o restablecer su contraseña.
      * 
+     * @param string $govId NIF o NIE para generar el token único.
+     * 
      * @return string Token generado.
      */
-    private static function generateToken(): string
+    public static function generateToken(string $govId): string
     {
-        return md5(uniqid('49195253r', true));
+        return md5(uniqid($govId, true));
     }
 
     /*

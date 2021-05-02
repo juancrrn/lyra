@@ -2,7 +2,10 @@
 
 namespace Juancrrn\Lyra\Domain\User;
 
+use DateTime;
+use InvalidArgumentException;
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\PermissionGroup\PermissionGroupRepository;
 use Juancrrn\Lyra\Domain\Repository;
 
@@ -39,11 +42,142 @@ class UserRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
+    /**
+     * Actualiza la fecha de último inicio de sesión.
+     * 
+     * @requires    Existe un usuario en la base de datos con el identificador
+     *              especificado.
+     * 
+     * @param int $id
+     * @param DateTime $newLastLoginDate
+     * 
+     * @return bool
+     */
+    public function updateLastLoginDateById(int $id, ?DateTime $newLastLoginDate = null): bool
+    {
+        if (! $newLastLoginDate)
+            $newLastLoginDate = new DateTime;
+
+        $newLastLoginDate = $newLastLoginDate->format(CommonUtils::MYSQL_DATETIME_FORMAT);
+
+        $query = <<< SQL
+        UPDATE
+            users
+        SET
+            last_login_date = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        
+        $stmt->bind_param('si', $newLastLoginDate, $id);
+        
+        $result = $stmt->execute();
+
+        $stmt->close();
+
+        return $result;
+    }
+
+    /**
+     * Genera un token de recuperación para un usuario, lo guarda en su fila
+     * de la base de datos y lo devuelve.
+     * 
+     * Además, si el usuario estaba en User::STATUS_ACTIVE, lo modifica a
+     * User::STATUS_RESET. Si estaba en User::STATUS_INACTIVE, continúa igual.
+     * 
+     * @requires    Existe un usuario en la base de datos con el identificador
+     *              especificado.
+     * 
+     * @param int $id
+     * 
+     * @return bool|string  False si no se pudo completar la operación o el
+     *                      token en caso positivo.
+     */
+    public function generateAndUpdateTokenAndStatusById(int $id): bool|string
+    {
+        $user = $this->retrieveById($id);
+
+        $token = User::generateToken($user->getGovId());
+
+        $status = $user->getStatus() == User::STATUS_INACTIVE ?
+            User::STATUS_INACTIVE : User::STATUS_RESET;
+
+        $query = <<< SQL
+        UPDATE
+            users
+        SET
+            token = ?,
+            status = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('ssi', $token, $status, $id);
+        
+        $result = $stmt->execute();
+
+        $stmt->close();
+
+        if ($result == true) {
+            return $token;
+        } else {
+            return false;
+        }
+    }
+
     public function findById(int $id): bool|int
     {
         throw new \Exception('Not implemented');
     }
 
+    /**
+     * Comprueba si existe un usuario en base a un token.
+     * 
+     * @param string $testToken
+     * 
+     * @return bool|int El identificador en caso de existir o false en otro
+     *                  caso.
+     */
+    public function findByToken(string $testToken): bool|int
+    {
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            users
+        WHERE
+            token = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('s', $testToken);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        if ($result->num_rows != 1) {
+            $return = false;
+        } else {
+            $return = $result->fetch_object()->id;
+        }
+
+        $stmt->close();
+
+        return $return;
+    }
+
+    /**
+     * Comprueba si existe un usuario en base a un NIF o NIE.
+     * 
+     * @param string $testGovId
+     * 
+     * @return bool|int El identificador en caso de existir o false en otro
+     *                  caso.
+     */
     public function findByGovId(string $testGovId): bool|int
     {
         $testGovId = mb_strtolower($testGovId);
