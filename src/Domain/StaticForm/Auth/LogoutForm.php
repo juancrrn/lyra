@@ -27,7 +27,7 @@ class LogoutForm extends StaticFormModel
     
     protected function generateFields(array & $preloadedData = array()): string
     {
-        return App::getSingleton()->getViewManagerInstance()->generateTemplateRender(
+        return App::getSingleton()->getViewManagerInstance()->generateViewTemplateRender(
             'forms/auth/inputs_logout_form',
             array()
         );

@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Common\View;
 
 use InvalidArgumentException;
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\TemplateUtils;
 use Juancrrn\Lyra\Common\View\Common\FooterPartView;
 use Juancrrn\Lyra\Common\View\Common\HeaderPartView;
 use RuntimeException;
@@ -52,11 +53,6 @@ class ViewManager
      * Array de elementos plantilla (<template>).
      */
     private $templateElements;
-
-    /**
-     * Extensión de los ficheros de plantilla HTML.
-     */
-    private const TEMPLATE_FILE_EXTENSION = '.html';
 
     /**
      * Constructor.
@@ -205,7 +201,7 @@ class ViewManager
     {
         $app = App::getSingleton();
 
-        return $this->generateTemplateRender(
+        return $this->generateViewTemplateRender(
             self::TEMPLATE_ELEMENT_SUBDIRECTORY . DIRECTORY_SEPARATOR . 'template_toast',
             array(
                 'autohide'  => $app->isDevMode() ? 'false' : 'true',
@@ -225,7 +221,7 @@ class ViewManager
 
         if (! empty($_SESSION[self::SESSION_MESSAGES])) {
             foreach ($_SESSION[self::SESSION_MESSAGES] as $clave => $mensaje) {
-                echo self::generateToast($mensaje['tipo'], $mensaje['contenido']);
+                echo $this->generateToast($mensaje['tipo'], $mensaje['contenido']);
 
                 // Eliminar mensaje de la cola tras mostrarlo.
                 unset($_SESSION[self::SESSION_MESSAGES][$clave]);
@@ -241,7 +237,7 @@ class ViewManager
      */
     private function addToastTemplateAndPrint(): void
     {
-        self::addTemplateElement(
+        $this->addTemplateElement(
             'toast',
             'template_toast',
             array(
@@ -252,7 +248,7 @@ class ViewManager
             )
         );
 
-        self::printToasts();
+        $this->printToasts();
     }
 
     /*
@@ -300,7 +296,7 @@ class ViewManager
 		array $filling
     ): string
     {
-        $filledTemplate = $this->generateTemplateRender(
+        $filledTemplate = $this->generateViewTemplateRender(
             self::TEMPLATE_ELEMENT_SUBDIRECTORY . DIRECTORY_SEPARATOR . $fileName,
             $filling
         );
@@ -374,7 +370,10 @@ class ViewManager
 		array $filling
 	): void
 	{
-        echo $this->generateTemplateRender($fileName, $filling);
+        echo $this->generateViewTemplateRender(
+            $fileName,
+            $filling
+        );
 	}
 
     /*
@@ -444,51 +443,26 @@ class ViewManager
     }
 
     /*
-     * 
+     *
      * Auxiliares
      * 
      */
 
     /**
-     * Genera un contenido visual final a partir de un fichero de plantilla y
-     * algunos valores.
+     * @param string $fileName
+     * @param array $filling
      * 
-     * @param string $fileName  Nombre del fichero, dentro del directorio de
-     *                          recursos.
-     * @param array $filling    Array clave-valor con los nombres de los
-     *                          placeholders y sus valores.
-     * 
-     *                          Se recomiendan nombres de placeholders de tipo
-     *                          #nombre-compuesto#.
-     * 
-     *                          Solo pueden darse valores de tipo cadena de
-     *                          texto.
+     * @return string
      */
-    public function generateTemplateRender(
+    public function generateViewTemplateRender(
 		string $fileName,
 		array $filling
-	): string
-	{
-        $fullPath = $this->viewResourcesPath . DIRECTORY_SEPARATOR . $fileName . self::TEMPLATE_FILE_EXTENSION;
-		
-		if (! file_exists($fullPath)) {
-            throw new RuntimeException('Template file not found: ' . $fullPath . '.');
-        }
-        
-        $file = file_get_contents($fullPath);
-        
-        if (empty($file)) {
-            throw new RuntimeException('Empty template file: ' . realpath($fullPath) . '.');
-		} else {
-            // Preparar los nombres de los placeholders.
-
-            $names = array_keys($filling);
-
-            for ($i = 0; $i < count($names); $i++) {
-                $names[$i] = '#' . $names[$i] . '#';
-            }
-
-			return str_replace($names, array_values($filling), $file);
-		}
-	}
+    ): string
+    {
+        return TemplateUtils::generateTemplateRender(
+            $fileName,
+            $filling,
+            $this->viewResourcesPath
+        );
+    }
 }
