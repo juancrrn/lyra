@@ -80,6 +80,12 @@ class App
     private $devMode;
 
     /**
+     * @var array $emailSettings        Valores de configuración para el envío
+     *                                  de correo electrónico.
+     */
+    private $emailSettings;
+
+    /**
      * Ruta relativa del directorio de plantillas HTML de las vistas.
      */
     private const VIEW_RESOURCES_PATH = 'resources/views';
@@ -141,7 +147,9 @@ class App
 
         string $defaultPassword,
 
-        bool $devMode
+        bool $devMode,
+
+        array $emailSettings
     ): void
     {
         $this->dbConn = null;
@@ -156,6 +164,8 @@ class App
         $this->defaultPassword = $defaultPassword;
 
         $this->devMode = $devMode;
+
+        $this->emailSettings = $emailSettings;
 
         // Inicializar gestión de la sesión de usuario.
         $this->sessionInstance = new SessionManager();
@@ -244,5 +254,10 @@ class App
     public function isDevMode(): bool
     {
         return $this->devMode;
+    }
+
+    public function getEmailSettings(): array
+    {
+        return $this->emailSettings;
     }
 }

@@ -93,5 +93,19 @@ $app->init(
 
     LYRA_DEF_PASSWORD,
 
-    LYRA_DEV_MODE
+    LYRA_DEV_MODE,
+
+    array(
+        'enable'            => LYRA_EMAIL_ENABLE,
+        'smtp_host'         => LYRA_EMAIL_SMTP_HOST,
+        'smtp_port'         => LYRA_EMAIL_SMTP_PORT,
+        'smtp_user'         => LYRA_EMAIL_SMTP_USER,
+        'smtp_password'     => LYRA_EMAIL_SMTP_PASSWORD,
+        'no_reply'          => LYRA_EMAIL_NO_REPLY,
+        'reply_to'          => LYRA_EMAIL_REPLY_TO,
+        'dkim_domain'       => LYRA_EMAIL_DKIM_DOMAIN,
+        'dkim_selector'     => LYRA_EMAIL_DKIM_SELECTOR,
+        'dkim_private_key'  => LYRA_EMAIL_DKIM_PRIVATE_KEY,
+        'dkim_private_key_passphrase' => LYRA_EMAIL_DKIM_PRIVATE_KEY_PASSPHRASE
+    )
 );

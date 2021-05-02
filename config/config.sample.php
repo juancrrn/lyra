@@ -35,3 +35,18 @@ define('LYRA_DEF_PASSWORD',  'holamundo');
  * Modo de desarrollo, activa errores de PHP y MySQL.
  */
 define('LYRA_DEV_MODE',      false);
+
+/**
+ * Configuración de envío de correo electrónico.
+ */
+define('LYRA_EMAIL_ENABLE',         false);
+define('LYRA_EMAIL_SMTP_HOST',      '');
+define('LYRA_EMAIL_SMTP_PORT',      '');
+define('LYRA_EMAIL_SMTP_USER',      '');
+define('LYRA_EMAIL_SMTP_PASSWORD',  '');
+define('LYRA_EMAIL_NO_REPLY',       '');
+define('LYRA_EMAIL_REPLY_TO',       '');
+define('LYRA_EMAIL_DKIM_DOMAIN',    '');
+define('LYRA_EMAIL_DKIM_SELECTOR',  '');
+define('LYRA_EMAIL_DKIM_PRIVATE_KEY', realpath(__DIR__ . '/email/dkim_private.pem'));
+define('LYRA_EMAIL_DKIM_PRIVATE_KEY_PASSPHRASE', '');
