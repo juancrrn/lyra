@@ -492,5 +492,3 @@ class ViewManager
 		}
 	}
 }
-
-?>

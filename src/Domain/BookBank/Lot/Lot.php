@@ -197,5 +197,3 @@ class Lot
         return $this->contents;
     }
 }
-
-?>

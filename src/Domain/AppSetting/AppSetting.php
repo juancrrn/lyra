@@ -52,5 +52,3 @@ class AppSetting
         return $this->value;
     }
 }
-
-?>

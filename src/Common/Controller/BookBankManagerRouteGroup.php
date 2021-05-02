@@ -62,5 +62,3 @@ class BookBankManagerRouteGroup implements RouteGroupModel
         });
     }
 }
-
-?>

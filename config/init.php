@@ -95,5 +95,3 @@ $app->init(
 
     LYRA_DEV_MODE
 );
-
-?>

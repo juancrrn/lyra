@@ -475,5 +475,3 @@ abstract class AjaxFormModel
         return $button;
     }
 }
-
-?>

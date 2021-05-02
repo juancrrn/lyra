@@ -17,5 +17,3 @@ interface RouteGroupModel
 
     public function runAll(): void;
 }
-
-?>

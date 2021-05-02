@@ -102,5 +102,3 @@ class Donation
         return $this->schoolYear;
     }
 }
-
-?>

@@ -37,5 +37,3 @@ class Error404View extends ViewModel
         $app->getViewManagerInstance()->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
     }
 }
-
-?>

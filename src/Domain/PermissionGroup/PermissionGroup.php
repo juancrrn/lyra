@@ -155,5 +155,3 @@ class PermissionGroup
         return $this->creatorId;
     }
 }
-
-?>

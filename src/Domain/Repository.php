@@ -89,5 +89,3 @@ interface Repository
      */
     public function deleteById(int $id): bool;
 }
-
-?>

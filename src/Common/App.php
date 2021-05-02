@@ -246,5 +246,3 @@ class App
         return $this->devMode;
     }
 }
-
-?>

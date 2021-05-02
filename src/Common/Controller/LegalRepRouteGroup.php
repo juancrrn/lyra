@@ -44,5 +44,3 @@ class LegalRepRouteGroup implements RouteGroupModel
         });
     }
 }
-
-?>

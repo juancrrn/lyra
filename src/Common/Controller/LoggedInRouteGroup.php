@@ -43,5 +43,3 @@ class LoggedInRouteGroup implements RouteGroupModel
         });
     }
 }
-
-?>

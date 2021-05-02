@@ -122,5 +122,3 @@ class Controller
         echo call_user_func($handler);
     }
 }
-
-?>

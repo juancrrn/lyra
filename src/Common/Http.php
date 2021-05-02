@@ -136,5 +136,3 @@ class Http
         die();
     }
 }
-
-?>

@@ -63,5 +63,3 @@ $controllerInstance->get('/demo/sandbox/', function () {
  * Ruta por defecto (error 404)
  */
 (new AnyoneRouteGroup($controllerInstance))->runDefault();
-
-?>

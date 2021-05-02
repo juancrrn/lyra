@@ -220,5 +220,3 @@ abstract class StaticFormModel
         return false;
     }
 }
-
-?>

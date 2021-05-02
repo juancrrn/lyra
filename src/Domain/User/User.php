@@ -345,5 +345,3 @@ class User
         return $this->permissionGroups;
     }
 }
-
-?>

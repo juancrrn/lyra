@@ -84,5 +84,3 @@ class LoginForm extends StaticFormModel
         $this->initialize();
     }
 }
-
-?>

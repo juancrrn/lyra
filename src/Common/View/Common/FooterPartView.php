@@ -54,5 +54,3 @@ class FooterPartView extends ViewModel
         $app->getViewManagerInstance()->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
     }
 }
-
-?>

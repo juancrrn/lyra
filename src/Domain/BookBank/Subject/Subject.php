@@ -138,5 +138,3 @@ class Subject
         return $this->creatorId;
     }
 }
-
-?>

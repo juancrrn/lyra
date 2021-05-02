@@ -42,5 +42,3 @@ class LogoutForm extends StaticFormModel
         $app->getViewManagerInstance()->addSuccessMessage('Se ha cerrado la sesión correctamente.', '');
     }
 }
-
-?>

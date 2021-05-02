@@ -155,5 +155,3 @@ class Request
         return $this->locked;
     }
 }
-
-?>

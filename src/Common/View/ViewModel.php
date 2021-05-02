@@ -36,5 +36,3 @@ abstract class ViewModel
 		return $this->id;
 	}
 }
-
-?>

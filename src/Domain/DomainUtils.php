@@ -36,5 +36,3 @@ class DomainUtils
         self::EDU_LEVEL_OTHER
     );
 }
-
-?>
