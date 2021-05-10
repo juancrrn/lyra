@@ -37,6 +37,89 @@ class UserRepository implements Repository
         $this->db = App::getSingleton()->getDbConn();
     }
 
+    /**
+     * Inserta un elemento a la base de datos.
+     * 
+     * @param User $user
+     * @param string|null $hashedPassword
+     * 
+     * @return bool|int
+     */
+    public function insert(User $user, ?string $hashedPassword = null): bool|int
+    {
+        $query = <<< SQL
+        INSERT INTO
+            users
+            (
+                id,
+                gov_id,
+                first_name,
+                last_name,
+                birth_date,
+                hashed_password,
+                email_address,
+                phone_number,
+                representative_id,
+                registration_date,
+                last_login_date,
+                token,
+                status
+            )
+        VALUES
+            ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        
+        $id = $user->getId();
+        $govId = $user->getGovId(); // Nullable
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $birthDate = $user->getBirthDate()
+            ->format(CommonUtils::MYSQL_DATE_FORMAT);
+        //$hashedPassword = ...;
+        $emailAddress = $user->getEmailAddress();
+        $phoneNumber = $user->getPhoneNumber();
+        $representativeId = $user->getRepresentativeId(); // Nullable
+        $registrationDate = $user->getRegistrationDate()
+            ->format(CommonUtils::MYSQL_DATETIME_FORMAT);
+        $lastLoginDate = $user->getLastLoginDate() ? // Nullable
+            $user->getLastLoginDate()
+            ->format(CommonUtils::MYSQL_DATETIME_FORMAT) :
+            null;
+        $token = $user->getToken(); // Nullable
+        $status = $user->getStatus();
+
+        $stmt->bind_param(
+            'isssssssissss',
+            $id,
+            $govId,
+            $firstName,
+            $lastName,
+            $birthDate,
+            $hashedPassword,
+            $emailAddress,
+            $phoneNumber,
+            $representativeId,
+            $registrationDate,
+            $lastLoginDate,
+            $token,
+            $status
+        );
+        
+        $result = $stmt->execute();
+
+        $id = $this->db->insert_id;
+
+        $stmt->close();
+
+        if ($result) {
+            return $id;
+        } else {
+            return false;
+        }
+    }
+
     public function update(): bool|int
     {
         throw new \Exception('Not implemented');
@@ -391,5 +474,44 @@ class UserRepository implements Repository
     public function deleteById(int $id): bool
     {
         throw new \Exception('Not implemented');
+    }
+
+    /**
+     * Crea un enlace entre un usuario y un grupo de permisos.
+     * 
+     * @requires Existe un usuario con el identificador especificado.
+     * @requires Existe un grupo de permisos con el identificador especificado.
+     * 
+     * @param int $userId
+     * @param int $permissionGroupId
+     * 
+     * @return bool Resultado de la operación.
+     */
+    public function createPermissionGroupLink(int $userId, int $permissionGroupId): bool
+    {
+        $query = <<< SQL
+        INSERT INTO
+            user_permission_group_links
+            (
+                user_id,
+                permission_group_id
+            )
+        VALUES
+            ( ?, ? )
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'ii',
+            $userId,
+            $permissionGroupId
+        );
+        
+        $result = $stmt->execute();
+
+        $stmt->close();
+
+        return $result;
     }
 }
