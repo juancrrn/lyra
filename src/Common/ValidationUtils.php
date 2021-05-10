@@ -43,6 +43,11 @@ class ValidationUtils
 		'.{12,}' . // Cualquier otro caracter hasta completar 12
 		'$/u';
 
+	/**
+	 * Dígitos de verificación del NIF o NIE.
+	 */
+	private const NIF_NIE_DIGITS = 'TRWAGMYFPDXBNJZSQVHLCKE';
+
     /*
      *
      * Codificación
@@ -100,6 +105,53 @@ class ValidationUtils
 		} else {
 			return mb_convert_encoding($string, mb_detect_encoding(($string)));
 		}
+	}
+
+	/*
+	 * 
+	 * Formatos estándares
+	 * 
+	 */
+
+	private static function validateNif(string $testString): bool
+	{
+		$testString = strtoupper($testString);
+		
+		if (preg_match('/(^[0-9]{8}[A-Z]{1}$)/', $testString)) {
+			if ($testString[8] == substr(self::NIF_NIE_DIGITS, substr($testString, 0, 8) % 23, 1)) {				
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private static function validateNie(string $testString): bool
+	{
+		$testString = strtoupper($testString);
+		
+		if (preg_match('/(^[XYZ]{1}[0-9]{7}[A-Z]{1}$)/', $testString)) {
+			if ($testString[8] == substr(self::NIF_NIE_DIGITS, substr(str_replace(array('X', 'Y', 'Z'), array('0', '1', '2'), $testString), 0, 8) % 23, 1)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Valida un identificador gubernamental de tipo NIF o NIE.
+	 * 
+	 * @param mixed $testItem
+	 * 
+	 * @return bool
+	 */
+	public static function validateGovId(mixed $testItem): bool
+	{
+		if (! is_string($testItem))
+			return false;
+
+		return self::validateNif($testItem) || self::validateNie($testItem);
 	}
 
 	/*
