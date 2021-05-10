@@ -34,10 +34,6 @@ class HeaderPartView extends ViewModel
         $sessionManager = $app->getSessionManagerInstance();
         $viewManager = $app->getViewManagerInstance();
 
-        $logoutForm = new LogoutForm('/auth/logout/');
-        $logoutForm->handle();
-        $logoutForm->initialize();
-
         $mainMenuBuffer = '';
 
         // Generar elementos de navegación del menú lateral.
@@ -54,6 +50,10 @@ class HeaderPartView extends ViewModel
         $userMenuBuffer = ''; 
 
         if ($sessionManager->isLoggedIn()) {
+            $logoutForm = new LogoutForm('/auth/logout/');
+            $logoutForm->handle();
+            $logoutForm->initialize();
+
             $user = $sessionManager->getLoggedInUser();
             
             $fullName = $user->getFullName();
