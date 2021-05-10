@@ -23,6 +23,8 @@ class LogoutForm extends StaticFormModel
     public function __construct(string $action)
     {
         parent::__construct(self::FORM_ID, array('action' => $action));
+
+        $this->forceDisableCsrfValidation();
     }
     
     protected function generateFields(array & $preloadedData = array()): string
