@@ -49,8 +49,14 @@ abstract class StaticFormModel
      * @var string CSRF_PREFIX           CSRF prefix for $_SESSION storing.
      * @var string CSRF_TOKEN_FIELD      CSRF token field name.
      */
-    private const CSRF_PREFIX = 'csrf';
+    private const CSRF_PREFIX = 'lyra_csrf';
     private const CSRF_TOKEN_FIELD = 'csrf-token';
+
+    /**
+     * @var bool $forceDisableCsrfValidation    Permite forzar que no se valide
+     *                                          el token CSRF.
+     */
+    private $forceDisableCsrfValidation = false;
 
     /**
      * Crea un nuevo formulario.
@@ -84,7 +90,7 @@ abstract class StaticFormModel
      * Procesa el envío de un formulario.
      */
     public function handle()
-    {   
+    {
         if ($this->isSent($_POST)) {
             $submittedCsrfToken = $_POST[self::CSRF_TOKEN_FIELD] ?? null;
 
@@ -156,12 +162,21 @@ abstract class StaticFormModel
 
         $actionUrl = $this->actionUrl;
         $id = $this->id;
-        $csrfTokenFieldName = self::CSRF_TOKEN_FIELD;
-        $csrfToken = $this->CsrfGenerateToken();
+
+        if ($this->forceDisableCsrfValidation) {
+            $csrfInput = '';
+        } else {
+            $csrfTokenFieldName = self::CSRF_TOKEN_FIELD;
+            $csrfToken = $this->CsrfGenerateToken();
+            
+            $csrfInput = <<< HTML
+            <input type="hidden" name="$csrfTokenFieldName" value="$csrfToken">
+            HTML;
+        }
 
         $this->html = <<< HTML
         <form method="post" action="$actionUrl" id="$id" class="default-form">
-            <input type="hidden" name="$csrfTokenFieldName" value="$csrfToken">
+            $csrfInput
             <input type="hidden" name="action" value="$id" />
             $campos
         </form>
@@ -191,6 +206,9 @@ abstract class StaticFormModel
      */
     private function CsrfGenerateToken(): string
     {
+        if ($this->forceDisableCsrfValidation)
+            return '';
+
         $token = hash('sha512', mt_rand(0, mt_getrandmax()));
 
         $_SESSION[self::CSRF_PREFIX . '_' . $this->id] = $token;
@@ -207,16 +225,24 @@ abstract class StaticFormModel
      */
     private function CsrfValidateToken(null|string $token): bool
     {
+        if ($this->forceDisableCsrfValidation)
+            return true;
+
         if (! $token) return false;
 
         if (isset($_SESSION[self::CSRF_PREFIX . '_' . $this->id])
             && $_SESSION[self::CSRF_PREFIX . '_' . $this->id] === $token) {
             
             unset($_SESSION[self::CSRF_PREFIX . '_' . $this->id]);
-
+                
             return true;
         }
 
         return false;
+    }
+
+    protected function forceDisableCsrfValidation(): void
+    {
+        $this->forceDisableCsrfValidation = true;
     }
 }
