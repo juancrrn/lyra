@@ -7,6 +7,8 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
+use Juancrrn\Lyra\Common\View\Auth\PasswordResetProcessView;
+use Juancrrn\Lyra\Common\View\Auth\PasswordResetRequestView;
 use Juancrrn\Lyra\Common\View\Error\Error404View;
 use Juancrrn\Lyra\Common\View\Home\DashboardView;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
@@ -56,14 +58,24 @@ class AnyoneRouteGroup implements RouteGroupModel
             $viewManager->render(new LoginView);
         });
         
-        // Restablecimiento de contraseña
-        $this->controllerInstance->get('/auth/reset/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        // Solicitud de restablecimiento de contraseña
+        $this->controllerInstance->get('/auth/reset/request/', function () use ($viewManager) {
+            $viewManager->render(new PasswordResetRequestView);
         });
         
-        // Restablecimiento de contraseña (POST del formulario)
-        $this->controllerInstance->post('/auth/reset/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        // Solicitud de restablecimiento de contraseña (POST del formulario)
+        $this->controllerInstance->post('/auth/reset/request/', function () use ($viewManager) {
+            $viewManager->render(new PasswordResetRequestView);
+        });
+        
+        // Proceso de restablecimiento de contraseña
+        $this->controllerInstance->get('/auth/reset/process/([0-9a-zA-Z]*)', function ($token) use ($viewManager) {
+            $viewManager->render(new PasswordResetProcessView($token));
+        });
+        
+        // Proceso de restablecimiento de contraseña (POST del formulario)
+        $this->controllerInstance->post('/auth/reset/process/', function ($token) use ($viewManager) {
+            $viewManager->render(new PasswordResetProcessView($token));
         });
     }
 
