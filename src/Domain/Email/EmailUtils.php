@@ -3,7 +3,10 @@
 namespace Juancrrn\Lyra\Domain\Email;
 
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\TemplateUtils;
 use Juancrrn\Lyra\Common\ValidationUtils;
+use Juancrrn\Lyra\Common\View\Auth\PasswordResetProcessView;
+use Juancrrn\Lyra\Domain\User\User;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
@@ -23,7 +26,7 @@ class EmailUtils
     /**
      * Ruta relativa del directorio de plantillas HTML de los mensajes de email.
      */
-    private const VIEW_RESOURCES_PATH = 'resources/email';
+    private const EMAIL_RESOURCES_PATH = 'resources/email';
 
 	/**
 	 * Valor de la cabecera X-Mailer.
@@ -74,5 +77,142 @@ class EmailUtils
 		$mail->DKIM_copyHeaderFields = false;
 
 		return $mail;
+	}
+
+	/**
+	 * Envía un mensaje genérico, con los valores utilizados habitualmente.
+	 * 
+	 * @param User $recipient
+	 * @param string $subject
+	 * @param string $templateFileName
+	 * @param array $templateFilling
+	 * 
+	 * @return bool
+	 */
+	private static function sendGenericMessage(
+		User 	$recipient,
+		string 	$subject,
+		string 	$templateFileName,
+		array 	$templateFilling
+	): bool
+	{
+		$app = App::getSingleton();
+
+		$mail = self::initialize();
+
+		$mail->addAddress($recipient->getEmailAddress());
+		$mail->isHTML(true);
+		$mail->Subject = ValidationUtils::ensureUtf8($subject);
+
+		$basicFilling = array(
+			'app-name' => $app->getName(),
+			'app-url' => $app->getUrl(),
+			'user-first-name' => $recipient->getFirstName()
+		);
+
+		$mail->Body = self::generateMailTemplateRender(
+			$templateFileName,
+			array_merge($basicFilling, $templateFilling)
+		);
+
+		$mail->AltBody = self::generateMailTemplateRender(
+			$templateFileName . '_plain',
+			array_merge($basicFilling, $templateFilling)
+		);
+
+		return $mail->send();
+	}
+
+	/**
+	 * Renderiza el contenido de un mensaje a partir de una plantilla y un
+	 * relleno.
+	 * 
+	 * @param string $fileName
+	 * @param string $filling
+	 * 
+	 * @return string
+	 */
+	private static function generateMailTemplateRender(
+		string $fileName,
+		array $filling
+	): string
+	{
+		return TemplateUtils::generateTemplateRender(
+			$fileName,
+			$filling,
+			realpath(App::getSingleton()->getRoot() . self::EMAIL_RESOURCES_PATH)
+		);
+	}
+
+	/**
+	 * Envía un mensaje con información sobre privacidad y protección de datos.
+	 * 
+	 * @param User $user
+	 * 
+	 * @return bool
+	 */
+	public static function sendUserPrivacyMessage(User $user): bool
+	{
+		return self::sendGenericMessage(
+			$user,
+			'Información sobre privacidad',
+			'auth/email_privacy',
+			array()
+		);
+	}
+
+	/**
+	 * Envía un mensaje de activación.
+	 * 
+	 * @param User $user
+	 * 
+	 * @return bool
+	 */
+	public static function sendUserActivationMessage(User $user): bool
+	{
+		return self::sendGenericMessage(
+			$user,
+			'Activar usuario',
+			'auth/email_activation',
+			array(
+				'activation-url' => App::getSingleton()->getUrl() . PasswordResetProcessView::VIEW_ROUTE_BASIC . $user->getToken()
+			)
+		);
+	}
+
+	/**
+	 * Envía un mensaje de aviso de activación correcta.
+	 * 
+	 * @param User $user
+	 * 
+	 * @return bool
+	 */
+	public static function sendUserActivatedMessage(User $user): bool
+	{
+		return self::sendGenericMessage(
+			$user,
+			'Usuario activado correctamente',
+			'auth/email_activated',
+			array()
+		);
+	}
+
+	/**
+	 * Envía un mensaje de restablecimiento de contraseña para un usuario
+	 * 
+	 * @param User $user
+	 * 
+	 * @return bool
+	 */
+	public static function sendUserPasswordResetMessage(User $user): bool
+	{
+		return self::sendGenericMessage(
+			$user,
+			'Restablecer contraseña',
+			'auth/email_password_reset',
+			array(
+				'reset-url' => App::getSingleton()->getUrl() . PasswordResetProcessView::VIEW_ROUTE_BASIC . $user->getToken()
+			)
+		);
 	}
 }
