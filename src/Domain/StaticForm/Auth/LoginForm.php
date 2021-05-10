@@ -12,8 +12,10 @@
 
 namespace Juancrrn\Lyra\Domain\StaticForm\Auth;
 
+use DateTime;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Domain\StaticForm\StaticFormModel;
+use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
 class LoginForm extends StaticFormModel
@@ -71,12 +73,22 @@ class LoginForm extends StaticFormModel
             if (! password_verify($password, $userRepository->retrieveJustHashedPasswordById($userId))) {
                 $view->addErrorMessage('El NIF o NIE y la contraseña introducidos no coinciden.');
             } else {
-                $sessionManager = $app->getSessionManagerInstance();
 
-                $sessionManager->doLogIn($userRepository->retrieveById($userId, true));
+                // Comprobar que el usuario está activado
+                $user = $userRepository->retrieveById($userId, true);
 
-                header("Location: " . $app->getUrl());
-                die();
+                if ($user->getStatus() != User::STATUS_ACTIVE) {
+                    $view->addErrorMessage('Tu usuario no está activado. Busca un mensaje en tu bandeja de entrada de correo electrónico con un enlace para activarlo o restablecer tu contraseña.');
+                    $view->addErrorMessage('Por favor, comprueba tu bandeja de correo no deseado o spam. Si no encuentras el mensaje, puedes contactar con nosotros.');
+                } else {
+                    $sessionManager = $app->getSessionManagerInstance();
+
+                    $sessionManager->doLogIn($user);
+
+                    $userRepository->updateLastLoginDateById($userId);
+
+                    $view->addSuccessMessage('¡Te damos la bienvenida!', '');
+                }
             }
 
         }
