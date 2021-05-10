@@ -74,7 +74,7 @@ class AnyoneRouteGroup implements RouteGroupModel
         });
         
         // Proceso de restablecimiento de contraseña (POST del formulario)
-        $this->controllerInstance->post('/auth/reset/process/', function ($token) use ($viewManager) {
+        $this->controllerInstance->post('/auth/reset/process/([0-9a-zA-Z]*)', function ($token) use ($viewManager) {
             $viewManager->render(new PasswordResetProcessView($token));
         });
     }

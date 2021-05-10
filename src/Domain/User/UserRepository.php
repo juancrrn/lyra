@@ -128,6 +128,44 @@ class UserRepository implements Repository
         }
     }
 
+    /**
+     * Termina el proceso de activación o de restablecimiento de contraseña con
+     * token, dejando al usuario en User::STATUS_ACTIVE y con su nueva
+     * contraseña.
+     * 
+     * @requires    Existe un usuario en la base de datos con el identificador
+     *              especificado.
+     * 
+     * @param int $id
+     * @param string $hashedPassword
+     * 
+     * @return bool Resultado de la operación.
+     */
+    public function finalizeTokenProcessById(int $id, string $hashedPassword): bool
+    {
+        $status = User::STATUS_ACTIVE;
+        
+        $query = <<< SQL
+        UPDATE
+            users
+        SET
+            hashed_password = ?,
+            token = null,
+            status = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('ssi', $hashedPassword, $status, $id);
+        
+        $result = $stmt->execute();
+
+        $stmt->close();
+
+        return $result;
+    }
+
     public function findById(int $id): bool|int
     {
         throw new \Exception('Not implemented');
