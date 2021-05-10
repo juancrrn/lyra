@@ -44,7 +44,7 @@ class LoginView extends ViewModel
 
         $filling = array(
             'form-html' => $this->form->getHtml(),
-            'reset-url' => $app->getUrl() . '/auth/reset/'
+            'reset-url' => $app->getUrl() . PasswordResetRequestView::VIEW_ROUTE
         );
 
         $app->getViewManagerInstance()->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
