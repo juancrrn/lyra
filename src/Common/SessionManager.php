@@ -123,9 +123,10 @@ class SessionManager
     public function requireNotLoggedIn($api = false): void
     {
         if ($this->isLoggedIn()) {
+            $viewManager = App::getSingleton()->getViewManagerInstance();
+
             if (! $api) {
-                ddl(null, null);
-                //Vista::encolaMensajeError('No puedes acceder a esta página habiendo iniciado sesión.', '');
+                $viewManager->addErrorMessage('No puedes acceder a esta página habiendo iniciado sesión.', '');
             } else {
                 ddl(null, null);
                 //HTTP::apiRespondError(409, array('No debería estar autenticado.')); // HTTP 409 Conflict.
