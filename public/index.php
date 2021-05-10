@@ -20,6 +20,10 @@ $controllerInstance->get('/demo/sandbox/', function () {
     require_once __DIR__ . '/../demo/SandBox.php';
 });
 
+$controllerInstance->get('/demo/migration/', function () {
+    require_once __DIR__ . '/../demo/MigrationSandBox.php';
+});
+
 /**
  * Vistas de usuarios de cualquier tipo (todos)
  */
