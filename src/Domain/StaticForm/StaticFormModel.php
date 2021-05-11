@@ -206,7 +206,7 @@ abstract class StaticFormModel
      */
     private function CsrfGenerateToken(): string
     {
-        if ($this->forceDisableCsrfValidation)
+        if ($this->forceDisableCsrfValidation || App::getSingleton()->isDevMode())
             return '';
 
         $token = hash('sha512', mt_rand(0, mt_getrandmax()));
@@ -225,7 +225,7 @@ abstract class StaticFormModel
      */
     private function CsrfValidateToken(null|string $token): bool
     {
-        if ($this->forceDisableCsrfValidation)
+        if ($this->forceDisableCsrfValidation || App::getSingleton()->isDevMode())
             return true;
 
         if (! $token) return false;
