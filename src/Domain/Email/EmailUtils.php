@@ -120,7 +120,16 @@ class EmailUtils
 			array_merge($basicFilling, $templateFilling)
 		);
 
-		return $mail->send();
+		if (! $app->isDevMode()) {
+			return $mail->send();
+		} else {
+			echo 'Requested sending email but app instance is in developement mode.';
+			$app->getViewManagerInstance()->addErrorMessage('Se solicitó el envío de un mensaje de correo electrónico, pero la instancia de la aplicación tiene activado el modo de depuración.');
+
+			var_dump($mail);
+
+			return true;
+		}
 	}
 
 	/**
