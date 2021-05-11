@@ -1,6 +1,6 @@
 <?php
 
-namespace Juancrrn\Lyra\Domain\BookBank\Request;
+namespace Juancrrn\Lyra\Domain\BookBank\Subject;
 
 use DateTime;
 
@@ -40,17 +40,17 @@ class Subject
     private $schoolYear;
 
     /**
-     * @var string $bookName
+     * @var null|string $bookName
      */
     private $bookName;
 
     /**
-     * @var string $bookIsbn
+     * @var null|string $bookIsbn
      */
     private $bookIsbn;
 
     /**
-     * @var string $bookImageUrl
+     * @var null|string $bookImageUrl
      */
     private $bookImageUrl;
 
@@ -69,9 +69,9 @@ class Subject
         string      $name,
         string      $educationLevel,
         int         $schoolYear,
-        string      $bookName,
-        string      $bookIsbn,
-        string      $bookImageUrl,
+        ?string      $bookName,
+        ?string      $bookIsbn,
+        ?string      $bookImageUrl,
         DateTime    $creationDate,
         int         $creatorId
     )
@@ -113,17 +113,17 @@ class Subject
         return $this->schoolYear;
     }
 
-    public function getBookName(): string
+    public function getBookName(): null|string
     {
         return $this->bookName;
     }
 
-    public function getBookIsbn(): string
+    public function getBookIsbn(): null|string
     {
         return $this->bookIsbn;
     }
 
-    public function getBookImageUrl(): string
+    public function getBookImageUrl(): null|string
     {
         return $this->bookImageUrl;
     }
