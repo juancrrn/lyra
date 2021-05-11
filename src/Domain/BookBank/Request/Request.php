@@ -20,12 +20,14 @@ class Request
     /*
      * Posibles estados de la solicitud
      */
-    public const STATUS_ACCEPTED        = 'book_request_status_accepted';
+    public const STATUS_PENDING         = 'book_request_status_pending';
+    public const STATUS_PROCESSED       = 'book_request_status_processed';
     public const STATUS_REJECTED_STOCK  = 'book_request_status_rejected_stock';
     public const STATUS_REJECTED_OTHER  = 'book_request_status_rejected_other';
 
     public const STATUSES = array(
-        self::STATUS_ACCEPTED,
+        self::STATUS_PENDING,
+        self::STATUS_PROCESSED,
         self::STATUS_REJECTED_STOCK,
         self::STATUS_REJECTED_OTHER
     );
@@ -81,7 +83,6 @@ class Request
 
     public function __construct(
         int         $id,
-        int         $requestId,
         int         $studentId,
         string      $status,
         DateTime    $creationDate,
@@ -93,7 +94,6 @@ class Request
     )
     {
         $this->id              = $id;
-        $this->requestId       = $requestId;
         $this->studentId       = $studentId;
         $this->status          = $status;
         $this->creationDate    = $creationDate;
