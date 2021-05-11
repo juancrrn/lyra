@@ -77,27 +77,27 @@ class Donation
         return $this->id;
     }
 
-    public function getstudentId(): int
+    public function getStudentId(): int
     {
         return $this->studentId;
     }
 
-    public function getcreationDate(): DateTime
+    public function getCreationDate(): DateTime
     {
         return $this->creationDate;
     }
 
-    public function getcreatorId(): int
+    public function getCreatorId(): int
     {
         return $this->creatorId;
     }
 
-    public function geteducationLevel(): string
+    public function getEducationLevel(): string
     {
         return $this->educationLevel;
     }
 
-    public function getschoolYear(): int
+    public function getSchoolYear(): int
     {
         return $this->schoolYear;
     }
