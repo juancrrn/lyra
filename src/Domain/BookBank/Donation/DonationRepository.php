@@ -122,6 +122,12 @@ class DonationRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
+    /*
+     *
+     * Contenidos de donaciones
+     * 
+     */
+
     /**
      * Crea una relación de contenido entre una donación y una asignatura en la
      * base de datos.
