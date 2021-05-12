@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Domain\BookBank\Lot;
 
 use DateTime;
 use InvalidArgumentException;
+use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\GenericHumanModel;
 
 /**
@@ -145,6 +146,51 @@ class Lot
         $this->returnDate      = $returnDate;
         $this->locked          = $locked;
         $this->contents        = $contents;
+    }
+
+    public static function constructFromMysqliObject(object $mysqli_object): self
+    {
+        $pickupDate =
+            isset($mysqli_object->pickup_date) ?
+            DateTime::createFromFormat(
+                CommonUtils::MYSQL_DATETIME_FORMAT,
+                $mysqli_object->pickup_date
+            )
+            : null;
+            
+        $returnDate =
+            isset($mysqli_object->return_date) ?
+            DateTime::createFromFormat(
+                CommonUtils::MYSQL_DATETIME_FORMAT,
+                $mysqli_object->return_date
+            )
+            : null;
+
+        return new self(
+            $mysqli_object->id,
+            $mysqli_object->request_id,
+            $mysqli_object->student_id,
+            $mysqli_object->status,
+            $mysqli_object->creation_date,
+            $mysqli_object->creator_id,
+            $mysqli_object->education_level,
+            $mysqli_object->school_year,
+            $pickupDate,
+            $returnDate,
+            $mysqli_object->locked,
+            null
+        );
+    }
+
+    /*
+     * 
+     * Setters
+     * 
+     */
+
+    public function setContents(array $contents): void
+    {
+        $this->contents = $contents;
     }
 
     /*
