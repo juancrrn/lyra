@@ -26,16 +26,25 @@ interface Repository
     public function __construct(\mysqli $db);
 
     /**
+     * Inserta el objeto en la base de datos.
+     * 
+     * @param static $this  Objeto a insertar.
+     * 
+     * @return bool|int El identificador del objeto insertado si no ha habido
+     *                  ningún problema, o false en caso contrario.
+     */
+    //public function insert(): bool|int;
+
+    /**
      * Actualiza o inserta el objeto en la base de datos, según si tiene o no
      * valor en la propiedad $id.
      * 
-     * @param static $this  Objeto a actualizar o insertar.
+     * @param static $this  Objeto a actualizar.
      * 
-     * @return bool|int     True si se ha actualizado correctamente, false si
-     *                      ha habido algún problema y, en el caso de inserción,
-     *                      el identificador del objeto insertado.
+     * @return bool True si se ha actualizado correctamente o false si ha habido
+     *              algún problema.
      */
-    public function update(): bool|int;
+    //public function update(): bool;
 
     /**
      * Comprueba si existe un objeto en la base de datos en base a su id.
@@ -87,5 +96,5 @@ interface Repository
      * 
      * @return bool         Resultado de la ejecución de la sentencia.
      */
-    public function deleteById(int $id): bool;
+    public function deleteById(int $id): void;
 }
