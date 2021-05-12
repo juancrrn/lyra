@@ -371,35 +371,6 @@ class UserRepository implements Repository
         return $element;
     }
 
-    public function retrievePermissionGroupsById(int $userId): array
-    {
-        $query = <<< SQL
-        SELECT
-            permission_group_id
-        FROM
-            user_permission_group_links
-        WHERE
-            user_id = ?
-        SQL;
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $elements = array();
-
-        $permissionGroupRepository = new PermissionGroupRepository($this->db);
-
-        while($mysqli_object = $result->fetch_object()) {
-            $elements[] = $permissionGroupRepository->retrieveById($mysqli_object->permission_group_id);
-        }
-
-        $stmt->close();
-
-        return $elements;
-    }
-
     public function retrieveJustHashedPasswordById(int $id): string
     {
         $query = <<< SQL
@@ -474,6 +445,41 @@ class UserRepository implements Repository
     public function deleteById(int $id): bool
     {
         throw new \Exception('Not implemented');
+    }
+
+    /*
+     *
+     * Grupos de permisos
+     * 
+     */
+
+    public function retrievePermissionGroupsById(int $userId): array
+    {
+        $query = <<< SQL
+        SELECT
+            permission_group_id
+        FROM
+            user_permission_group_links
+        WHERE
+            user_id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $elements = array();
+
+        $permissionGroupRepository = new PermissionGroupRepository($this->db);
+
+        while($mysqli_object = $result->fetch_object()) {
+            $elements[] = $permissionGroupRepository->retrieveById($mysqli_object->permission_group_id);
+        }
+
+        $stmt->close();
+
+        return $elements;
     }
 
     /**
