@@ -3,6 +3,8 @@
 namespace Juancrrn\Lyra\Domain\BookBank\Request;
 
 use DateTime;
+use InvalidArgumentException;
+use Juancrrn\Lyra\Domain\GenericHumanModel;
 
 /**
  * Clase para representar una solicitud
@@ -21,9 +23,20 @@ class Request
      * Posibles estados de la solicitud
      */
     public const STATUS_PENDING         = 'book_request_status_pending';
+    private const STATUS_PENDING_TITLE = 'Solicitud pendiente';
+    private const STATUS_PENDING_DESC = 'La solicitud ha sido creada pero aún no se ha procesado.';
+
     public const STATUS_PROCESSED       = 'book_request_status_processed';
+    private const STATUS_PROCESSED_TITLE = 'Solicitud procesada';
+    private const STATUS_PROCESSED_DESC = 'La solicitud ha sido procesada y existe un paquete asociado a la misma.';
+
     public const STATUS_REJECTED_STOCK  = 'book_request_status_rejected_stock';
+    private const STATUS_REJECTED_STOCK_TITLE = 'Solicitud desestimada por falta de ejemplares';
+    private const STATUS_REJECTED_STOCK_DESC = 'La solicitud no ha podido procesarse por falta de ejemplares.';
+
     public const STATUS_REJECTED_OTHER  = 'book_request_status_rejected_other';
+    private const STATUS_REJECTED_OTHER_TITLE = 'Solicitud desestimada por otros motivos';
+    private const STATUS_REJECTED_OTHER_DESC = 'La solicitud no ha podido procesarse por otros motivos.';
 
     public const STATUSES = array(
         self::STATUS_PENDING,
@@ -153,5 +166,43 @@ class Request
     public function isLocked(): bool
     {
         return $this->locked;
+    }
+
+    /*
+     *
+     * Estados
+     * 
+     */
+
+    /**
+     * Transforma el estado a una representación humanamente legible.
+     * 
+     * @param string $status
+     * 
+     * @return GenericHumanModel
+     */
+    public static function statusToHuman(string $status): GenericHumanModel
+    {
+        if (! in_array($status, self::STATUSES))
+            throw new InvalidArgumentException('Invalid satus.');
+
+        switch ($status) {
+            case self::STATUS_PENDING:
+                return new GenericHumanModel(
+                    self::STATUS_PENDING, self::STATUS_PENDING_TITLE, self::STATUS_PENDING_DESC
+                );
+            case self::STATUS_PROCESSED:
+                return new GenericHumanModel(
+                    self::STATUS_PROCESSED, self::STATUS_PROCESSED_TITLE, self::STATUS_PROCESSED_DESC
+                );
+            case self::STATUS_REJECTED_STOCK:
+                return new GenericHumanModel(
+                    self::STATUS_REJECTED_STOCK, self::STATUS_REJECTED_STOCK_TITLE, self::STATUS_REJECTED_STOCK_DESC
+                );
+            case self::STATUS_REJECTED_OTHER:
+                return new GenericHumanModel(
+                    self::STATUS_REJECTED_OTHER, self::STATUS_REJECTED_OTHER_TITLE, self::STATUS_REJECTED_OTHER_DESC
+                );
+        }
     }
 }

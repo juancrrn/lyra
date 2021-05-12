@@ -3,7 +3,9 @@
 namespace Juancrrn\Lyra\Domain\User;
 
 use DateTime;
+use InvalidArgumentException;
 use Juancrrn\Lyra\Common\CommonUtils;
+use Juancrrn\Lyra\Domain\GenericHumanModel;
 
 /**
  * Clase para representar un usuario
@@ -19,18 +21,19 @@ class User
 {
 
     /**
-     * Posibles estados de un usuario:
-     * 
-     * - Inactivo: recién creado, necesita hacer clic en un mensaje en su email
-     *   para activar su cuenta. Existe un token.
-     * - Activo: puede acceder normalmente.
-     * - Restablecimiento: ha solicitado el restablecimiento de su contraseña.
-     *   Tiene que hacer clic en un mensaje en su email para restablecerla.
-     *   Existe un token.
+     * Posibles estados de un usuario
      */
     public const STATUS_INACTIVE    = 'user_status_inactive';
+    private const STATUS_INACTIVE_TITLE = 'Usuario desactivado';
+    private const STATUS_INACTIVE_DESC = 'El usuario acaba de crearse o ha sido desactivado manualmente, y tiene que activarse a través de un enlace en un mensaje de correo electrónico recibido.';
+
     public const STATUS_ACTIVE      = 'user_status_active';
+    private const STATUS_ACTIVE_TITLE = 'Usuario activado';
+    private const STATUS_ACTIVE_DESC = 'El usuario está activado y puede acceder correctamente.';
+
     public const STATUS_RESET       = 'user_status_reset';
+    private const STATUS_RESET_TITLE = 'Usuario en restablecimiento de contraseña';
+    private const STATUS_RESET_DESC = 'El usuario ha solicitado un restablecimiento de contraseña y debe procesarlo a través de un enlace en un mensaje de correo electrónico recibido.';
 
     public const STATUSES = array(
         self::STATUS_INACTIVE,
@@ -345,5 +348,39 @@ class User
     public function getPermissionGroups(): null|array
     {
         return $this->permissionGroups;
+    }
+
+    /*
+     *
+     * Estados
+     * 
+     */
+
+    /**
+     * Transforma el estado a una representación humanamente legible.
+     * 
+     * @param string $status
+     * 
+     * @return GenericHumanModel
+     */
+    public static function statusToHuman(string $status): GenericHumanModel
+    {
+        if (! in_array($status, self::STATUSES))
+            throw new InvalidArgumentException('Invalid satus.');
+
+        switch ($status) {
+            case self::STATUS_INACTIVE:
+                return new GenericHumanModel(
+                    self::STATUS_INACTIVE, self::STATUS_INACTIVE_TITLE, self::STATUS_INACTIVE_DESC
+                );
+            case self::STATUS_ACTIVE:
+                return new GenericHumanModel(
+                    self::STATUS_ACTIVE, self::STATUS_ACTIVE_TITLE, self::STATUS_ACTIVE_DESC
+                );
+            case self::STATUS_RESET:
+                return new GenericHumanModel(
+                    self::STATUS_RESET, self::STATUS_RESET_TITLE, self::STATUS_RESET_DESC
+                );
+        }
     }
 }
