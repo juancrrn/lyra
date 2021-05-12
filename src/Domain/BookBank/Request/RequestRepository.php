@@ -126,7 +126,7 @@ class RequestRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    public function deleteById(int $id): bool
+    public function deleteById(int $id): void
     {
         throw new \Exception('Not implemented');
     }
