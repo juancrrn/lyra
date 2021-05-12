@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\BookBank\Subject;
 
 use DateTime;
+use Juancrrn\Lyra\Common\CommonUtils;
 
 /**
  * Clase para representar una asignatura
@@ -18,7 +19,7 @@ class Subject
 {
 
     /**
-     * @var int $id
+     * @var null|int $id
      */
     private $id;
 
@@ -65,13 +66,13 @@ class Subject
     private $creatorId;
 
     public function __construct(
-        int         $id,
+        ?int        $id,
         string      $name,
         string      $educationLevel,
         int         $schoolYear,
-        ?string      $bookName,
-        ?string      $bookIsbn,
-        ?string      $bookImageUrl,
+        ?string     $bookName,
+        ?string     $bookIsbn,
+        ?string     $bookImageUrl,
         DateTime    $creationDate,
         int         $creatorId
     )
@@ -85,6 +86,33 @@ class Subject
         $this->bookImageUrl     = $bookImageUrl;
         $this->creationDate     = $creationDate;
         $this->creatorId        = $creatorId;
+    }
+
+    public static function constructFromMysqliObject(object $mysqli_object): self
+    {
+        $bookName = isset($mysqli_object->book_name) ?
+            $mysqli_object->book_name : null;
+        $bookIsbn = isset($mysqli_object->book_isbn) ?
+            $mysqli_object->book_isbn : null;
+        $bookImageUrl = isset($mysqli_object->book_image_url) ?
+            $mysqli_object->book_image_url : null;
+            
+        $creationDate = DateTime::createFromFormat(
+            CommonUtils::MYSQL_DATETIME_FORMAT,
+            $mysqli_object->creation_date
+        );
+
+        return new self(
+            $mysqli_object->id,
+            $mysqli_object->name,
+            $mysqli_object->education_level,
+            $mysqli_object->school_year,
+            $bookName,
+            $bookIsbn,
+            $bookImageUrl,
+            $creationDate,
+            $mysqli_object->creator_id
+        );
     }
 
     /*

@@ -42,7 +42,7 @@ class SubjectRepository implements Repository
      * 
      * @return bool|int
      */
-    public function insert(Subject $item): bool|int
+    public function insert(Subject $item): int
     {
         $query = <<< SQL
         INSERT INTO
@@ -94,26 +94,126 @@ class SubjectRepository implements Repository
 
         $stmt->close();
 
-        if ($result) {
-            return $id;
+        return $id;
+    }
+
+    public function update(Subject $item): void
+    {
+        $query = <<< SQL
+        UPDATE
+            book_subjects
+        SET
+            name = ?,
+        AND
+            education_level = ?,
+        AND
+            school_year = ?,
+        AND
+            book_name = ?,
+        AND
+            book_isbn = ?,
+        AND
+            book_image_url = ?,
+        AND
+            creation_date = ?,
+        AND
+            creator_id = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $id = $item->getId();
+        $name = $item->getName();
+        $educationLevel = $item->getEducationLevel();
+        $schoolYear = $item->getSchoolYear();
+        $bookName = $item->getBookName(); // Nullable
+        $bookIsbn = $item->getBookIsbn(); // Nullable
+        $bookImageUrl = $item->getBookImageUrl(); // Nullable
+        $creationDate = $item->getCreationDate()
+            ->format(CommonUtils::MYSQL_DATETIME_FORMAT);
+        $creatorId = $item->getCreatorId();
+
+        $stmt->bind_param(
+            'ssissssii',
+            $name,
+            $educationLevel,
+            $schoolYear,
+            $bookName,
+            $bookIsbn,
+            $bookImageUrl,
+            $creationDate,
+            $creatorId,
+            $id
+        );
+        
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
+    public function findById(int $testId): bool|int
+    {
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            book_subjects
+        WHERE
+            id = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $testId);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        if ($result->num_rows != 1) {
+            $return = false;
         } else {
-            return false;
+            $return = $testId;
         }
-    }
 
-    public function update(): bool|int
-    {
-        throw new \Exception('Not implemented');
-    }
+        $stmt->close();
 
-    public function findById(int $id): bool|int
-    {
-        throw new \Exception('Not implemented');
+        return $return;
     }
 
     public function retrieveById(int $id): Subject
     {
-        throw new \Exception('Not implemented');
+        $query = <<< SQL
+        SELECT
+            id,
+            name,
+            education_level,
+            school_year,
+            book_name,
+            book_isbn,
+            book_image_url,
+            creation_date,
+            creator_id
+        FROM
+            book_subjects
+        WHERE
+            id = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $mysqli_object = $result->fetch_object();
+
+        $element = Subject::constructFromMysqliObject($mysqli_object);
+
+        $stmt->close();
+
+        return $element;
     }
 
     public function retrieveAll(): array
@@ -126,8 +226,24 @@ class SubjectRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    public function deleteById(int $id): bool
+    public function deleteById(int $id): void
     {
-        throw new \Exception('Not implemented');
+        $query = <<< SQL
+        DELETE FROM
+            book_subjects
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'i',
+            $id
+        );
+        
+        $stmt->execute();
+
+        $stmt->close();
     }
 }
