@@ -69,17 +69,17 @@ class LoginForm extends StaticFormModel
         if (! $view->anyErrorMessages()) {
             $userId = $userRepository->findByGovId($govId);
 
-            // Comprobar si la contraseña es correcta.
-            if (! password_verify($password, $userRepository->retrieveJustHashedPasswordById($userId))) {
-                $view->addErrorMessage('El NIF o NIE y la contraseña introducidos no coinciden.');
+            // Comprobar que el usuario está activado
+            $user = $userRepository->retrieveById($userId, true);
+
+            if ($user->getStatus() != User::STATUS_ACTIVE) {
+                $view->addErrorMessage('Tu usuario no está activado. Busca un mensaje en tu bandeja de entrada de correo electrónico con un enlace para activarlo o restablecer tu contraseña.');
+                $view->addErrorMessage('Por favor, comprueba tu bandeja de correo no deseado o spam. Si no encuentras el mensaje, puedes contactar con nosotros.');
             } else {
 
-                // Comprobar que el usuario está activado
-                $user = $userRepository->retrieveById($userId, true);
-
-                if ($user->getStatus() != User::STATUS_ACTIVE) {
-                    $view->addErrorMessage('Tu usuario no está activado. Busca un mensaje en tu bandeja de entrada de correo electrónico con un enlace para activarlo o restablecer tu contraseña.');
-                    $view->addErrorMessage('Por favor, comprueba tu bandeja de correo no deseado o spam. Si no encuentras el mensaje, puedes contactar con nosotros.');
+                // Comprobar si la contraseña es correcta.
+                if (! password_verify($password, $userRepository->retrieveJustHashedPasswordById($userId))) {
+                    $view->addErrorMessage('El NIF o NIE y la contraseña introducidos no coinciden.');
                 } else {
                     $sessionManager = $app->getSessionManagerInstance();
 
@@ -90,7 +90,6 @@ class LoginForm extends StaticFormModel
                     $view->addSuccessMessage('¡Te damos la bienvenida!', '');
                 }
             }
-
         }
 
         $this->initialize();
