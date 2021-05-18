@@ -373,6 +373,7 @@ class UserRepository implements Repository
 
     public function retrieveJustHashedPasswordById(int $id): string
     {
+        var_dump($id);
         $query = <<< SQL
         SELECT
             hashed_password
@@ -442,7 +443,7 @@ class UserRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    public function deleteById(int $id): bool
+    public function deleteById(int $id): void
     {
         throw new \Exception('Not implemented');
     }

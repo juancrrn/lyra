@@ -42,7 +42,7 @@ class RequestRepository implements Repository
      * 
      * @return bool|int
      */
-    public function insert(Request $item): bool|int
+    public function insert(Request $item): int
     {
         $query = <<< SQL
         INSERT INTO
@@ -94,11 +94,7 @@ class RequestRepository implements Repository
 
         $stmt->close();
 
-        if ($result) {
-            return $id;
-        } else {
-            return false;
-        }
+        return $id;
     }
 
     public function update(): bool|int
@@ -111,9 +107,70 @@ class RequestRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
+    public function findByStudentId(int $studentId): array
+    {
+        $query = <<< SQL
+        SELECT
+            id
+        FROM
+            book_requests
+        WHERE
+            student_id = ?
+        ORDER BY
+            creation_date
+        DESC
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $studentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $items = array();
+
+        while ($item = $result->fetch_object()) {
+            $items[] = $item->id;
+        }
+
+        $stmt->close();
+
+        return $items;
+    }
+
     public function retrieveById(int $id): Request
     {
-        throw new \Exception('Not implemented');
+        
+        $query = <<< SQL
+        SELECT
+            id,
+            student_id,
+            status,
+            creation_date,
+            creator_id,
+            education_level,
+            school_year,
+            specification,
+            locked
+        FROM
+            book_requests
+        WHERE
+            id = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param('i', $id);
+        
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $item = Request::constructFromMysqliObject($result->fetch_object());
+
+        $stmt->close();
+        
+        return $item;
     }
 
     public function retrieveAll(): array

@@ -150,6 +150,11 @@ class Lot
 
     public static function constructFromMysqliObject(object $mysqli_object): self
     {
+        $creationDate = DateTime::createFromFormat(
+            CommonUtils::MYSQL_DATETIME_FORMAT,
+            $mysqli_object->creation_date
+        );
+
         $pickupDate =
             isset($mysqli_object->pickup_date) ?
             DateTime::createFromFormat(
@@ -171,7 +176,7 @@ class Lot
             $mysqli_object->request_id,
             $mysqli_object->student_id,
             $mysqli_object->status,
-            $mysqli_object->creation_date,
+            $creationDate,
             $mysqli_object->creator_id,
             $mysqli_object->education_level,
             $mysqli_object->school_year,

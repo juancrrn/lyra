@@ -42,6 +42,16 @@ class User
     );
 
     /**
+     * Nombres cortos de grupos de permisos nativos (native permission group,
+     * NPG).
+     */
+    public const NPG_APP_MANAGER = 'app-manager';
+    public const NPG_BOOKBANK_MANAGER = 'bookbank-manager';
+    public const NPG_BOOKBANK_VOLUNTEER = 'bookbank-volunteer';
+    public const NPG_LEGALREP = 'legalrep';
+    public const NPG_STUDENT = 'student';
+
+    /**
      * Identificador interno.
      * 
      * @var int $id

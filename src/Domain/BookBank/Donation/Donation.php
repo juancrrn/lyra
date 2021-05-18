@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\BookBank\Donation;
 
 use DateTime;
+use Juancrrn\Lyra\Common\CommonUtils;
 
 /**
  * Clase para representar una donación
@@ -49,13 +50,19 @@ class Donation
      */
     private $schoolYear;
 
+    /**
+     * @var null|array $contents
+     */
+    private $contents;
+
     public function __construct(
         int         $id,
         int         $studentId,
         DateTime    $creationDate,
         int         $creatorId,
         string      $educationLevel,
-        int         $schoolYear
+        int         $schoolYear,
+        ?array      $contents = null
     )
     {
         $this->id               = $id;
@@ -64,6 +71,35 @@ class Donation
         $this->creatorId        = $creatorId;
         $this->educationLevel   = $educationLevel;
         $this->schoolYear       = $schoolYear;
+        $this->contents         = $contents;
+    }
+
+    public static function constructFromMysqliObject(object $mysqli_object): self
+    {
+        $creationDate = DateTime::createFromFormat(
+            CommonUtils::MYSQL_DATETIME_FORMAT,
+            $mysqli_object->creation_date
+        );
+
+        return new self(
+            $mysqli_object->id,
+            $mysqli_object->student_id,
+            $creationDate,
+            $mysqli_object->creator_id,
+            $mysqli_object->education_level,
+            $mysqli_object->school_year
+        );
+    }
+
+    /*
+     * 
+     * Setters
+     * 
+     */
+
+    public function setContents(array $contents): void
+    {
+        $this->contents = $contents;
     }
 
     /*
@@ -100,5 +136,10 @@ class Donation
     public function getSchoolYear(): int
     {
         return $this->schoolYear;
+    }
+
+    public function getContents(): null|array
+    {
+        return $this->contents;
     }
 }

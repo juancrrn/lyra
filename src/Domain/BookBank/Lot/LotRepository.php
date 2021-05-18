@@ -263,42 +263,55 @@ class LotRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    /**
-     * Comprueba si existe un paquete en la base de datos en base a un
-     * identificador especificado.
-     * 
-     * @param string $testId
-     * 
-     * @return bool|int El identificador en caso de existir o false en otro
-     *                  caso.
-     */
-    public function findByGovId(string $testId): bool|int
+    public function findByStudentId(int $studentId): array
     {
         $query = <<< SQL
-        SELECT 
+        SELECT
             id
         FROM
             book_lots
         WHERE
-            id = ?
-        LIMIT 1
+            student_id = ?
         SQL;
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $testId);
+        $stmt->bind_param('i', $studentId);
         $stmt->execute();
-
         $result = $stmt->get_result();
 
-        if ($result->num_rows != 1) {
-            $return = false;
-        } else {
-            $return = $testId;
+        $items = array();
+
+        while ($item = $result->fetch_object()) {
+            $items[] = $item->id;
         }
 
         $stmt->close();
 
-        return $return;
+        return $items;
+    }
+
+    public function findByRequestId(int $requestId): int
+    {
+        $query = <<< SQL
+        SELECT
+            id
+        FROM
+            book_lots
+        WHERE
+            request_id = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $requestId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $itemId = $result->fetch_object()->id;
+
+        $stmt->close();
+
+        return $itemId;
     }
 
     public function retrieveById(int $id, ?bool $loadContents = false): Lot
@@ -398,7 +411,7 @@ class LotRepository implements Repository
         SQL;
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $userId);
+        $stmt->bind_param('i', $lotId);
         $stmt->execute();
         $result = $stmt->get_result();
 

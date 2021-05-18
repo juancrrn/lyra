@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Domain\BookBank\Request;
 
 use DateTime;
 use InvalidArgumentException;
+use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\GenericHumanModel;
 
 /**
@@ -115,6 +116,26 @@ class Request
         $this->schoolYear      = $schoolYear;
         $this->specification   = $specification;
         $this->locked          = $locked;
+    }
+
+    public static function constructFromMysqliObject(object $mysqli_object): self
+    {
+        $creationDate = DateTime::createFromFormat(
+            CommonUtils::MYSQL_DATETIME_FORMAT,
+            $mysqli_object->creation_date
+        );
+
+        return new self(
+            $mysqli_object->id,
+            $mysqli_object->student_id,
+            $mysqli_object->status,
+            $creationDate,
+            $mysqli_object->creator_id,
+            $mysqli_object->education_level,
+            $mysqli_object->school_year,
+            $mysqli_object->specification,
+            $mysqli_object->locked
+        );
     }
 
     /*
