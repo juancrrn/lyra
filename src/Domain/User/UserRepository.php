@@ -249,6 +249,62 @@ class UserRepository implements Repository
         return $result;
     }
 
+    public function search(string $keyword, ?bool $loadModel = false): array
+    {
+        $keyword = '%' . $keyword . '%';
+
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            users        
+        WHERE
+            gov_id LIKE ?
+        OR
+            first_name LIKE ?
+        OR
+            last_name LIKE ?
+        OR
+            email_address LIKE ?
+        OR
+            phone_number LIKE ?
+        LIMIT 8
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param(
+            'sssss',
+            $keyword,
+            $keyword,
+            $keyword,
+            $keyword,
+            $keyword
+        );
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $items = array();
+
+        while ($object = $result->fetch_object()) {
+            $items[] = $object->id;
+        }
+
+        if ($loadModel) {
+            $return = [];
+
+            foreach ($items as $userId) {
+                $return[] = $this->retrieveById($userId);
+            }
+        } else {
+            $return = $items;
+        }
+
+        $stmt->close();
+
+        return $return;
+    }
+
     public function findById(int $id): bool|int
     {
         throw new \Exception('Not implemented');

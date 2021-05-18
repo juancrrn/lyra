@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Common\View\Common;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
 use Juancrrn\Lyra\Common\View\Home\DashboardView;
 use Juancrrn\Lyra\Common\View\ViewModel;
@@ -49,6 +50,10 @@ class HeaderPartView extends ViewModel
 
             if ($user->hasPermission(User::NPG_STUDENT)) {
                 $mainMenuBuffer .= $viewManager->generateMainMenuLink(OverviewView::class);
+            }
+
+            if ($user->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
+                $mainMenuBuffer .= $viewManager->generateMainMenuLink(StudentSearchView::class);
             }
         } else {
             $mainMenuBuffer .= $viewManager->generateMainMenuLink(HomeView::class);

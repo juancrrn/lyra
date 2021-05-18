@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Domain\User;
 
 use DateTime;
 use InvalidArgumentException;
+use JsonSerializable;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\GenericHumanModel;
 
@@ -17,7 +18,7 @@ use Juancrrn\Lyra\Domain\GenericHumanModel;
  * @version 0.0.1
  */
 
-class User
+class User implements JsonSerializable
 {
 
     /**
@@ -234,6 +235,30 @@ class User
             $mysqli_object->status,
             null
         );
+    }
+
+    /*
+     *
+     * JSON
+     * 
+     */
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'govId' => $this->govId,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'birthDate' => $this->birthDate,
+            'emailAddress' => $this->emailAddress,
+            'phoneNumber' => $this->phoneNumber,
+            'representativeId' => $this->representativeId,
+            'registrationDate' => $this->registrationDate,
+            'lastLoginDate' => $this->lastLoginDate,
+            'token' => $this->token,
+            'status' => $this->status
+        ];
     }
 
     /*
