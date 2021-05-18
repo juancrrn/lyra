@@ -55,6 +55,11 @@ class ViewManager
     private $templateElements;
 
     /**
+     * Nombre de la vista que se está mostrando actualmente.
+     */
+    private $currentRenderingView = null;
+
+    /**
      * Constructor.
      * 
      * @param string $viewResourcesPath
@@ -102,6 +107,11 @@ class ViewManager
     public function getCurrentPageId(): string
     {
         return $this->currentPageId;
+    }
+
+    public function getCurrentRenderingView(): null|ViewModel
+    {
+        return $this->currentRenderingView;
     }
 
     /*
@@ -335,6 +345,8 @@ class ViewManager
      */
     public function render(ViewModel $vista): void
     {
+        $this->currentRenderingView = $vista;
+
         $this->setCurrentPage($vista->getName(), $vista->getId());
         
         $this->injectHeader();
