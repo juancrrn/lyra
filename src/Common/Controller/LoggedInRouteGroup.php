@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\Self\ProfileView;
 use Juancrrn\Lyra\Domain\StaticForm\Auth\LogoutForm;
 
 /**
@@ -39,7 +40,7 @@ class LoggedInRouteGroup implements RouteGroupModel
         
         // Perfil propio
         $this->controllerInstance->get('/self/profile/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+            $viewManager->render(new ProfileView);
         });
     }
 }
