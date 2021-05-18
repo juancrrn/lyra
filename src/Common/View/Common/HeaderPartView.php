@@ -4,9 +4,13 @@ namespace Juancrrn\Lyra\Common\View\Common;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
+use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
+use Juancrrn\Lyra\Common\View\Home\DashboardView;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
+use Juancrrn\Lyra\Common\View\Self\ProfileView;
 use Juancrrn\Lyra\Domain\StaticForm\Auth\LogoutForm;
+use Juancrrn\Lyra\Domain\User\User;
 
 /**
  * Clase especial para la parte de la cabecera de página
@@ -37,12 +41,17 @@ class HeaderPartView extends ViewModel
         $mainMenuBuffer = '';
 
         // Generar elementos de navegación del menú lateral.
-        $mainMenuBuffer .= $viewManager->generateMainMenuLink(HomeView::class);
 
         if ($sessionManager->isLoggedIn()) {
             $user = $sessionManager->getLoggedInUser();
 
-            // TODO
+            $mainMenuBuffer .= $viewManager->generateMainMenuLink(DashboardView::class);
+
+            if ($user->hasPermission(User::NPG_STUDENT)) {
+                $mainMenuBuffer .= $viewManager->generateMainMenuLink(OverviewView::class);
+            }
+        } else {
+            $mainMenuBuffer .= $viewManager->generateMainMenuLink(HomeView::class);
         }
 
         // Generar elementos de la navegación del menú de sesión de usuario.
@@ -59,11 +68,13 @@ class HeaderPartView extends ViewModel
             $fullName = $user->getFullName();
 
             $profileUrl = $app->getUrl() . '/self/profile/';
-            
-            // TODO
 
-            $userMenuBuffer .= $viewManager->generateUserMenuItem('<a class="nav-link" href="' . $profileUrl . '">' . $fullName . '</a>');
-            //$userMenuBuffer .= $viewManager->generateUserMenuItem('<span class="badge bg-secondary lyra-user-type-badge">' . $userTypeTitle . '</span>');
+            $profileLinkActive =
+                $viewManager->getCurrentRenderingView() instanceof ProfileView ?
+                'active' : '';
+            $userMenuBuffer .= $viewManager->generateUserMenuItem(
+                '<a class="nav-link ' . $profileLinkActive . '" href="' . $profileUrl . '">' . $fullName . '</a>'
+            );
             $userMenuBuffer .= $viewManager->generateUserMenuItem($logoutForm->getHtml());
         } else {
             $loginUrl = $app->getUrl() . '/auth/login/';

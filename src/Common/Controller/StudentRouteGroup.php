@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
 
 /**
  * Vistas de usuarios con permisos de estudiante (Student) (puede ser receptor
@@ -33,8 +34,8 @@ class StudentRouteGroup implements RouteGroupModel
         $viewManager = App::getSingleton()->getViewManagerInstance();
         
         // Listado de paquetes propios
-        $this->controllerInstance->get('/self/book-lots/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        $this->controllerInstance->get('/bookbank/student/overview/', function () use ($viewManager) {
+            $viewManager->render(new OverviewView);
         });
     }
 }
