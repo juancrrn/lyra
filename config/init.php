@@ -33,8 +33,7 @@ if (LYRA_DEV_MODE) {
  * Configuración de codificación y zona horaria.
  */
 ini_set('default_charset', 'UTF-8');
-setLocale(LC_ALL, 'es_ES.UTF.8');
-setlocale(LC_TIME, 'es_ES');
+setlocale(LC_ALL, "es_ES", 'Spanish_Spain', 'Spanish');
 date_default_timezone_set('Europe/Madrid');
 
 /**
