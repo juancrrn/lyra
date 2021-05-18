@@ -29,8 +29,6 @@ class OverviewView extends ViewModel
     public  const VIEW_ID               = 'bookbank-student-overview';
     public  const VIEW_ROUTE            = '/bookbank/student/overview/';
 
-    private $user;
-
     public function __construct()
     {
         $sessionManager = App::getSingleton()->getSessionManagerInstance();
@@ -39,8 +37,6 @@ class OverviewView extends ViewModel
 
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
-
-        $this->user = $sessionManager->getLoggedInUser();
     }
 
     public function processContent(): void
@@ -217,6 +213,6 @@ class OverviewView extends ViewModel
             'donation-list-human' => $donationListItemsHtml
         );
 
-        $app->getViewManagerInstance()->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
+        $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
     }
 }
