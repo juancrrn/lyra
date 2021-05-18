@@ -2,6 +2,7 @@
 
 namespace Juancrrn\Lyra\Common;
 
+use Juancrrn\Lyra\Common\Api\ApiManager;
 use Juancrrn\Lyra\Common\SessionManager;
 
 use Juancrrn\Lyra\Common\Controller\Controller;
@@ -43,6 +44,12 @@ class App
      *                                              de vistas.
      */
     private $viewManagerInstance;
+
+    /**
+     * @var ApiManager $apiManagerInstance          Instancia actual del gestor
+     *                                              de API.
+     */
+    private $apiManagerInstance;
 
     /**
      * @var \mysqli $dbConn                         Conexión de la instancia a
@@ -168,7 +175,7 @@ class App
         $this->emailSettings = $emailSettings;
 
         // Inicializar gestión de la sesión de usuario.
-        $this->sessionInstance = new SessionManager();
+        $this->sessionInstance = new SessionManager;
         $this->sessionInstance->init();
 
         // Inicializar la gestión del controlador HTTP.
@@ -176,6 +183,9 @@ class App
         
         // Inicializar la gestión de vistas.
         $this->viewManagerInstance = new ViewManager(realpath($root . self::VIEW_RESOURCES_PATH));
+        
+        // Inicializar la gestión de API.
+        $this->apiManagerInstance = new ApiManager;
     }
 
     /**
@@ -224,6 +234,11 @@ class App
     public function getViewManagerInstance(): ViewManager
     {
         return $this->viewManagerInstance;
+    }
+
+    public function getApiManagerInstance(): ApiManager
+    {
+        return $this->apiManagerInstance;
     }
 
     public function getRoot(): string

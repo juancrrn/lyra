@@ -2,6 +2,8 @@
 
 namespace Juancrrn\Lyra\Common;
 
+use JsonSerializable;
+
 /**
  * Funciones auxiliares de HTTP
  * 
@@ -110,29 +112,5 @@ class Http
         } else {
             return false;
         }
-    }
-
-    /**
-     * Genera una respuesta HTTP con datos JSON y un código estado HTTP, y para 
-     * la ejecución del script
-     * 
-     * @param int   $httpCode HTTP status code
-     * @param array $messages Messages to send in the response
-     */
-    public static function apiRespondError(int $httpCode, array $messages): void
-    {
-        $errorData = array(
-            'status' => 'error',
-            'error' => $httpCode,
-            'messages' => $messages
-        );
-
-        http_response_code($httpCode);
-
-        header('Content-Type: application/json; charset=utf-8');
-        
-        echo json_encode($errorData);
-        
-        die();
     }
 }
