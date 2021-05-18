@@ -39,7 +39,7 @@ class BookBankManagerRouteGroup implements RouteGroupModel
          */
         
         // Lista de asignaturas
-        $this->controllerInstance->get('/book-bank/subjects/', function () use ($viewManager) {
+        $this->controllerInstance->get('/bookbank/subjects/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
         
@@ -50,14 +50,14 @@ class BookBankManagerRouteGroup implements RouteGroupModel
          */
         
         // Búsqueda de estudiantes
-        $this->controllerInstance->get('/book-bank/manual/students/', function () use ($viewManager) {
+        $this->controllerInstance->get('/bookbank/manual/students/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
         
         // Listado de paquetes de un estudiante
             // Con formularios AJAX para la edición
             // Y un menú para buscar otro estudiante
-        $this->controllerInstance->get('/book-bank/manual/students/([0-9]+)/', function (int $studentId) use ($viewManager) {
+        $this->controllerInstance->get('/bookbank/manual/students/([0-9]+)/', function (int $studentId) use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
     }

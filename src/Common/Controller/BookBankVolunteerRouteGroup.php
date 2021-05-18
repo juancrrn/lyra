@@ -45,7 +45,7 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
          */
 
         // Búsqueda de usuario
-        $this->controllerInstance->get('/book-bank/check-in/search/', function () use ($viewManager) {
+        $this->controllerInstance->get('/bookbank/check-in/search/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
 
@@ -54,17 +54,17 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
             // Devolución: devolver un paquete de libros
             // Solicitud: solicitar un paquete de libros
             // Recogida: recoger un paquete de libros
-        $this->controllerInstance->get('/book-bank/check-in/([0-9]+)/overview/', function () use ($viewManager) {
+        $this->controllerInstance->get('/bookbank/check-in/([0-9]+)/overview/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
 
         // Finalización de gestiones (POST del formulario)
-        $this->controllerInstance->post('/book-bank/check-in/([0-9]+)/process/', function () use ($viewManager) {
+        $this->controllerInstance->post('/bookbank/check-in/([0-9]+)/process/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
 
         // Finalización de gestiones (vista final de salida, redireccionada tras el POST)
-        $this->controllerInstance->post('/book-bank/check-in/([0-9]+)/done/', function () use ($viewManager) {
+        $this->controllerInstance->post('/bookbank/check-in/([0-9]+)/done/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
         
@@ -75,12 +75,12 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
          */
 
         // Inicio del asistente
-        $this->controllerInstance->post('/book-bank/lot-fill/welcome/', function () use ($viewManager) {
+        $this->controllerInstance->post('/bookbank/lot-fill/welcome/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
 
         // Rellenado de un paquete de libros
-        $this->controllerInstance->post('/book-bank/lot-fill/process/', function () use ($viewManager) {
+        $this->controllerInstance->post('/bookbank/lot-fill/process/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
     }
