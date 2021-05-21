@@ -284,7 +284,7 @@ class UserRepository implements Repository
 
         $result = $stmt->get_result();
 
-        $items = array();
+        $items = [];
 
         while ($object = $result->fetch_object()) {
             $items[] = $object->id;
@@ -305,9 +305,29 @@ class UserRepository implements Repository
         return $return;
     }
 
-    public function findById(int $id): bool|int
+    public function findById(int $testId): bool
     {
-        throw new \Exception('Not implemented');
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            users
+        WHERE
+            id = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $testId);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $return = $result->num_rows == 1;
+
+        $stmt->close();
+
+        return $return;
     }
 
     /**
@@ -478,7 +498,7 @@ class UserRepository implements Repository
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $elements = array();
+        $elements = [];
 
         while ($mysqli_object = $result->fetch_object()) {
             $currentElement = User::constructFromMysqliObject($mysqli_object);
@@ -526,7 +546,7 @@ class UserRepository implements Repository
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $elements = array();
+        $elements = [];
 
         $permissionGroupRepository = new PermissionGroupRepository($this->db);
 

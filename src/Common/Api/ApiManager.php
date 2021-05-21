@@ -26,15 +26,15 @@ class ApiManager
     public static function apiRespond(
         int $httpStatusCode,
         mixed $data,
-        ?array $messages = array()
+        ?array $messages = []
     ): void
     {
         http_response_code($httpStatusCode);
 
-        $responseData = array(
+        $responseData = [
             'data' => $data,
             'messages' => $messages
-        );
+        ];
 
         header('Content-Type: application/json; charset=utf-8');
         

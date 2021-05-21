@@ -7,7 +7,6 @@ use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
-use Locale;
 
 /**
  * Vista de perfil
@@ -21,7 +20,7 @@ use Locale;
 
 class ProfileView extends ViewModel
 {
-    private const VIEW_RESOURCE_FILE    = 'self/view_profile';
+    private const VIEW_RESOURCE_FILE    = 'views/self/view_profile';
     public  const VIEW_NOMBRE           = 'Perfil';
     public  const VIEW_ID               = 'self-profile';
     public  const VIEW_ROUTE            = '/self/profile/';
@@ -58,8 +57,8 @@ class ProfileView extends ViewModel
         $viewManager = $app->getViewManagerInstance();
 
         foreach ($this->user->getPermissionGroups() as $group) {
-            $permissionGroupItemsHtml .= $viewManager->generateViewTemplateRender(
-                'self/view_profile_part_permission_group_item',
+            $permissionGroupItemsHtml .= $viewManager->fillTemplate(
+                'views/self/view_profile_part_permission_group_item',
                 array(
                     'full-name' => $group->getFullName(),
                     'description' => $group->getDescription()

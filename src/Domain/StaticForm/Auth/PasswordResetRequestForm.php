@@ -26,10 +26,10 @@ class PasswordResetRequestForm extends StaticFormModel
 
     public function __construct(string $action)
     {
-        parent::__construct(self::FORM_ID, array('action' => $action));
+        parent::__construct(self::FORM_ID, [ 'action' => $action ]);
     }
     
-    protected function generateFields(array & $preloadedData = array()): string
+    protected function generateFields(array & $preloadedData = []): string
     {
         $govId = '';
 
@@ -37,11 +37,11 @@ class PasswordResetRequestForm extends StaticFormModel
             $govId = isset($preloadedData['gov_id']) ? $preloadedData['gov_id'] : $govId;
         }
 
-        return App::getSingleton()->getViewManagerInstance()->generateViewTemplateRender(
+        return App::getSingleton()->getViewManagerInstance()->fillTemplate(
             'forms/auth/inputs_password_reset_request_form',
-            array(
+            [
                 'gov_id' => $govId
-            )
+            ]
         );
     }
     

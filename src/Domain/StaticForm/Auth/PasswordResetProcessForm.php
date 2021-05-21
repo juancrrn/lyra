@@ -29,23 +29,23 @@ class PasswordResetProcessForm extends StaticFormModel
 
     public function __construct(string $action, string $token)
     {
-        parent::__construct(self::FORM_ID, array('action' => $action));
+        parent::__construct(self::FORM_ID, [ 'action' => $action ]);
 
         $this->token = $token;
     }
     
-    protected function generateFields(array & $preloadedData = array()): string
+    protected function generateFields(array & $preloadedData = []): string
     {
         $token = $preloadedData['token'];
 
         $app = App::getSingleton();
 
-        return $app->getViewManagerInstance()->generateViewTemplateRender(
+        return $app->getViewManagerInstance()->fillTemplate(
             'forms/auth/inputs_password_reset_process_form',
-            array(
+            [
                 'token' => $token,
                 'app-name' => $app->getName()
-            )
+            ]
         );
     }
     

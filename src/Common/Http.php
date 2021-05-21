@@ -50,13 +50,22 @@ class Http
      */
     public const METHOD_PATCH = 'PATCH';
 
-    public const METHODS = array(
+    public const METHODS = [
         self::METHOD_GET,
         self::METHOD_POST,
         self::METHOD_PUT,
         self::METHOD_DELETE,
         self::METHOD_PATCH
-    );
+    ];
+
+    /**
+     * Redirecciona a una URL y detiene la ejecución del script.
+     */
+    public static function redirect(string $url): void
+    {
+        header('Location: ' . $url);
+        die();
+    }
 
     /**
      * Devuelve el método de petición HTTP.

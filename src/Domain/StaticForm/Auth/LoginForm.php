@@ -36,7 +36,7 @@ class LoginForm extends StaticFormModel
             $govId = isset($preloadedData['gov_id']) ? $preloadedData['gov_id'] : $govId;
         }
 
-        return App::getSingleton()->getViewManagerInstance()->generateViewTemplateRender(
+        return App::getSingleton()->getViewManagerInstance()->fillTemplate(
             'forms/auth/inputs_login_form',
             array(
                 'gov_id' => $govId

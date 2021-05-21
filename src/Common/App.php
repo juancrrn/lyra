@@ -95,7 +95,7 @@ class App
     /**
      * Ruta relativa del directorio de plantillas HTML de las vistas.
      */
-    private const VIEW_RESOURCES_PATH = 'resources/views';
+    private const VIEW_RESOURCES_PATH = 'resources';
     
     /**
      * Constructor. Al ser privado, asegura que solo habrá una única instancia

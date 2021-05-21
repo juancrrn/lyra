@@ -103,7 +103,7 @@ class Controller
      */
     public function processRequest(string $route, callable $handler): void
     {
-        $matches = array();
+        $matches = [];
 
         if (Http::matchesRequestUri($this->pathBase, $route, $matches)) {
             echo call_user_func_array($handler, $matches);

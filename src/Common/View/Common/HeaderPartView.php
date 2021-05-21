@@ -26,7 +26,7 @@ use Juancrrn\Lyra\Domain\User\User;
 class HeaderPartView extends ViewModel
 {
 
-    private const VIEW_RESOURCE_FILE = 'common/view_part_header';
+    private const VIEW_RESOURCE_FILE = 'views/common/view_part_header';
 
     public function __construct()
     {

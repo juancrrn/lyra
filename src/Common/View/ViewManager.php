@@ -68,7 +68,7 @@ class ViewManager
     {
         $this->viewResourcesPath = $viewResourcesPath;
 
-        $this->templateElements = array();
+        $this->templateElements = [];
     }
 
     /*
@@ -151,10 +151,10 @@ class ViewManager
      */
     public function addErrorMessage(string $mensaje, string $header_location = null): void
     {
-        $_SESSION[self::SESSION_MESSAGES][] = array(
+        $_SESSION[self::SESSION_MESSAGES][] = [
             "tipo" => "error",
             "contenido" => $mensaje
-        );
+        ];
 
         if ($header_location !== null) {
             header("Location: " . App::getSingleton()->getUrl() . $header_location);
@@ -171,10 +171,10 @@ class ViewManager
      */
     public function addSuccessMessage(string $mensaje, string $header_location = null): void
     {
-        $_SESSION[self::SESSION_MESSAGES][] = array(
+        $_SESSION[self::SESSION_MESSAGES][] = [
             "tipo" => "exito",
             "contenido" => $mensaje
-        );
+        ];
 
         if ($header_location !== null) {
             header("Location: " . App::getSingleton()->getUrl() . $header_location);
@@ -211,14 +211,14 @@ class ViewManager
     {
         $app = App::getSingleton();
 
-        return $this->generateViewTemplateRender(
+        return $this->fillTemplate(
             self::TEMPLATE_ELEMENT_SUBDIRECTORY . DIRECTORY_SEPARATOR . 'template_toast',
-            array(
+            [
                 'autohide'  => $app->isDevMode() ? 'false' : 'true',
                 'type'      => $tipo,
                 'app-name'  => $app->getName(),
                 'content'   => $contenido
-            )
+            ]
         );
     }
 
@@ -250,12 +250,12 @@ class ViewManager
         $this->addTemplateElement(
             'toast',
             'template_toast',
-            array(
+            [
                 'autohide'  => '',
                 'type'      => '',
                 'app-name'  => '',
                 'content'   => ''
-            )
+            ]
         );
 
         $this->printToasts();
@@ -277,11 +277,11 @@ class ViewManager
 		array $filling
     ): void
     {
-        $this->templateElements[] = array(
+        $this->templateElements[] = [
             'html_id' => $htmlId,
             'file_name' => $fileName,
             'filling' => $filling
-        );
+        ];
     }
 
     /**
@@ -306,7 +306,7 @@ class ViewManager
 		array $filling
     ): string
     {
-        $filledTemplate = $this->generateViewTemplateRender(
+        $filledTemplate = $this->fillTemplate(
             self::TEMPLATE_ELEMENT_SUBDIRECTORY . DIRECTORY_SEPARATOR . $fileName,
             $filling
         );
@@ -336,7 +336,7 @@ class ViewManager
 
     /*
      * 
-     * Renderizado de la vista
+     * Renderizado de vistas
      * 
      */
 
@@ -371,22 +371,6 @@ class ViewManager
 
         //die(); // TODO No necesario
     }
-
-    /**
-     * Imprime una plantilla rellenada.
-     * 
-     * Ver ViewManager::generateTemplateRender().
-     */
-    public function renderTemplate(
-		string $fileName,
-		array $filling
-	): void
-	{
-        echo $this->generateViewTemplateRender(
-            $fileName,
-            $filling
-        );
-	}
 
     /*
      * 
@@ -456,7 +440,7 @@ class ViewManager
 
     /*
      *
-     * Auxiliares
+     * Plantillas
      * 
      */
 
@@ -466,15 +450,31 @@ class ViewManager
      * 
      * @return string
      */
-    public function generateViewTemplateRender(
+    public function fillTemplate(
 		string $fileName,
 		array $filling
     ): string
     {
-        return TemplateUtils::generateTemplateRender(
+        return TemplateUtils::fillTemplate(
             $fileName,
             $filling,
             $this->viewResourcesPath
         );
     }
+
+    /**
+     * Imprime una plantilla rellenada.
+     * 
+     * Ver ViewManager::fillTemplate().
+     */
+    public function renderTemplate(
+		string $fileName,
+		array $filling
+	): void
+	{
+        echo $this->fillTemplate(
+            $fileName,
+            $filling
+        );
+	}
 }

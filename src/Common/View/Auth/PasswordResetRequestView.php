@@ -43,10 +43,10 @@ class PasswordResetRequestView extends ViewModel
     {
         $app = App::getSingleton();
 
-        $filling = array(
+        $filling = [
             'form-html' => $this->form->getHtml(),
             'login-url' => $app->getUrl() . '/auth/login/'
-        );
+        ];
 
         $app->getViewManagerInstance()->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
     }

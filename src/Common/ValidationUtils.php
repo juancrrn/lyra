@@ -131,7 +131,7 @@ class ValidationUtils
 		$testString = strtoupper($testString);
 		
 		if (preg_match('/(^[XYZ]{1}[0-9]{7}[A-Z]{1}$)/', $testString)) {
-			if ($testString[8] == substr(self::NIF_NIE_DIGITS, substr(str_replace(array('X', 'Y', 'Z'), array('0', '1', '2'), $testString), 0, 8) % 23, 1)) {
+			if ($testString[8] == substr(self::NIF_NIE_DIGITS, substr(str_replace(['X', 'Y', 'Z'], ['0', '1', '2'], $testString), 0, 8) % 23, 1)) {
 				return true;
 			}
 		}

@@ -11,6 +11,7 @@ use Juancrrn\Lyra\Domain\BookBank\Lot\LotRepository;
 use Juancrrn\Lyra\Domain\BookBank\Request\Request;
 use Juancrrn\Lyra\Domain\BookBank\Request\RequestRepository;
 use Juancrrn\Lyra\Domain\DomainUtils;
+use Juancrrn\Lyra\Domain\User\User;
 
 /**
  * Vista de resumen de banco de libros de un estudiante
@@ -24,7 +25,7 @@ use Juancrrn\Lyra\Domain\DomainUtils;
 
 class OverviewView extends ViewModel
 {
-    private const VIEW_RESOURCE_FILE    = 'bookbank/student/view_overview';
+    private const VIEW_RESOURCE_FILE    = 'views/bookbank/student/view_overview';
     public  const VIEW_NAME             = 'Mi banco de libros';
     public  const VIEW_ID               = 'bookbank-student-overview';
     public  const VIEW_ROUTE            = '/bookbank/student/overview/';
@@ -33,7 +34,7 @@ class OverviewView extends ViewModel
     {
         $sessionManager = App::getSingleton()->getSessionManagerInstance();
 
-        $sessionManager->requireLoggedIn();
+        $sessionManager->requirePermissionGroups([ User::NPG_STUDENT ]);
 
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
@@ -55,8 +56,8 @@ class OverviewView extends ViewModel
         $requestLotListItemsHtml = '';
 
         if (empty($requestIds)) {
-            $requestLotListItemsHtml .= $viewManager->generateViewTemplateRender(
-                'bookbank/student/view_overview_part_empty',
+            $requestLotListItemsHtml .= $viewManager->fillTemplate(
+                'views/bookbank/student/view_overview_part_empty',
                 []
             );
         } else {
@@ -83,16 +84,16 @@ class OverviewView extends ViewModel
                         $bookName = $subject->getBookName() ??
                             'Sin libro o libro no definido';
                             
-                        $lotContentListHuman .= $viewManager->generateViewTemplateRender(
-                            'bookbank/student/view_overview_part_subject_sub_item',
-                            array(
+                        $lotContentListHuman .= $viewManager->fillTemplate(
+                            'views/bookbank/student/view_overview_part_subject_sub_item',
+                            [
                                 'item-book-image-url' => $bookImageUrl,
                                 'item-title-human' =>
                                     $subject->getName() . ' de ' .
                                     DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
                                 'item-book-isbn' => $subject->getBookIsbn(),
                                 'item-book-name' => $bookName
-                            )
+                            ]
                         );
                     }
 
@@ -104,9 +105,9 @@ class OverviewView extends ViewModel
                         $lotBadge = '';
                     }
 
-                    $requestLotListItemsHtml .= $viewManager->generateViewTemplateRender(
-                        'bookbank/student/view_overview_part_request_with_lot_item',
-                        array(
+                    $requestLotListItemsHtml .= $viewManager->fillTemplate(
+                        'views/bookbank/student/view_overview_part_request_with_lot_item',
+                        [
                             'item-heading-id' => 'item-header-request-' . $requestId,
                             'item-body-id' => 'item-body-request-' . $requestId,
                             'item-id' => $requestId,
@@ -127,14 +128,14 @@ class OverviewView extends ViewModel
                                 $lot->getCreationDate()->getTimestamp()
                             ),
                             'item-lot-content-list-human' => $lotContentListHuman
-                        )
+                        ]
                     );
 
                     /* Fin proceso paquete asociado */
                 } else {
-                    $requestLotListItemsHtml .= $viewManager->generateViewTemplateRender(
-                        'bookbank/student/view_overview_part_request_item',
-                        array(
+                    $requestLotListItemsHtml .= $viewManager->fillTemplate(
+                        'views/bookbank/student/view_overview_part_request_item',
+                        [
                             'item-heading-id' => 'item-header-request-' . $requestId,
                             'item-body-id' => 'item-body-request-' . $requestId,
                             'item-id' => $requestId,
@@ -146,7 +147,7 @@ class OverviewView extends ViewModel
                                 $request->getCreationDate()->getTimestamp()
                             ),
                             'item-specification' => $specification
-                        )
+                        ]
                     );
                 }
             }
@@ -160,8 +161,8 @@ class OverviewView extends ViewModel
         $donationListItemsHtml = '';
 
         if (empty($donationIds)) {
-            $donationListItemsHtml .= $viewManager->generateViewTemplateRender(
-                'bookbank/student/view_overview_part_empty',
+            $donationListItemsHtml .= $viewManager->fillTemplate(
+                'views/bookbank/student/view_overview_part_empty',
                 []
             );
         } else {
@@ -177,41 +178,41 @@ class OverviewView extends ViewModel
                     $bookName = $subject->getBookName() ??
                         'Sin libro o libro no definido';
                         
-                    $donationContentListHuman .= $viewManager->generateViewTemplateRender(
-                        'bookbank/student/view_overview_part_subject_sub_item',
-                        array(
+                    $donationContentListHuman .= $viewManager->fillTemplate(
+                        'views/bookbank/student/view_overview_part_subject_sub_item',
+                        [
                             'item-book-image-url' => $bookImageUrl,
                             'item-title-human' =>
                                 $subject->getName() . ' de ' .
                                 DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
                             'item-book-isbn' => $subject->getBookIsbn(),
                             'item-book-name' => $bookName
-                        )
+                        ]
                     );
                 }
 
-                $donationListItemsHtml .= $viewManager->generateViewTemplateRender(
-                    'bookbank/student/view_overview_part_donation_item',
-                    array(
+                $donationListItemsHtml .= $viewManager->fillTemplate(
+                    'views/bookbank/student/view_overview_part_donation_item',
+                    [
                         'item-heading-id' => 'item-header-donation-' . $donationId,
                         'item-body-id' => 'item-body-donation-' . $donationId,
                         'item-id' => $donationId,
                         'item-title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
                         'item-creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
                         'item-content-list-human' => $donationContentListHuman
-                    )
+                    ]
                 );
             }
         }
 
-        $filling = array(
+        $filling = [
             'app-name' => $app->getName(),
             'view-name' => $this->getName(),
             'request-count' => $requestIdsCount,
             'request-lot-list-human' => $requestLotListItemsHtml,
             'donation-count' => $donationIdsCount,
             'donation-list-human' => $donationListItemsHtml
-        );
+        ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
     }

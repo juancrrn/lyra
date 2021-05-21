@@ -36,11 +36,11 @@ class User implements JsonSerializable
     private const STATUS_RESET_TITLE = 'Usuario en restablecimiento de contraseña';
     private const STATUS_RESET_DESC = 'El usuario ha solicitado un restablecimiento de contraseña y debe procesarlo a través de un enlace en un mensaje de correo electrónico recibido.';
 
-    public const STATUSES = array(
+    public const STATUSES = [
         self::STATUS_INACTIVE,
         self::STATUS_ACTIVE,
         self::STATUS_RESET
-    );
+    ];
 
     /**
      * Nombres cortos de grupos de permisos nativos (native permission group,

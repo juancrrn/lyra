@@ -146,7 +146,7 @@ class EmailUtils
 		array $filling
 	): string
 	{
-		return TemplateUtils::generateTemplateRender(
+		return TemplateUtils::fillTemplate(
 			$fileName,
 			$filling,
 			realpath(App::getSingleton()->getRoot() . self::EMAIL_RESOURCES_PATH)

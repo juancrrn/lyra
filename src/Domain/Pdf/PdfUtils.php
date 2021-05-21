@@ -126,7 +126,7 @@ class PdfUtils
 		array $filling
 	): string
 	{
-		return TemplateUtils::generateTemplateRender(
+		return TemplateUtils::fillTemplate(
 			$fileName,
 			$filling,
 			realpath(App::getSingleton()->getRoot() . self::PDF_RESOURCES_PATH)

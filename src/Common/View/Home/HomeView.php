@@ -18,7 +18,7 @@ use Juancrrn\Lyra\Common\View\ViewModel;
 class HomeView extends ViewModel
 {
 
-    private const VIEW_RESOURCE_FILE    = 'home/view_home';
+    private const VIEW_RESOURCE_FILE    = 'views/home/view_home';
     public  const VIEW_NAME             = 'Inicio';
     public  const VIEW_ID               = 'home';
     public  const VIEW_ROUTE            = '/?';

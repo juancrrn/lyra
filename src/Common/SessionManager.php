@@ -107,7 +107,7 @@ class SessionManager
                 //Vista::encolaMensajeError('Necesitas haber iniciado sesión para acceder a este contenido.', '/sesion/iniciar/');
             } else {
                 ddl(null, null);
-                //HTTP::apiRespondError(401, array('No autenticado.')); // HTTP 401 Unauthorized (unauthenticated).
+                //HTTP::apiRespondError(401, ['No autenticado.']); // HTTP 401 Unauthorized (unauthenticated).
             }
         }
     }
@@ -129,7 +129,7 @@ class SessionManager
                 $viewManager->addErrorMessage('No puedes acceder a esta página habiendo iniciado sesión.', '');
             } else {
                 ddl(null, null);
-                //HTTP::apiRespondError(409, array('No debería estar autenticado.')); // HTTP 409 Conflict.
+                //HTTP::apiRespondError(409, ['No debería estar autenticado.']); // HTTP 409 Conflict.
             }
         }
     }
@@ -149,23 +149,21 @@ class SessionManager
     {
         $this->requireLoggedIn($api);
 
-        $missingPermissionGroups = array();
+        $missingPermissionGroups = [];
 
-        foreach ($testPermissionGroups as $testPermissionGroup) {
-            if (in_array($testPermissionGroup, $this->getLoggedInUser()->getPermissionGroups()) == $negate) {
+        foreach ($testPermissionGroups as $testPermissionGroup)
+            if (! $this->getLoggedInUser()->hasPermission($testPermissionGroup))
                 $missingPermissionGroups[] = $testPermissionGroup;
-            }
-        }
 
         if (! empty($missingPermissionGroups)) {
             $app = App::getSingleton();
 
             if (! $api) {
-                App::getSingleton()
-                    ->getViewManagerInstance()
+                $app->getViewManagerInstance()
                     ->addErrorMessage('No tienes permiso para acceder a este contenido.', '');
             } else {
-                Http::apiRespondError(403, array('No autorizado.'));
+                $app->getApiManagerInstance()
+                    ->apiRespond(403, ['No autorizado.']);
             }
         }
     }

@@ -7,6 +7,7 @@ use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 
 /**
@@ -60,16 +61,21 @@ class BookBankManagerRouteGroup implements RouteGroupModel
             $viewManager->render(new StudentSearchView);
         });
         
-        // Búsqueda de estudiantes (POST del campo de búsqueda)
-        $this->controllerInstance->post('/bookbank/manage/students/search/', function () use ($apiManager) {
-            $apiManager->call(new StudentSearchApi);
+        // Búsqueda de estudiantes (POST del formulario)
+        $this->controllerInstance->post('/bookbank/manage/students/', function () use ($viewManager) {
+            $viewManager->render(new StudentSearchView);
         });
+        
+        // Búsqueda de estudiantes (POST del campo de búsqueda AJAX)
+        //$this->controllerInstance->post('/bookbank/manage/students/search/', function () use ($apiManager) {
+        //    $apiManager->call(new StudentSearchApi);
+        //});
         
         // Listado de paquetes de un estudiante
             // Con formularios AJAX para la edición
             // Y un menú para buscar otro estudiante
         $this->controllerInstance->get('/bookbank/manage/students/([0-9]+)/overview/', function (int $studentId) use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+            $viewManager->render(new StudentOverviewView($studentId));
         });
     }
 }

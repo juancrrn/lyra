@@ -18,7 +18,7 @@ use Juancrrn\Lyra\Common\View\ViewModel;
 class FooterPartView extends ViewModel
 {
 
-    private const VIEW_RESOURCE_FILE = 'common/view_part_footer';
+    private const VIEW_RESOURCE_FILE = 'views/common/view_part_footer';
 
     public function __construct()
     {

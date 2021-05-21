@@ -78,12 +78,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $app = Juancrrn\Lyra\Common\App::getSingleton();
 
 $app->init(
-    array(
+    [
         'host' => LYRA_DB_HOST,
         'user' => LYRA_DB_USER,
         'password' => LYRA_DB_PASSWORD,
         'name' => LYRA_DB_NAME
-    ),
+    ],
 
     LYRA_ROOT,
     LYRA_URL,
@@ -94,7 +94,7 @@ $app->init(
 
     LYRA_DEV_MODE,
 
-    array(
+    [
         'enable'            => LYRA_EMAIL_ENABLE,
         'smtp_host'         => LYRA_EMAIL_SMTP_HOST,
         'smtp_port'         => LYRA_EMAIL_SMTP_PORT,
@@ -106,5 +106,5 @@ $app->init(
         'dkim_selector'     => LYRA_EMAIL_DKIM_SELECTOR,
         'dkim_private_key'  => LYRA_EMAIL_DKIM_PRIVATE_KEY,
         'dkim_private_key_passphrase' => LYRA_EMAIL_DKIM_PRIVATE_KEY_PASSPHRASE
-    )
+    ]
 );

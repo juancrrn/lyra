@@ -27,7 +27,7 @@ class TemplateUtils
      *                          Solo pueden darse valores de tipo cadena de
      *                          texto.
      */
-    public static function generateTemplateRender(
+    public static function fillTemplate(
 		string $fileName,
 		array $filling,
         string $resourcesPath
