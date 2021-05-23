@@ -43,9 +43,6 @@ class StudentOverviewView extends ViewModel
 
         $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_MANAGER ]);
 
-        $this->name = self::VIEW_NAME;
-        $this->id = self::VIEW_ID;
-
         $userRepository = new UserRepository($app->getDbConn());
 
         if (! $userRepository->findById($studentId)) {
@@ -57,6 +54,9 @@ class StudentOverviewView extends ViewModel
         if (! $this->student->hasPermission(User::NPG_STUDENT)) {
             $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
         }
+
+        $this->name = self::VIEW_NAME;
+        $this->id = self::VIEW_ID;
     }
 
     public function processContent(): void
@@ -152,7 +152,8 @@ class StudentOverviewView extends ViewModel
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $lot->getCreationDate()->getTimestamp()
                             ),
-                            'item-lot-content-list-human' => $lotContentListHuman
+                            'item-lot-content-list-human' => $lotContentListHuman,
+                            'item-edit-url' => $app->getUrl() . RequestEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'
                         ]
                     );
 
@@ -171,7 +172,8 @@ class StudentOverviewView extends ViewModel
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $request->getCreationDate()->getTimestamp()
                             ),
-                            'item-specification' => $specification
+                            'item-specification' => $specification,
+                            'item-edit-url' => $app->getUrl() . RequestEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'
                         ]
                     );
                 }
@@ -230,7 +232,8 @@ class StudentOverviewView extends ViewModel
                         'item-id' => $donationId,
                         'item-title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
                         'item-creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
-                        'item-content-list-human' => $donationContentListHuman
+                        'item-content-list-human' => $donationContentListHuman,
+                        'item-edit-url' => $app->getUrl() . DonationEditView::VIEW_ROUTE_BASE . $donationId . '/edit/'
                     ]
                 );
             }

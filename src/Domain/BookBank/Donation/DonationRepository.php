@@ -94,9 +94,29 @@ class DonationRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    public function findById(int $id): bool|int
+    public function findById(int $testId): bool
     {
-        throw new \Exception('Not implemented');
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            book_donations
+        WHERE
+            id = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $testId);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $return = $result->num_rows == 1;
+
+        $stmt->close();
+
+        return $return;
     }
 
     public function retrieveById(int $id, ?bool $loadContents = false): Donation

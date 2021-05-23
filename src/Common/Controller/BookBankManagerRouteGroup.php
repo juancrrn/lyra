@@ -7,6 +7,8 @@ use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationEditView;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 
@@ -57,25 +59,28 @@ class BookBankManagerRouteGroup implements RouteGroupModel
          */
         
         // Búsqueda de estudiantes
-        $this->controllerInstance->get('/bookbank/manage/students/', function () use ($viewManager) {
+        $this->controllerInstance->get(StudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new StudentSearchView);
         });
         
         // Búsqueda de estudiantes (POST del formulario)
-        $this->controllerInstance->post('/bookbank/manage/students/', function () use ($viewManager) {
+        $this->controllerInstance->post(StudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new StudentSearchView);
         });
         
-        // Búsqueda de estudiantes (POST del campo de búsqueda AJAX)
-        //$this->controllerInstance->post('/bookbank/manage/students/search/', function () use ($apiManager) {
-        //    $apiManager->call(new StudentSearchApi);
-        //});
-        
         // Listado de paquetes de un estudiante
-            // Con formularios AJAX para la edición
-            // Y un menú para buscar otro estudiante
-        $this->controllerInstance->get('/bookbank/manage/students/([0-9]+)/overview/', function (int $studentId) use ($viewManager) {
-            $viewManager->render(new StudentOverviewView($studentId));
+        $this->controllerInstance->get(StudentOverviewView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
+            $viewManager->render(new StudentOverviewView($itemId));
+        });
+        
+        // Edición de una donación
+        $this->controllerInstance->get(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
+            $viewManager->render(new DonationEditView($itemId));
+        });
+        
+        // Edición de una solicitud (con o sin paquete)
+        $this->controllerInstance->get(RequestEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
+            $viewManager->render(new RequestEditView($itemId));
         });
     }
 }
