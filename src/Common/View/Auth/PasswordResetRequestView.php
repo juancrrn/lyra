@@ -19,7 +19,7 @@ use Juancrrn\Lyra\Domain\StaticForm\Auth\PasswordResetRequestForm;
 
 class PasswordResetRequestView extends ViewModel
 {
-    private const VIEW_RESOURCE_FILE    = 'auth/view_password_reset_request';
+    private const VIEW_RESOURCE_FILE    = 'views/auth/view_password_reset_request';
     public  const VIEW_NOMBRE           = 'Solicitar restablecimiento de contraseña';
     public  const VIEW_ID               = 'auth-password-reset-request';
     public  const VIEW_ROUTE            = '/auth/reset/request/';

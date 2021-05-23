@@ -1,1 +1,39 @@
-hello
+<div class="container">
+    
+    <div class="row mb-2">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <a class="d-block mb-3" href="#back-to-search-url#">
+                <i class="material-icons d-inline-block align-middle me-2">arrow_back</i><span class="d-inline-block align-middle">Gestionar otro estudiante</span>
+            </a>
+            <h2 class="mb-4">#view-name#</h2>
+            <p class="mb-3">A continuación se muestran los movimientos del estudiante seleccionado.</p>
+            #student-card-html#
+            <p class="mb-3 text-muted">No olvides guardar los cambios antes de salir de la página.</p>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-1"></div>
+        <div class="col-xl-5">
+            <h4 class="text-secondary mb-3">
+                <span class="material-icons d-inline-block align-middle me-2">favorite</span>
+                <span class="d-inline-block align-middle">Donaciones (#donation-count#)</span>
+            </h4>
+            <div class="accordion mb-4" id="bookbank-student-overview-donations-accordion">
+                #donation-list-human#
+            </div>
+        </div>
+        <div class="col-xl-5">
+            <h4 class="text-secondary mb-3">
+                <span class="material-icons d-inline-block align-middle me-2">book</span>
+                <span class="d-inline-block align-middle">Solicitudes y paquetes (#request-count#)</span>
+            </h4>
+            <div class="accordion mb-4" id="bookbank-student-overview-requests-lots-accordion">
+                #request-lot-list-human#
+            </div>
+        </div>
+        <div class="col-xl-1"></div>
+    </div>
+</div>

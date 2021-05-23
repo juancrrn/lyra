@@ -1,0 +1,36 @@
+<div class="accordion mb-3" id="student-profile-card-#accordion-id#">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="student-profile-card-item-header-#user-id#">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#student-profile-card-item-target-#user-id#" aria-expanded="false" aria-controls="student-profile-card-item-target-#user-id#">
+                <div class="container p-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-2">
+                            <img class="rounded-circle d-block mb-3 mb-md-0" style="max-width: 50px;" src="#user-profile-picture#" alt="">
+                        </div>
+                        <div class="col">
+                            <p><strong>#user-full-name#</strong></p>
+                            <p>#user-gov-id#</p>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </h2>
+        <div id="student-profile-card-item-target-#user-id#" class="accordion-collapse collapse" aria-labelledby="student-profile-card-item-header-#user-id#" data-bs-parent="#student-profile-card-#accordion-id#">
+            <div class="accordion-body">
+                <p class="mb-3"><strong>
+                    <span class="material-icons d-inline-block align-middle me-2">info</span>
+                    <span class="d-inline-block align-middle">Datos personales</span>
+                </strong></p>
+                <p class="mb-2">Dirección de correo electrónico: <span class="text-muted">#user-email-address#</span></p>
+                <p class="mb-3">Número de teléfono: <span class="text-muted">#user-phone-number#</span></p>
+
+                <p class="mb-3"><strong>
+                    <span class="material-icons d-inline-block align-middle me-2">how_to_reg</span>
+                    <span class="d-inline-block align-middle">Registro en Lyra</span>
+                </strong></p>
+                <p class="mb-2">Representante legal: <span class="text-muted">#user-representative-name-human#</span></p>
+                <p>Estado: <span class="text-muted">#user-status-human#</span></p>
+            </div>
+        </div>
+    </div>
+</div>

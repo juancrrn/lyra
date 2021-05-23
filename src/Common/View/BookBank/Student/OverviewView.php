@@ -57,7 +57,7 @@ class OverviewView extends ViewModel
 
         if (empty($requestIds)) {
             $requestLotListItemsHtml .= $viewManager->fillTemplate(
-                'views/bookbank/student/view_overview_part_empty',
+                'views/bookbank/common/part_card_empty',
                 []
             );
         } else {
@@ -77,24 +77,30 @@ class OverviewView extends ViewModel
 
                     $lotContentListHuman = '';
 
-                    foreach ($lot->getContents() as $subject) {
-                        $bookImageUrl = $subject->getBookImageUrl() ??
-                            $app->getUrl() . '/img/graphic-default-book-image.svg';
-
-                        $bookName = $subject->getBookName() ??
-                            'Sin libro o libro no definido';
-                            
-                        $lotContentListHuman .= $viewManager->fillTemplate(
-                            'views/bookbank/student/view_overview_part_subject_sub_item',
-                            [
-                                'item-book-image-url' => $bookImageUrl,
-                                'item-title-human' =>
-                                    $subject->getName() . ' de ' .
-                                    DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                                'item-book-isbn' => $subject->getBookIsbn(),
-                                'item-book-name' => $bookName
-                            ]
+                    if (empty($lot->getContents())) {
+                        $lotContentListHuman = $viewManager->fillTemplate(
+                            'views/bookbank/common/part_subject_list_empty', []
                         );
+                    } else {
+                        foreach ($lot->getContents() as $subject) {
+                            $bookImageUrl = $subject->getBookImageUrl() ??
+                                $app->getUrl() . '/img/graphic-default-book-image.svg';
+
+                            $bookName = $subject->getBookName() ??
+                                'Sin libro o libro no definido';
+                                
+                            $lotContentListHuman .= $viewManager->fillTemplate(
+                                'views/bookbank/common/part_subject_list_item',
+                                [
+                                    'item-book-image-url' => $bookImageUrl,
+                                    'item-title-human' =>
+                                        $subject->getName() . ' de ' .
+                                        DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
+                                    'item-book-isbn' => $subject->getBookIsbn(),
+                                    'item-book-name' => $bookName
+                                ]
+                            );
+                        }
                     }
 
                     if ($lot->getStatus() == Lot::STATUS_READY) {
@@ -162,7 +168,7 @@ class OverviewView extends ViewModel
 
         if (empty($donationIds)) {
             $donationListItemsHtml .= $viewManager->fillTemplate(
-                'views/bookbank/student/view_overview_part_empty',
+                'views/bookbank/common/part_card_empty',
                 []
             );
         } else {
@@ -171,24 +177,30 @@ class OverviewView extends ViewModel
 
                 $donationContentListHuman = '';
 
-                foreach ($donation->getContents() as $subject) {
-                    $bookImageUrl = $subject->getBookImageUrl() ??
-                        $app->getUrl() . '/img/graphic-default-book-image.svg';
-
-                    $bookName = $subject->getBookName() ??
-                        'Sin libro o libro no definido';
-                        
-                    $donationContentListHuman .= $viewManager->fillTemplate(
-                        'views/bookbank/student/view_overview_part_subject_sub_item',
-                        [
-                            'item-book-image-url' => $bookImageUrl,
-                            'item-title-human' =>
-                                $subject->getName() . ' de ' .
-                                DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                            'item-book-isbn' => $subject->getBookIsbn(),
-                            'item-book-name' => $bookName
-                        ]
+                if (empty($donation->getContents())) {
+                    $donationContentListHuman = $viewManager->fillTemplate(
+                        'views/bookbank/common/part_subject_list_empty', []
                     );
+                } else {
+                    foreach ($donation->getContents() as $subject) {
+                        $bookImageUrl = $subject->getBookImageUrl() ??
+                            $app->getUrl() . '/img/graphic-default-book-image.svg';
+
+                        $bookName = $subject->getBookName() ??
+                            'Sin libro o libro no definido';
+                            
+                        $donationContentListHuman .= $viewManager->fillTemplate(
+                            'views/bookbank/common/part_subject_list_item',
+                            [
+                                'item-book-image-url' => $bookImageUrl,
+                                'item-title-human' =>
+                                    $subject->getName() . ' de ' .
+                                    DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
+                                'item-book-isbn' => $subject->getBookIsbn(),
+                                'item-book-name' => $bookName
+                            ]
+                        );
+                    }
                 }
 
                 $donationListItemsHtml .= $viewManager->fillTemplate(

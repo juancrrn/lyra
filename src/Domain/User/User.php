@@ -320,8 +320,16 @@ class User implements JsonSerializable
         return $this->id;
     }
 
-    public function getGovId(): null|string
+    public function getGovId(?bool $escaped = false): null|string
     {
+        if ($escaped) {
+            if ($this->govId) {
+                return mb_strtoupper($this->govId);
+            } else {
+                return '(No especificado)';
+            }
+        }
+        
         return $this->govId;
     }
 

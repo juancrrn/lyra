@@ -25,7 +25,7 @@ class Lot
      */
     public const STATUS_INITIAL     = 'book_lot_status_initial';
     private const STATUS_INITIAL_TITLE = 'Paquete en estado inicial';
-    private const STATUS_INITIAL_DESC = 'El paquete ha sido creado pero aún no ha sido completado.';
+    private const STATUS_INITIAL_DESC = 'El paquete ha sido creado pero aún no está listo para recoger.';
 
     public const STATUS_READY       = 'book_lot_status_ready';
     private const STATUS_READY_TITLE = 'Paquete preparado';

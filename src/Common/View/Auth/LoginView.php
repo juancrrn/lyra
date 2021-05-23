@@ -18,7 +18,7 @@ use Juancrrn\Lyra\Domain\StaticForm\Auth\LoginForm;
 
 class LoginView extends ViewModel
 {
-    private const VIEW_RESOURCE_FILE    = 'auth/view_login';
+    private const VIEW_RESOURCE_FILE    = 'views/auth/view_login';
     public  const VIEW_NOMBRE           = 'Iniciar sesión';
     public  const VIEW_ID               = 'auth-login';
     public  const VIEW_ROUTE            = '/auth/login/';

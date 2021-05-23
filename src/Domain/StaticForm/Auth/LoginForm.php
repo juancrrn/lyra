@@ -56,7 +56,8 @@ class LoginForm extends StaticFormModel
         if (empty($govId)) {
             $view->addErrorMessage('El NIF o NIE no puede estar vacío.');
         } elseif (! $userRepository->findByGovId($govId)) {
-            $view->addErrorMessage('El NIF o NIE y la contraseña introducidos no coinciden.');
+            $view->addErrorMessage('El NIF o NIE introducido no existe.');
+            $view->addErrorMessage('Aunque las solicitudes están a nombre de los estudiantes, los representantes legales pueden gestionarlas en su nombre. Prueba a utilizar el NIF o NIE de un representante para acceder.');
         }
         
         $password = isset($postedData['password']) ? $postedData['password'] : null;

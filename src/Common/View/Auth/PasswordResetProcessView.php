@@ -22,7 +22,7 @@ use Juancrrn\Lyra\Domain\User\UserRepository;
 
 class PasswordResetProcessView extends ViewModel
 {
-    private const VIEW_RESOURCE_FILE    = 'auth/view_password_reset_process';
+    private const VIEW_RESOURCE_FILE    = 'views/auth/view_password_reset_process';
     public  const VIEW_NOMBRE           = 'Establecer contraseña';
     public  const VIEW_ID               = 'auth-password-reset-process';
     public  const VIEW_ROUTE            = '/auth/reset/process/([0-9a-zA-Z]*)';
