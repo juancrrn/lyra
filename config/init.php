@@ -41,6 +41,10 @@ date_default_timezone_set('Europe/Madrid');
  */
 function dd($var)
 {
+    $bt = debug_backtrace();
+
+    echo 'dd(): ' . $bt[1]['class'] . '::' . $bt[1]['function'] . '() @ ' . $bt[1]['file'] . ':' . $bt[1]['line'] . "\n";
+
     var_dump($var);
 
     die();

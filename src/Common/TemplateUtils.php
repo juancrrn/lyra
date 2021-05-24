@@ -55,4 +55,29 @@ class TemplateUtils
 			return str_replace($names, array_values($filling), $file);
 		}
 	}
+
+    /**
+     * Genera una cadena HTMl con etiquetas option para un select.
+     * 
+     * @param array $valueContentArray  Array clave-valor con valor-contenido
+     *                                  para las option.
+     * @param string $selectedValue     Valor seleccionado por defecto.
+     */
+    public static function generateSelectOptions(
+        array $valueContentArray,
+        ?string $selectedValue = null
+    ): string
+    {
+        $html = '';
+
+        foreach ($valueContentArray as $value => $content) {
+            $selected = $value == $selectedValue ? ' selected="selected"' : '';
+
+            $html .= <<< HTML
+            <option value="$value"$selected>$content</option>
+            HTML;
+        }
+
+        return $html;
+    }
 }

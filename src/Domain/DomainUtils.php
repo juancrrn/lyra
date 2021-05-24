@@ -107,4 +107,26 @@ class DomainUtils
                 );
         }
     }
+
+    public static function getEducationLevelsForSelectOptions(): array
+    {
+        $array = [];
+
+        foreach (self::EDU_LEVELS as $levelValue) {
+            $array[$levelValue] = self::educationLevelToHuman($levelValue)->getTitle();
+        }
+
+        return $array;
+    }
+
+    /*
+     *
+     * Nivel educativo
+     * 
+     */
+
+    public static function schoolYearToHuman(int $schoolYear): string
+    {
+        return substr($schoolYear, 0, 4) . ' - ' . substr($schoolYear, 4, 4);
+    }
 }
