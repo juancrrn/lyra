@@ -34,7 +34,7 @@ define('LYRA_DEF_PASSWORD',  'holamundo');
 /**
  * Modo de desarrollo, activa errores de PHP y MySQL.
  */
-define('LYRA_DEV_MODE',      false);
+define('LYRA_DEV_MODE',      true);
 
 /**
  * Configuración de envío de correo electrónico.
