@@ -3,15 +3,11 @@
 namespace Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager;
 
 use Juancrrn\Lyra\Common\App;
-use Juancrrn\Lyra\Common\Http;
 use Juancrrn\Lyra\Common\TemplateUtils;
-use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Domain\BookBank\Donation\DonationRepository;
 use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
 use Juancrrn\Lyra\Domain\DomainUtils;
 use Juancrrn\Lyra\Domain\StaticForm\StaticFormModel;
-use Juancrrn\Lyra\Domain\User\User;
-use Juancrrn\Lyra\Domain\User\UserRepository;
 
 /**
  * Formulario de edición de donación
