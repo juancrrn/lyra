@@ -94,6 +94,30 @@ class DonationRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
+    public function updateEducationLevelAndContentsById(int $id, string $educationLevel, array $contents): void
+    {
+        
+        $query = <<< SQL
+        UPDATE
+            book_donations
+        SET
+            education_level = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param('si', $educationLevel, $id);
+        $stmt->execute();
+
+        $stmt->close();
+
+        $this->updateContentsWithIds($id, $contents);
+
+        return;
+    }
+
     public function findById(int $testId): bool
     {
         $query = <<< SQL
@@ -273,6 +297,90 @@ class DonationRepository implements Repository
             return $id;
         } else {
             return false;
+        }
+    }
+
+    public function deleteContent(int $donationId, int $subjectId): int
+    {
+        $query = <<< SQL
+        DELETE FROM
+            book_donation_contents
+        WHERE
+            donation_id = ?
+        AND
+            subject_id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'ii',
+            $donationId,
+            $subjectId
+        );
+        
+        $result = $stmt->execute();
+
+        $stmt->close();
+
+        return $result;
+    }
+
+    public function insertContents(int $lotId, array $subjects): void
+    {
+        foreach ($subjects as $subject)
+            $this->insertContent($lotId, $subject->getId());
+    }
+
+    /**
+     * Actualiza los enlaces de contenidos correspondientes a una donación.
+     * 
+     * @param int $donationId            Identificador de la donación.
+     * @param array $newContents    Array de Subject correspondiente a los
+     *                              contenidos que deberán quedar al final
+     *                              del proceso.
+     */
+    public function updateContents(int $donationId, array $newContentSubjects): void
+    {
+        $ids = [];
+
+        foreach ($newContentSubjects as $newContentSubject) {
+            $ids[] = $newContentSubject->getId();
+        }
+
+        $this->updateContentsWithIds($donationId, $ids);
+    }
+
+    public function updateContentsWithIds(int $donationId, array $newContentSubjectIds): void
+    {
+        $currentContentSubjects = $this->retrieveContentsById($donationId);
+
+        // Contents to add
+        // $newContents - $currentContents
+
+        foreach ($newContentSubjectIds as $newContentSubjectId) {
+            $inArray = false;
+
+            foreach ($currentContentSubjects as $currentContentSubject)
+                if ($currentContentSubject->getId() == $newContentSubjectId)
+                    $inArray = true;
+
+            if (! $inArray)
+                $this->insertContent($donationId, $newContentSubjectId);
+        }
+
+        // Contents to delete
+        // $currentContents - $newContents
+
+        foreach ($currentContentSubjects as $currentContentSubject) {
+            $inArray = false;
+
+            foreach ($newContentSubjectIds as $newContentSubjectId)
+                if ($newContentSubjectId == $currentContentSubject->getId())
+                    $inArray = true;
+
+            if (! $inArray)
+                $this->deleteContent($donationId, $currentContentSubject->getId());
         }
     }
 }

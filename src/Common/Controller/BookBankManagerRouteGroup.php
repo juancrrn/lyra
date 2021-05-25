@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Common\Controller;
 
 use Exception;
+use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
 use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
@@ -52,6 +53,11 @@ class BookBankManagerRouteGroup implements RouteGroupModel
             throw new Exception('Route declared but not implemented.');
         });
         
+        // Búsqueda AJAX de asignaturas
+        $this->controllerInstance->post('/bookbank/manage/subjects/search/', function () use ($apiManager) {
+            $apiManager->call(new SubjectSearchApi);
+        });
+        
         /*
          *
          * Gestión manual de paquetes de estudiantes
@@ -75,6 +81,11 @@ class BookBankManagerRouteGroup implements RouteGroupModel
         
         // Edición de una donación
         $this->controllerInstance->get(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
+            $viewManager->render(new DonationEditView($itemId));
+        });
+        
+        // Edición de una donación (POST del formulario)
+        $this->controllerInstance->post(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new DonationEditView($itemId));
         });
         

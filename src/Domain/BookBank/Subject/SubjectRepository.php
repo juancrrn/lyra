@@ -221,6 +221,60 @@ class SubjectRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
+    public function search(string $keyword, ?bool $loadModel = false): array
+    {
+        $keyword = '%' . $keyword . '%';
+
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            book_subjects        
+        WHERE
+            school_year = 20202021
+        AND
+        (
+            name LIKE ?
+        OR
+            book_name LIKE ?
+        OR
+            book_isbn LIKE ?
+        )
+        LIMIT 8
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param(
+            'sss',
+            $keyword,
+            $keyword,
+            $keyword
+        );
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $items = [];
+
+        while ($object = $result->fetch_object()) {
+            $items[] = $object->id;
+        }
+
+        if ($loadModel) {
+            $return = [];
+
+            foreach ($items as $userId) {
+                $return[] = $this->retrieveById($userId);
+            }
+        } else {
+            $return = $items;
+        }
+
+        $stmt->close();
+
+        return $return;
+    }
+
     public function verifyConstraintsById(int $id): bool|array
     {
         throw new \Exception('Not implemented');

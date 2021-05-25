@@ -3,7 +3,9 @@
 namespace Juancrrn\Lyra\Domain\BookBank\Subject;
 
 use DateTime;
+use JsonSerializable;
 use Juancrrn\Lyra\Common\CommonUtils;
+use Juancrrn\Lyra\Domain\DomainUtils;
 
 /**
  * Clase para representar una asignatura
@@ -15,7 +17,7 @@ use Juancrrn\Lyra\Common\CommonUtils;
  * @version 0.0.1
  */
 
-class Subject
+class Subject implements JsonSerializable
 {
 
     /**
@@ -113,6 +115,30 @@ class Subject
             $creationDate,
             $mysqli_object->creator_id
         );
+    }
+
+    /*
+     *
+     * JSON
+     * 
+     */
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'compoundName' => 
+                $this->getName() . ' de ' .
+                DomainUtils::educationLevelToHuman($this->getEducationLevel())->getTitle(),
+            'educationLevel' => $this->getEducationLevel(),
+            'schoolYear' => $this->getSchoolYear(),
+            'bookName' => $this->getBookName(),
+            'bookIsbn' => $this->getBookIsbn(),
+            'bookImageUrl' => $this->getBookImageUrl(),
+            'creationDate' => $this->getCreationDate()
+            //'creatorId' => $this->
+        ];
     }
 
     /*

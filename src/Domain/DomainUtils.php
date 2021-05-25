@@ -119,6 +119,11 @@ class DomainUtils
         return $array;
     }
 
+    public static function validEducationLevel(string $testEducationLevel): bool
+    {
+        return in_array($testEducationLevel, self::EDU_LEVELS);
+    }
+
     /*
      *
      * Nivel educativo

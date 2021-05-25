@@ -51,6 +51,13 @@ class DonationEditView extends ViewModel
 
         $userRepository = new UserRepository($app->getDbConn());
 
+        $this->form = new DonationEditForm(self::VIEW_ROUTE_BASE . $itemId . '/edit/', $itemId); 
+
+        $this->form->handle();
+
+        // Retrieve again, just in case the form was submitted
+        $this->donation = $donationRepository->retrieveById($itemId, true);
+
         $preloadedData = [
             'id' => $this->donation->getId(),
             'studentFullName' => $userRepository->retrieveById($this->donation->getStudentId())->getFullName(),
@@ -64,9 +71,6 @@ class DonationEditView extends ViewModel
             'contents' => $this->donation->getContents()
         ];
 
-        $this->form = new DonationEditForm(self::VIEW_ROUTE, $itemId); 
-
-        $this->form->handle();
         $this->form->initialize($preloadedData);
 
         $this->name = self::VIEW_NAME;

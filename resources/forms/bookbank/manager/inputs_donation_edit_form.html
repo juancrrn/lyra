@@ -12,8 +12,8 @@
             <div class="form-text">Esta propiedad no puede modificarse.</div>
         </div>
         <div class="mb-3">
-            <label for="bookbank-manager-donation-edit-form-" class="form-label">Nivel educativo</label>
-            <select name="" id="bookbank-manager-donation-edit-form-" class="form-select">
+            <label for="#form-fields-name-prefix#education-level" class="form-label">Nivel educativo</label>
+            <select name="#form-fields-name-prefix#education-level" id="#form-fields-name-prefix#education-level" class="form-select">
                 #education-level-select-options-html#
             </select>
         </div>
@@ -32,18 +32,21 @@
         <div class="form-text mb-3">No puedes dejar vacía esta lista. Para eliminar la donación, utilizar el botón del final de la página.</div>
         <div class="card mb-3">
             <div class="card-header">
-                <label class="form-label" for="bookbank-manager-donation-edit-form-subject-search">Añadir asignaturas</label>
-                <input type="text" class="form-control search-autocomplete-disabled" name="bookbank-manager-donation-edit-form-subject-search" id="bookbank-manager-donation-edit-form-subject-search" data-target-list="bookbank-manager-donation-edit-form-contents-list" placeholder="Buscar asignaturas para añadir...">
+                <label class="form-label" for="#form-fields-name-prefix#subject-search">Añadir asignaturas</label>
+                <input type="text" class="form-control subject-list-search" data-query-url="#query-url#" data-target-results="#form-fields-name-prefix#search-results" placeholder="Buscar asignaturas para añadir...">
+                <div class="subject-list-search-results card position-absolute d-none" style="z-index: 1000;" id="#form-fields-name-prefix#search-results" data-target-list="#form-fields-name-prefix#contents-list">
+                    <ul class="list-group list-group-flush"></ul>
+                </div>
             </div>
-            <ul id="bookbank-manager-donation-edit-form-contents-list" class="list-group list-group-flush subject-list-editable">
+            <ul id="#form-fields-name-prefix#contents-list" class="list-group list-group-flush subject-list-editable">
                 #initial-contents-list-html#
             </ul>
         </div>
         <div class="text-end">
-            <a class="btn btn-outline-danger">
+            <!--a class="btn btn-outline-danger">
                 <span class="material-icons">delete</span>
                 Eliminar donación
-            </a>
+            </a-->
             <button type="submit" class="btn btn-primary">
                 <span class="material-icons">save</span>
                 Guardar
