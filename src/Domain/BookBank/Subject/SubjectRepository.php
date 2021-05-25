@@ -231,7 +231,7 @@ class SubjectRepository implements Repository
         FROM
             book_subjects        
         WHERE
-            school_year = 20202021
+            school_year = 20212022
         AND
         (
             name LIKE ?

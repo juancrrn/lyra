@@ -8,6 +8,7 @@ use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationCreateView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
@@ -79,6 +80,16 @@ class BookBankManagerRouteGroup implements RouteGroupModel
             $viewManager->render(new StudentOverviewView($itemId));
         });
         
+        // Creación de una donación
+        $this->controllerInstance->get(DonationCreateView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new DonationCreateView($studentId));
+        });
+        
+        // Creación de una donación (POST del formulario)
+        $this->controllerInstance->post(DonationCreateView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new DonationCreateView($studentId));
+        });
+        
         // Edición de una donación
         $this->controllerInstance->get(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new DonationEditView($itemId));
@@ -87,11 +98,6 @@ class BookBankManagerRouteGroup implements RouteGroupModel
         // Edición de una donación (POST del formulario)
         $this->controllerInstance->post(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new DonationEditView($itemId));
-        });
-        
-        // Edición de una solicitud (con o sin paquete)
-        $this->controllerInstance->get(RequestEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
-            $viewManager->render(new RequestEditView($itemId));
         });
     }
 }

@@ -56,7 +56,7 @@ class Donation
     private $contents;
 
     public function __construct(
-        int         $id,
+        ?int        $id,
         int         $studentId,
         DateTime    $creationDate,
         int         $creatorId,
@@ -108,7 +108,7 @@ class Donation
      * 
      */
 
-    public function getId(): int
+    public function getId(): null|int
     {
         return $this->id;
     }

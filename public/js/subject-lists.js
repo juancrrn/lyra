@@ -1,11 +1,11 @@
 $(() => {
-    function constructSubjectListItem(dataItem)
+    function constructSubjectListItem(dataItem, checkBoxName)
     {
         const template = document.querySelector('#bookbank-common-subject-list-editable-item');
         var $clone = $(template.content.firstElementChild.cloneNode(true));
 
         $clone.attr('data-subject-id', dataItem.id);
-        $clone.find('input[name=\'bookbank-manager-donation-edit-form-contents[]\']').val(dataItem.id);
+        $clone.find('input[name=\'' + checkBoxName + '[]\']').val(dataItem.id);
         $clone.find('.t-item-book-image').css('background-image', 'url(\'' + dataItem.bookImageUrl + '\'');
         $clone.find('.t-item-title-human').text(dataItem.compoundName);
         $clone.find('.t-item-book-isbn').text(dataItem.bookIsbn);
@@ -94,7 +94,11 @@ $(() => {
         const $resultsList = $(this).closest('.subject-list-search-results');
         var $targetList = $('#' + $resultsList.data('target-list'));
         const dataItem = $(this).data('subject-serialized');
-        $targetList.append(constructSubjectListItem(dataItem));
+        const checkBoxName = $targetList.data('checkbox-name');
+
+        $targetList.find('.subject-list-empty-item').remove();
+
+        $targetList.append(constructSubjectListItem(dataItem, checkBoxName));
 
         clearAllResultsLists();
     });

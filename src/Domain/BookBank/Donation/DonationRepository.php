@@ -80,11 +80,14 @@ class DonationRepository implements Repository
             $schoolYear
         );
         
-        $result = $stmt->execute();
+        $stmt->execute();
 
         $id = $this->db->insert_id;
 
         $stmt->close();
+
+        if (is_array($item->getContents()))
+            $this->insertContents($id, $item->getContents());
 
         return $id;
     }
@@ -330,6 +333,12 @@ class DonationRepository implements Repository
     {
         foreach ($subjects as $subject)
             $this->insertContent($lotId, $subject->getId());
+    }
+
+    public function insertContentsWithIds(int $lotId, array $subjectIds): void
+    {
+        foreach ($subjectIds as $subjectId)
+            $this->insertContent($lotId, $subjectId);
     }
 
     /**

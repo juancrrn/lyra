@@ -246,6 +246,7 @@ class StudentOverviewView extends ViewModel
             'request-count' => $requestIdsCount,
             'request-lot-list-human' => $requestLotListItemsHtml,
             'donation-count' => $donationIdsCount,
+            'donation-create-url' => $app->getUrl() . DonationCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/',
             'donation-list-human' => $donationListItemsHtml
         ];
 

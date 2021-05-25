@@ -2,15 +2,19 @@
 
 namespace Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager;
 
+use DateTime;
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\TemplateUtils;
+use Juancrrn\Lyra\Domain\BookBank\Donation\Donation;
 use Juancrrn\Lyra\Domain\BookBank\Donation\DonationRepository;
 use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
 use Juancrrn\Lyra\Domain\DomainUtils;
 use Juancrrn\Lyra\Domain\StaticForm\StaticFormModel;
+use Juancrrn\Lyra\Domain\User\UserRepository;
 
 /**
- * Formulario de edición de donación
+ * Formulario de creación de donación
  * 
  * @package lyra
  *
@@ -19,19 +23,22 @@ use Juancrrn\Lyra\Domain\StaticForm\StaticFormModel;
  * @version 0.0.1
  */
 
-class DonationEditForm extends StaticFormModel
+class DonationCreateForm extends StaticFormModel
 {
 
-    private const FORM_ID = 'form-bookbank-manager-donation-edit';
-    private const FORM_FIELDS_NAME_PREFIX = 'bookbank-manager-donation-edit-form-';
+    private const FORM_ID = 'form-bookbank-manager-donation-create';
+    private const FORM_FIELDS_NAME_PREFIX = 'bookbank-manager-donation-create-form-';
 
-    private $itemId;
+    private $student;
 
-    public function __construct(string $action, int $itemId)
+    public function __construct(string $action, int $studentId)
     {
         parent::__construct(self::FORM_ID, [ 'action' => $action ]);
 
-        $this->itemId = $itemId;
+        $app = App::getSingleton();
+        $userRepository = new UserRepository($app->getDbConn());
+
+        $this->student = $userRepository->retrieveById($studentId);
     }
     
     protected function generateFields(array & $preloadedData = []): string
@@ -41,39 +48,12 @@ class DonationEditForm extends StaticFormModel
         $viewManager = $app->getViewManagerInstance();
 
         $educationLevelSelectOptionsHtml = TemplateUtils::generateSelectOptions(
-            DomainUtils::getEducationLevelsForSelectOptions(),
-            $preloadedData['educationLevel']
+            DomainUtils::getEducationLevelsForSelectOptions()
         );
 
-        $initialContentsListHtml = '';
-
-        if (empty($preloadedData['contents'])) {
-            $initialContentsListHtml = $viewManager->fillTemplate(
-                'html_templates/bookbank/common/template_subject_list_empty_item', []
-            );
-        } else {
-            foreach ($preloadedData['contents'] as $subject) {
-                $bookImageUrl = $subject->getBookImageUrl() ??
-                    $app->getUrl() . '/img/graphic-default-book-image.svg';
-
-                $bookName = $subject->getBookName() ??
-                    'Sin libro o libro no definido';
-                    
-                $initialContentsListHtml .= $viewManager->fillTemplate(
-                    'html_templates/bookbank/common/template_subject_list_editable_item',
-                    [
-                        'item-book-image-url' => $bookImageUrl,
-                        'item-title-human' =>
-                            $subject->getName() . ' de ' .
-                            DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                        'item-book-isbn' => $subject->getBookIsbn(),
-                        'item-book-name' => $bookName,
-                        'item-id' => $subject->getId(),
-                        'checkbox-name' => 'bookbank-manager-donation-edit-form-contents'
-                    ]
-                );
-            }
-        }
+        $initialContentsListHtml = $viewManager->fillTemplate(
+            'html_templates/bookbank/common/template_subject_list_empty_item', []
+        );
 
         // Add content list item template to HTML (available to AJAX)
 
@@ -86,7 +66,7 @@ class DonationEditForm extends StaticFormModel
                 'item-book-isbn' => '',
                 'item-book-name' => '',
                 'item-id' => '',
-                'checkbox-name' => 'bookbank-manager-donation-edit-form-contents'
+                'checkbox-name' => 'bookbank-manager-donation-create-form-contents'
             ]
         );
         
@@ -129,7 +109,7 @@ class DonationEditForm extends StaticFormModel
         ];
 
         return App::getSingleton()->getViewManagerInstance()->fillTemplate(
-            'forms/bookbank/manager/inputs_donation_edit_form',
+            'forms/bookbank/manager/inputs_donation_create_form',
             $filling
         );
     }
@@ -164,9 +144,21 @@ class DonationEditForm extends StaticFormModel
         if (! $viewManager->anyErrorMessages()) {
             $donationRepository = new DonationRepository($app->getDbConn());
 
-            $donationRepository->updateEducationLevelAndContentsById($this->itemId, $newEducationLevel, $newContents);
+            $donation = new Donation(
+                null,
+                $this->student->getId(),
+                new DateTime,
+                $app->getSessionManagerInstance()->getLoggedInUser()->getId(),
+                $newEducationLevel,
+                20212022,
+                null
+            );
 
-            $viewManager->addSuccessMessage('La donación fue actualizada correctamente.');
+            $insertedId = $donationRepository->insert($donation);
+
+            $donationRepository->insertContentsWithIds($insertedId, $newContents);
+
+            $viewManager->addSuccessMessage('La donación fue creada correctamente.');
         } else {
             $viewManager->addErrorMessage('Por favor, vuelve a intentarlo.');
         }
