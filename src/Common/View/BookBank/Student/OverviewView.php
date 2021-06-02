@@ -127,8 +127,7 @@ class OverviewView extends ViewModel
                             'item-specification' => $specification,
                             'item-lot-id' => $lot->getId(),
                             'item-lot-title-human' =>
-                                Lot::statusToHuman($lot->getStatus())->getTitle() . ' de ' .
-                                DomainUtils::educationLevelToHuman($lot->getEducationLevel())->getTitle(),
+                                Lot::statusToHuman($lot->getStatus())->getTitle(),
                             'item-lot-creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $lot->getCreationDate()->getTimestamp()

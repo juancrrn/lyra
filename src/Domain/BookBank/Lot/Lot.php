@@ -62,11 +62,6 @@ class Lot
     private $requestId;
 
     /**
-     * @var int $studentId
-     */
-    private $studentId;
-
-    /**
      * De self::STATUSES.
      * 
      * @var string $status
@@ -82,18 +77,6 @@ class Lot
      * @var int $creatorId
      */
     private $creatorId;
-
-    /**
-     * De Juancrrn\Lyra\Domain\GlobalUtils::EDU_LEVELS.
-     * 
-     * @var string $educationLevel
-     */
-    private $educationLevel;
-
-    /**
-     * @var int $schoolYear
-     */
-    private $schoolYear;
 
     /**
      * @var null|DateTime $pickupDate
@@ -122,12 +105,9 @@ class Lot
     public function __construct(
         int         $id,
         int         $requestId,
-        int         $studentId,
         string      $status,
         DateTime    $creationDate,
         int         $creatorId,
-        string      $educationLevel,
-        int         $schoolYear,
         ?DateTime   $pickupDate,
         ?DateTime   $returnDate,
         bool        $locked,
@@ -136,12 +116,9 @@ class Lot
     {
         $this->id              = $id;
         $this->requestId       = $requestId;
-        $this->studentId       = $studentId;
         $this->status          = $status;
         $this->creationDate    = $creationDate;
         $this->creatorId       = $creatorId;
-        $this->educationLevel  = $educationLevel;
-        $this->schoolYear      = $schoolYear;
         $this->pickupDate      = $pickupDate;
         $this->returnDate      = $returnDate;
         $this->locked          = $locked;
@@ -174,12 +151,9 @@ class Lot
         return new self(
             $mysqli_object->id,
             $mysqli_object->request_id,
-            $mysqli_object->student_id,
             $mysqli_object->status,
             $creationDate,
             $mysqli_object->creator_id,
-            $mysqli_object->education_level,
-            $mysqli_object->school_year,
             $pickupDate,
             $returnDate,
             $mysqli_object->locked,
@@ -214,11 +188,6 @@ class Lot
         return $this->requestId;
     }
 
-    public function getStudentId(): int
-    {
-        return $this->studentId;
-    }
-
     public function getStatus(): string
     {
         return $this->status;
@@ -232,16 +201,6 @@ class Lot
     public function getCreatorId(): int
     {
         return $this->creatorId;
-    }
-
-    public function getEducationLevel(): string
-    {
-        return $this->educationLevel;
-    }
-
-    public function getSchoolYear(): int
-    {
-        return $this->schoolYear;
     }
 
     public function getPickupDate(): null|DateTime

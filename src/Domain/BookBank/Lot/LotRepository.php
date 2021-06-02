@@ -24,19 +24,11 @@ use RuntimeException;
 class LotRepository implements Repository
 {
 
-    /**
-     * @var \mysqli $db     Conexión a la base de datos.
-     */
     protected $db;
 
-    /**
-     * Constructor
-     * 
-     * @param \mysqli $db   Conexión a la base de datos.
-     */
     public function __construct(\mysqli $db)
     {
-        $this->db = App::getSingleton()->getDbConn();
+        $this->db = $db;
     }
 
     public function insert(Lot $item): int
@@ -47,12 +39,9 @@ class LotRepository implements Repository
             (
                 id,
                 request_id,
-                student_id,
                 status,
                 creation_date,
                 creator_id,
-                education_level,
-                school_year,
                 pickup_date,
                 return_date,
                 locked
@@ -65,13 +54,10 @@ class LotRepository implements Repository
 
         $id = $item->getId();
         $requestId = $item->getRequestId();
-        $studentId = $item->getStudentId();
         $status = $item->getStatus();
         $creationDate = $item->getCreationDate()
             ->format(CommonUtils::MYSQL_DATETIME_FORMAT);
         $creatorId = $item->getCreatorId();
-        $educationLevel = $item->getEducationLevel();
-        $schoolYear = $item->getSchoolYear();
         $pickupDate = $item->getPickupDate() ? // Nullable
             $item->getPickupDate()
                 ->format(CommonUtils::MYSQL_DATETIME_FORMAT):
@@ -86,18 +72,15 @@ class LotRepository implements Repository
             'iiissisissi',
             $id,
             $requestId,
-            $studentId,
             $status,
             $creationDate,
             $creatorId,
-            $educationLevel,
-            $schoolYear,
             $pickupDate,
             $returnDate,
             $locked
         );
         
-        $result = $stmt->execute();
+        $stmt->execute();
 
         $id = $this->db->insert_id;
 
@@ -118,12 +101,9 @@ class LotRepository implements Repository
             book_lots
         SET
             request_id = ?,
-            student_id = ?,
             status = ?,
             creation_date = ?,
             creator_id = ?,
-            education_level = ?,
-            school_year = ?,
             pickup_date = ?,
             return_date = ?,
             locked = ?
@@ -135,13 +115,10 @@ class LotRepository implements Repository
 
         $id = $item->getId();
         $requestId = $item->getRequestId();
-        $studentId = $item->getStudentId();
         $status = $item->getStatus();
         $creationDate = $item->getCreationDate()
             ->format(CommonUtils::MYSQL_DATETIME_FORMAT);
         $creatorId = $item->getCreatorId();
-        $educationLevel = $item->getEducationLevel();
-        $schoolYear = $item->getSchoolYear();
         $pickupDate = $item->getPickupDate() ? // Nullable
             $item->getPickupDate()
                 ->format(CommonUtils::MYSQL_DATETIME_FORMAT):
@@ -320,12 +297,9 @@ class LotRepository implements Repository
         SELECT
             id,
             request_id,
-            student_id,
             status,
             creation_date,
             creator_id,
-            education_level,
-            school_year,
             pickup_date,
             return_date,
             locked
