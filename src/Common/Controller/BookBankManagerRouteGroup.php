@@ -9,6 +9,7 @@ use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationCreateView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationEditView;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestAndLotCreateView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestAndLotEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
@@ -97,6 +98,16 @@ class BookBankManagerRouteGroup implements RouteGroupModel
         // Donation edition (form POST)
         $this->controllerInstance->post(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new DonationEditView($itemId));
+        });
+        
+        // Request creation
+        $this->controllerInstance->get(RequestAndLotCreateView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new RequestAndLotCreateView($studentId));
+        });
+        
+        // Request creation (form POST)
+        $this->controllerInstance->post(RequestAndLotCreateView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new RequestAndLotCreateView($studentId));
         });
         
         // Request edition

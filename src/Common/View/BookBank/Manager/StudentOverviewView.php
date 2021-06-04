@@ -69,6 +69,7 @@ class StudentOverviewView extends ViewModel
             'view-name' => $this->getName(),
             'student-card-html' => $this->generateStudentCardPart(),
             //'request-count' => 0,//$requestIdsCount,
+            'request-and-lot-create-url' => $app->getUrl() . RequestAndLotCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/requests/create/',
             'request-lot-list-human' => $this->generateRequestListItemsHtml(),
             //'donation-count' => 0,//$donationIdsCount,
             'donation-create-url' => $app->getUrl() . DonationCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/',

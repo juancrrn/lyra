@@ -14,13 +14,18 @@
  * jQuery on document ready
  */
 $(() => {
-    /*
-     * Handle request and lot form status change
-     */
-    $('#bookbank-manager-request-and-lot-edit-form-status').on('change', function (event) {
-        const value = $(this).val();
+    function handleRequestAndLotFormStatusChange(trigger, type)
+    {
+        const value = $(trigger).val();
 
-        var container = document.querySelector('#bookbank-manager-request-and-lot-edit-form-associated-lot-container');
+        var container;
+
+        if (type == 'create') {
+            container = document.querySelector('#bookbank-manager-request-and-lot-create-form-associated-lot-container');
+        } else if (type == 'edit') {
+            container = document.querySelector('#bookbank-manager-request-and-lot-edit-form-associated-lot-container');
+        }
+
         var button = container.querySelector('.accordion-button');
         var collapse = container.querySelector('.accordion-collapse');
 
@@ -41,5 +46,13 @@ $(() => {
             button.setAttribute('disabled', 'disabled');
             collapse.classList.remove('show');
         }
+    }
+
+    $('#bookbank-manager-request-and-lot-edit-form-status').on('change', function (event) {
+        handleRequestAndLotFormStatusChange(this, 'edit');
+    });
+
+    $('#bookbank-manager-request-and-lot-create-form-status').on('change', function (event) {
+        handleRequestAndLotFormStatusChange(this, 'create');
     });
 });

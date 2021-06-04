@@ -6,11 +6,12 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Domain\DomainUtils;
 use Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager\DonationCreateForm;
+use Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager\RequestAndLotCreateForm;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
 /**
- * Vista de creación de donación
+ * Request creation view
  *
  * @package lyra
  * 
@@ -19,13 +20,13 @@ use Juancrrn\Lyra\Domain\User\UserRepository;
  * @version 0.0.1
  */
 
-class DonationCreateView extends ViewModel
+class RequestAndLotCreateView extends ViewModel
 {
-    private const VIEW_RESOURCE_FILE    = 'views/bookbank/manager/view_donation_create';
-    public  const VIEW_NAME             = 'Crear donación';
-    public  const VIEW_ID               = 'bookbank-manager-donation-create';
+    private const VIEW_RESOURCE_FILE    = 'views/bookbank/manager/view_request_and_lot_create';
+    public  const VIEW_NAME             = 'Crear solicitud y paquete';
+    public  const VIEW_ID               = 'bookbank-manager-request-and-lot-create';
     public  const VIEW_ROUTE_BASE       = '/bookbank/manage/students/';
-    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9])+/donations/create/';
+    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9])+/requests/create/';
 
     private $student;
     private $form;
@@ -46,7 +47,8 @@ class DonationCreateView extends ViewModel
 
         $this->student = $userRepository->retrieveById($studentId);
 
-        $this->form = new DonationCreateForm(self::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/', $this->student->getId()); 
+        // TODO
+        $this->form = new RequestAndLotCreateForm(self::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/', $this->student->getId()); 
 
         $this->form->handle();
 
@@ -73,7 +75,7 @@ class DonationCreateView extends ViewModel
             'app-url' => $app->getUrl(),
             'view-name' => $this->getName(),
             'back-to-student-overview-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASIC . $this->student->getId() . '/overview/',
-            'donation-create-form-html' => $this->form->getHtml()
+            'request-and-lot-create-form-html' => $this->form->getHtml()
         ];
         
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

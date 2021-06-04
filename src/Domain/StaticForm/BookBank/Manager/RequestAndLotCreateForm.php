@@ -17,7 +17,7 @@ use Juancrrn\Lyra\Domain\StaticForm\StaticFormModel;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
 /**
- * Request and lot edition form
+ * Request and lot creation form
  * 
  * @package lyra
  *
@@ -26,19 +26,22 @@ use Juancrrn\Lyra\Domain\User\UserRepository;
  * @version 0.0.1
  */
 
-class RequestAndLotEditForm extends StaticFormModel
+class RequestAndLotCreateForm extends StaticFormModel
 {
 
-    private const FORM_ID = 'form-bookbank-manager-request-and-lot-edit';
-    private const FORM_FIELDS_NAME_PREFIX = 'bookbank-manager-request-and-lot-edit-form-';
+    private const FORM_ID = 'form-bookbank-manager-request-and-lot-create';
+    private const FORM_FIELDS_NAME_PREFIX = 'bookbank-manager-request-and-lot-create-form-';
 
-    private $itemId;
+    private $student;
 
-    public function __construct(string $action, int $itemId)
+    public function __construct(string $action, int $studentId)
     {
         parent::__construct(self::FORM_ID, [ 'action' => $action ]);
 
-        $this->itemId = $itemId;
+        $app = App::getSingleton();
+        $userRepository = new UserRepository($app->getDbConn());
+
+        $this->student = $userRepository->retrieveById($studentId);
     }
     
     protected function generateFields(array & $preloadedData = []): string
@@ -46,42 +49,34 @@ class RequestAndLotEditForm extends StaticFormModel
         $app = App::getSingleton();
 
         $viewManager = $app->getViewManagerInstance();
-
-        $request = $preloadedData['request'];
-
-        $lot = $preloadedData['lot'];
         
         $userRepository = new UserRepository($app->getDbConn());
 
         $statusSelectOptionsHtml = TemplateUtils::generateSelectOptions(
             Request::getStatusesForSelectOptions(),
-            $request->getStatus()
+            Request::STATUS_PENDING
         );
 
         $educationLevelSelectOptionsHtml = TemplateUtils::generateSelectOptions(
-            DomainUtils::getEducationLevelsForSelectOptions(),
-            $request->getEducationLevel()
+            DomainUtils::getEducationLevelsForSelectOptions()
         );
 
         $filling = [
-            'student-full-name' => $userRepository->retrieveById($request->getStudentId())->getFullName(),
+            'student-full-name' => $this->student->getFullName(),
             'education-level-select-options-html' => $educationLevelSelectOptionsHtml,
-            'school-year-human' => DomainUtils::schoolYearToHuman($request->getSchoolYear()),
+            'school-year-human' => DomainUtils::schoolYearToHuman(20212022), // TODO Change to AppSetting
             'query-url' => $app->getUrl() . '/bookbank/manage/subjects/search/',
-            'creator-name' => $userRepository->retrieveById($request->getCreatorId())->getFullName(),
-            'creation-date-human' => strftime(
-                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
-                $request->getCreationDate()->getTimestamp()
-            ),
+            'creator-name' => $app->getSessionManagerInstance()->getLoggedInUser()->getFullName(),
+            'creation-date-human' => 'Ahora',
             'form-fields-name-prefix' => self::FORM_FIELDS_NAME_PREFIX,
             //'checkbox-name' => self::FORM_FIELDS_NAME_PREFIX . 'lot-contents',
-            'specification' => $request->getSpecification(),
+            //'specification' => $request->getSpecification(),
             'status-select-options-html' => $statusSelectOptionsHtml,
-            'associated-lot-html' => $this->generateAssociatedLotFieldsAndTemplates($lot)
+            'associated-lot-html' => $this->generateAssociatedLotFieldsAndTemplates()
         ];
 
         return $viewManager->fillTemplate(
-            'forms/bookbank/manager/inputs_request_and_lot_edit_form',
+            'forms/bookbank/manager/inputs_request_and_lot_create_form',
             $filling
         );
     }
@@ -197,7 +192,7 @@ class RequestAndLotEditForm extends StaticFormModel
         }
     }
 
-    private function generateAssociatedLotFieldsAndTemplates($lot): string
+    private function generateAssociatedLotFieldsAndTemplates(): string
     {
         $app = App::getSingleton();
 
@@ -246,132 +241,41 @@ class RequestAndLotEditForm extends StaticFormModel
 
         // Generate initial lot HTML
         
-        if (isset($lot)) {
-            $userRepository = new UserRepository($app->getDbConn());
+        $lotStatusSelectOptionsHtml = TemplateUtils::generateSelectOptions(
+            Lot::getStatusesForSelectOptions(),
+            Lot::STATUS_INITIAL
+        );
 
-            $lotStatusSelectOptionsHtml = TemplateUtils::generateSelectOptions(
-                Lot::getStatusesForSelectOptions(),
-                $lot->getStatus()
-            );
-            
-            $initialContentsListHtml = '';
+        $initialContentsListHtml = $viewManager->fillTemplate(
+            'html_templates/bookbank/common/template_subject_list_empty_item', []
+        );
 
-            if (empty($lot->getContents())) {
-                $initialContentsListHtml = $viewManager->fillTemplate(
-                    'html_templates/bookbank/common/template_subject_list_empty_item', []
-                );
-            } else {
-                foreach ($lot->getContents() as $subject) {
-                    $bookImageUrl = $subject->getBookImageUrl() ??
-                        $app->getUrl() . '/img/graphic-default-book-image.svg';
+        $associatedLotHtml = $viewManager->fillTemplate(
+            'views/bookbank/manager/view_request_and_lot_create_edit_part_associated_lot_editable',
+            [
+                'id' => '-',
+                'status-human' => 'Plantilla de paquete asociado',
+                'creation-date-human' => 'ahora',
+                'status-select-options-html' => $lotStatusSelectOptionsHtml,
+                'query-url' => $app->getUrl() . SubjectSearchApi::API_ROUTE,
+                'form-fields-name-prefix' => self::FORM_FIELDS_NAME_PREFIX . 'lot-',
+                'checkbox-name' => self::FORM_FIELDS_NAME_PREFIX . 'lot-contents',
+                'contents' => $initialContentsListHtml,
+                'pickup-date-human' => 'No definida',
+                'return-date-human' => 'No definida',
+                'creator-name' => $app->getSessionManagerInstance()->getLoggedInUser()->getFullName(),
+                'creation-date-human' => 'Ahora',
 
-                    $bookName = $subject->getBookName() ??
-                        'Sin libro o libro no definido';
-                        
-                    $initialContentsListHtml .= $viewManager->fillTemplate(
-                        'html_templates/bookbank/common/template_subject_list_editable_item',
-                        [
-                            'book-image-url' => $bookImageUrl,
-                            'title-human' =>
-                                $subject->getName() . ' de ' .
-                                DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                            'book-isbn' => $subject->getBookIsbn(),
-                            'book-name' => $bookName,
-                            'id' => $subject->getId(),
-                            'checkbox-name' => self::FORM_FIELDS_NAME_PREFIX . 'lot-contents'
-                        ]
-                    );
-                }
-            }
-
-            $pickupDateHuman =
-                $lot->getStatus() == Lot::STATUS_PICKED_UP ||
-                $lot->getStatus() == Lot::STATUS_RETURNED ?
-                strftime(
-                    CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
-                    $lot->getPickupDate()->getTimestamp()
-                ) :
-                'No definida'
-                ;
-
-            $returnDateHuman =
-                $lot->getStatus() == Lot::STATUS_RETURNED ?
-                strftime(
-                    CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
-                    $lot->getReturnDate()->getTimestamp()
-                ) :
-                'No definida'
-                ;
-
-            $associatedLotHtml = $viewManager->fillTemplate(
-                'views/bookbank/manager/view_request_and_lot_create_edit_part_associated_lot_editable',
-                [
-                    'id' => $lot->getId(),
-                    'status-human' => Lot::statusToHuman($lot->getStatus())->getTitle(),
-                    'creation-date-human' => strftime(
-                        CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
-                        $lot->getCreationDate()->getTimestamp()
-                    ),
-                    'status-select-options-html' => $lotStatusSelectOptionsHtml,
-                    'query-url' => $app->getUrl() . SubjectSearchApi::API_ROUTE,
-                    'form-fields-name-prefix' => self::FORM_FIELDS_NAME_PREFIX . 'lot-',
-                    'checkbox-name' => self::FORM_FIELDS_NAME_PREFIX . 'lot-contents',
-                    'contents' => $initialContentsListHtml,
-                    'pickup-date-human' => $pickupDateHuman,
-                    'return-date-human' => $returnDateHuman,
-                    'creator-name' => $userRepository->retrieveById($lot->getCreatorId())->getFullName(),
-                    'creation-date-human' => strftime(
-                        CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
-                        $lot->getCreationDate()->getTimestamp()
-                    ),
-
-                    // Enabled
-
-                    'button-collapsed-class' => '',
-                    'attr-bs-target' => 'bookbank-manager-associated-lot-accordion-body',
-                    'attr-aria-controls' => 'bookbank-manager-associated-lot-accordion-body',
-                    'attr-aria-expanded' => true,
-                    'button-disabled-attr' => '',
-                    'collapse-show-class' => 'show'
-                ]
-            );
-        } else {
-            $lotStatusSelectOptionsHtml = TemplateUtils::generateSelectOptions(
-                Lot::getStatusesForSelectOptions(),
-                Lot::STATUS_INITIAL
-            );
-
-            $initialContentsListHtml = $viewManager->fillTemplate(
-                'html_templates/bookbank/common/template_subject_list_empty_item', []
-            );
-
-            $associatedLotHtml = $viewManager->fillTemplate(
-                'views/bookbank/manager/view_request_and_lot_create_edit_part_associated_lot_editable',
-                [
-                    'id' => '-',
-                    'status-human' => 'Plantilla de paquete asociado',
-                    'creation-date-human' => 'ahora',
-                    'status-select-options-html' => $lotStatusSelectOptionsHtml,
-                    'query-url' => $app->getUrl() . SubjectSearchApi::API_ROUTE,
-                    'form-fields-name-prefix' => self::FORM_FIELDS_NAME_PREFIX . 'lot-',
-                    'checkbox-name' => self::FORM_FIELDS_NAME_PREFIX . 'lot-contents',
-                    'contents' => $initialContentsListHtml,
-                    'pickup-date-human' => 'No definida',
-                    'return-date-human' => 'No definida',
-                    'creator-name' => $app->getSessionManagerInstance()->getLoggedInUser()->getFullName(),
-                    'creation-date-human' => 'Ahora',
-
-                    // Disabled
-                    
-                    'button-collapsed-class' => 'collapsed',
-                    'attr-bs-target' => '',
-                    'attr-aria-controls' => '',
-                    'attr-aria-expanded' => false,
-                    'button-disabled-attr' => 'disabled="disabled"',
-                    'collapse-show-class' => '',
-                ]
-            );
-        }
+                // Disabled
+                
+                'button-collapsed-class' => 'collapsed',
+                'attr-bs-target' => '',
+                'attr-aria-controls' => '',
+                'attr-aria-expanded' => false,
+                'button-disabled-attr' => 'disabled="disabled"',
+                'collapse-show-class' => '',
+            ]
+        );
 
         return $associatedLotHtml;
     }
