@@ -24,9 +24,9 @@ toast.create = (type, text) =>
     var $toast = $(template.content.firstElementChild.cloneNode(true));
 
     $toast.attr('data-bs-autohide', autoconf.APP_PRODUCTION);
-    $toast.find('.type-indicator').addClass(type);
-    $toast.find('.lyra-toast-app-name').html(autoconf.APP_NAME);
-    $toast.find('.toast-body').html(text);
+    $toast.find('.t-class-type').addClass(type);
+    $toast.find('.t-app-name').html(autoconf.APP_NAME);
+    $toast.find('.t-content').html(text);
 
     return $toast;
 }
