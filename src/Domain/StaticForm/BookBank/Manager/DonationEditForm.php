@@ -2,6 +2,7 @@
 
 namespace Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager;
 
+use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\TemplateUtils;
 use Juancrrn\Lyra\Domain\BookBank\Donation\DonationRepository;
@@ -62,13 +63,13 @@ class DonationEditForm extends StaticFormModel
                 $initialContentsListHtml .= $viewManager->fillTemplate(
                     'html_templates/bookbank/common/template_subject_list_editable_item',
                     [
-                        'item-book-image-url' => $bookImageUrl,
-                        'item-title-human' =>
+                        'book-image-url' => $bookImageUrl,
+                        'title-human' =>
                             $subject->getName() . ' de ' .
                             DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                        'item-book-isbn' => $subject->getBookIsbn(),
-                        'item-book-name' => $bookName,
-                        'item-id' => $subject->getId(),
+                        'book-isbn' => $subject->getBookIsbn(),
+                        'book-name' => $bookName,
+                        'id' => $subject->getId(),
                         'checkbox-name' => 'bookbank-manager-donation-edit-form-contents'
                     ]
                 );
@@ -79,20 +80,20 @@ class DonationEditForm extends StaticFormModel
 
         $viewManager->addTemplateElement(
             'bookbank-common-subject-list-editable-item',
-            'bookbank\common\template_subject_list_editable_item',
+            'bookbank/common/template_subject_list_editable_item',
             [
-                'item-book-image-url' => '',
-                'item-title-human' => '',
-                'item-book-isbn' => '',
-                'item-book-name' => '',
-                'item-id' => '',
+                'book-image-url' => '',
+                'title-human' => '',
+                'book-isbn' => '',
+                'book-name' => '',
+                'id' => '',
                 'checkbox-name' => 'bookbank-manager-donation-edit-form-contents'
             ]
         );
         
         $viewManager->addTemplateElement(
             'bookbank-common-subject-list-empty-item',
-            'bookbank\common\template_subject_list_empty_item',
+            'bookbank/common/template_subject_list_empty_item',
             []
         );
 
@@ -100,19 +101,19 @@ class DonationEditForm extends StaticFormModel
 
         $viewManager->addTemplateElement(
             'bookbank-common-subject-search-item',
-            'bookbank\common\template_subject_search_item',
+            'bookbank/common/template_subject_search_item',
             [
-                'item-book-image-url' => '',
-                'item-title-human' => '',
-                'item-book-isbn' => '',
-                'item-book-name' => '',
-                'item-id' => ''
+                'book-image-url' => '',
+                'title-human' => '',
+                'book-isbn' => '',
+                'book-name' => '',
+                'id' => ''
             ]
         );
         
         $viewManager->addTemplateElement(
             'bookbank-common-subject-search-empty-item',
-            'bookbank\common\template_subject_search_empty_item',
+            'bookbank/common/template_subject_search_empty_item',
             []
         );
 
@@ -120,7 +121,7 @@ class DonationEditForm extends StaticFormModel
             'student-full-name' => $preloadedData['studentFullName'],
             'education-level-select-options-html' => $educationLevelSelectOptionsHtml,
             'school-year-human' => $preloadedData['schoolYear'],
-            'query-url' => $app->getUrl() . '/bookbank/manage/subjects/search/',
+            'query-url' => $app->getUrl() . SubjectSearchApi::API_ROUTE,
             'initial-contents-list-html' => $initialContentsListHtml,
             'creator-name' => $preloadedData['creatorName'],
             'creation-date-human' => $preloadedData['creationDate'],
@@ -150,13 +151,13 @@ class DonationEditForm extends StaticFormModel
         $newContents = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'contents'] ?? null;
 
         if (! is_array($newContents)) {
-            $viewManager->addErrorMessage('Hubo un error al procesar los nuevos contenidos.');
+            $viewManager->addErrorMessage('Hubo un error al procesar los contenidos.');
         } else {
             $subjectRepository = new SubjectRepository($app->getDbConn());
 
             foreach ($newContents as $newSubjectId) {
                 if (! $subjectRepository->findById($newSubjectId)) {
-                    $viewManager->addErrorMessage('Hubo un error al procesar los nuevos contenidos.');
+                    $viewManager->addErrorMessage('Hubo un error al procesar los contenidos.');
                 }
             }
         }

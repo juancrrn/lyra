@@ -226,4 +226,20 @@ class Request
                 );
         }
     }
+
+    public static function getStatusesForSelectOptions(): array
+    {
+        $array = [];
+
+        foreach (self::STATUSES as $statusValue) {
+            $array[$statusValue] = self::statusToHuman($statusValue)->getTitle();
+        }
+
+        return $array;
+    }
+
+    public static function validStatus(string $testStatus): bool
+    {
+        return in_array($testStatus, self::STATUSES);
+    }
 }

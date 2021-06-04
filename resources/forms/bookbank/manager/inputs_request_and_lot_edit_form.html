@@ -1,0 +1,88 @@
+<div class="row">
+    <div class="col-xl-1"></div>
+    <div class="col-xl-5">
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons d-inline-block align-middle me-2">description</span>
+            <span class="d-inline-block align-middle">Datos</span>
+        </h4>
+
+        <div class="mb-3">
+            <label class="form-label">Estudiante</label>
+            <input type="text" class="form-control" value="#student-full-name#" disabled="disabled">
+            <div class="form-text">Esta propiedad no puede modificarse.</div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="#form-fields-name-prefix#status" class="form-label">Estado</label>
+            <select name="#form-fields-name-prefix#status" id="#form-fields-name-prefix#status" class="form-select mb-2">
+                #status-select-options-html#
+            </select>
+            <p class="form-text mb-2"><span class="text-danger">Atención:</span> si una solicitud procesada se marca como pendiente o desestimada, <strong>se eliminará el paquete asociado</strong>.</p>
+            <p class="form-text"><span class="text-danger">Atención:</span> al marcar una solicitud como procesada, si no lo estaba ya, <strong>se creará un paquete asociado</strong> al enviar este formulario.</p>
+        </div>
+
+        <div class="mb-3">
+            <label for="#form-fields-name-prefix#education-level" class="form-label">Nivel educativo</label>
+            <select name="#form-fields-name-prefix#education-level" id="#form-fields-name-prefix#education-level" class="form-select">
+                #education-level-select-options-html#
+            </select>
+            <!--div class="form-text">Este campo limita la búsqueda de asignaturas para añadir al paquete.</div-->
+            <!--TODO: popup para confirmar borrado de asignaturas de nivel distinto-->
+        </div>
+
+        <div class="mb-3">
+            <label for="#form-fields-name-prefix#specification" class="form-label">Especificación</label>
+            <textarea class="form-control" id="#form-fields-name-prefix#specification" name="#form-fields-name-prefix#specification">#specification#</textarea>
+            <div class="form-text">Descripción detallada de la solicitud del estudiante: modalidad, itinerario, idioma, optativas, etc.</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Curso escolar</label>
+            <input type="text" class="form-control" value="#school-year-human#" disabled="disabled">
+            <div class="form-text">Esta propiedad no puede modificarse.</div>
+        </div>
+    </div>
+    <div class="col-xl-5">
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons d-inline-block align-middle me-2">inventory_2</span>
+            <span class="d-inline-block align-middle">Paquete asociado</span>
+        </h4>
+
+        <div id="#form-fields-name-prefix#associated-lot-container" class="associated-lot">
+            #associated-lot-html#
+        </div>
+
+        <div class="text-end">
+            <!--a class="btn btn-outline-danger">
+                <span class="material-icons">delete</span>
+                Eliminar solicitud
+            </a-->
+            <button type="submit" class="btn btn-primary">
+                <span class="material-icons">save</span>
+                Guardar
+            </button>
+        </div>
+    </div>
+    <div class="col-xl-1"></div>
+</div>
+
+<div class="row">
+    <div class="col-xl-1"></div>
+    <div class="col-xl-5">
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons d-inline-block align-middle me-2">info</span>
+            <span class="d-inline-block align-middle">Otros datos</span>
+        </h4>
+
+        <div class="form-text mb-3">Estas propiedades no pueden modificarse.</div>
+        <div class="mb-3">
+            <label class="form-label">Creador</label>
+            <input type="text" class="form-control" value="#creator-name#"  disabled="disabled">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Fecha y hora de creación</label>
+            <input type="text" class="form-control" value="#creation-date-human#" disabled="disabled">
+        </div>
+    </div>
+    <div class="col-xl-6"></div>
+</div>

@@ -11,7 +11,6 @@ use Juancrrn\Lyra\Domain\BookBank\Lot\LotRepository;
 use Juancrrn\Lyra\Domain\BookBank\Request\Request;
 use Juancrrn\Lyra\Domain\BookBank\Request\RequestRepository;
 use Juancrrn\Lyra\Domain\DomainUtils;
-use Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager\StudentSearchForm;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
@@ -61,8 +60,129 @@ class StudentOverviewView extends ViewModel
 
     public function processContent(): void
     {
-        $studentCardHtml = $this->generateStudentCardPart();
+        $app = App::getSingleton();
 
+        $viewManager = $app->getViewManagerInstance();
+
+        $filling = [
+            'app-name' => $app->getName(),
+            'view-name' => $this->getName(),
+            'student-card-html' => $this->generateStudentCardPart(),
+            //'request-count' => 0,//$requestIdsCount,
+            'request-lot-list-human' => $this->generateRequestListItemsHtml(),
+            //'donation-count' => 0,//$donationIdsCount,
+            'donation-create-url' => $app->getUrl() . DonationCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/',
+            'donation-list-human' => $this->generateDonationListItemsHtml()
+        ];
+
+        $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
+    }
+
+    private function generateStudentCardPart(): string
+    {
+        $app = App::getSingleton();
+
+        $viewManager = $app->getViewManagerInstance();
+
+        if ($this->student->getRepresentativeId() == null) {
+            $userRepresentativeHuman = '(No definido)';
+        } else {
+            $userRepository = new UserRepository($app->getDbConn());
+            $representative = $userRepository
+                ->retrieveById($this->student->getRepresentativeId());
+            $userRepresentativeHuman = $representative->getFullName();
+        }
+
+        $studentCardFilling = [
+            'accordion-id' => $this->student->getId(),
+            'user-profile-picture' => $app->getUrl() . '/img/default-user-image.png',
+            'user-id' => $this->student->getId(),
+            'user-full-name' => $this->student->getFullName(),
+            'user-gov-id' => $this->student->getGovId(true),
+            'user-email-address' => $this->student->getEmailAddress(),
+            'user-phone-number' => $this->student->getPhoneNumber(),
+            'user-representative-name-human' => $userRepresentativeHuman,
+            'user-status-human' => User::statusToHuman(
+                $this->student->getStatus()
+            )->getTitle()
+        ];
+
+        return $viewManager->fillTemplate(
+            'views/bookbank/common/part_student_profile_card',
+            $studentCardFilling
+        );
+    }
+
+    private function generateDonationListItemsHtml(): string
+    {
+        $app = App::getSingleton();
+
+        $viewManager = $app->getViewManagerInstance();
+
+        $donationRepository = new DonationRepository($app->getDbConn());
+
+        $donationIds = $donationRepository->findByStudentId($this->student->getId());
+        //$donationIdsCount = count($donationIds);
+
+        $donationListItemsHtml = '';
+
+        if (empty($donationIds)) {
+            $donationListItemsHtml .= $viewManager->fillTemplate(
+                'views/bookbank/common/part_card_empty',
+                []
+            );
+        } else {
+            foreach ($donationIds as $donationId) {
+                $donation = $donationRepository->retrieveById($donationId, true);
+
+                $donationContentListHuman = '';
+
+                if (empty($donation->getContents())) {
+                    $donationContentListHuman = $viewManager->fillTemplate(
+                        'views/bookbank/common/part_subject_list_empty', []
+                    );
+                } else {
+                    foreach ($donation->getContents() as $subject) {
+                        $bookImageUrl = $subject->getBookImageUrl() ??
+                            $app->getUrl() . '/img/graphic-default-book-image.svg';
+
+                        $bookName = $subject->getBookName() ??
+                            'Sin libro o libro no definido';
+                            
+                        $donationContentListHuman .= $viewManager->fillTemplate(
+                            'views/bookbank/common/part_subject_list_item',
+                            [
+                                'book-image-url' => $bookImageUrl,
+                                'title-human' =>
+                                    $subject->getName() . ' de ' .
+                                    DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
+                                'book-isbn' => $subject->getBookIsbn(),
+                                'book-name' => $bookName
+                            ]
+                        );
+                    }
+                }
+
+                $donationListItemsHtml .= $viewManager->fillTemplate(
+                    'views/bookbank/manager/view_overview_part_donation_editable_item',
+                    [
+                        'heading-id' => 'header-donation-' . $donationId,
+                        'body-id' => 'body-donation-' . $donationId,
+                        'id' => $donationId,
+                        'title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
+                        'creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
+                        'content-list-human' => $donationContentListHuman,
+                        'edit-url' => $app->getUrl() . DonationEditView::VIEW_ROUTE_BASE . $donationId . '/edit/'
+                    ]
+                );
+            }
+        }
+
+        return $donationListItemsHtml;
+    }
+
+    private function generateRequestListItemsHtml(): string
+    {
         $app = App::getSingleton();
 
         $viewManager = $app->getViewManagerInstance();
@@ -70,7 +190,7 @@ class StudentOverviewView extends ViewModel
         $requestRepository = new RequestRepository($app->getDbConn());
 
         $requestIds = $requestRepository->findByStudentId($this->student->getId());
-        $requestIdsCount = count($requestIds);
+        //$requestIdsCount = count($requestIds);
 
         $requestLotListItemsHtml = '';
 
@@ -111,12 +231,12 @@ class StudentOverviewView extends ViewModel
                             $lotContentListHuman .= $viewManager->fillTemplate(
                                 'views/bookbank/common/part_subject_list_item',
                                 [
-                                    'item-book-image-url' => $bookImageUrl,
-                                    'item-title-human' =>
+                                    'book-image-url' => $bookImageUrl,
+                                    'title-human' =>
                                         $subject->getName() . ' de ' .
                                         DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                                    'item-book-isbn' => $subject->getBookIsbn(),
-                                    'item-book-name' => $bookName
+                                    'book-isbn' => $subject->getBookIsbn(),
+                                    'book-name' => $bookName
                                 ]
                             );
                         }
@@ -133,27 +253,26 @@ class StudentOverviewView extends ViewModel
                     $requestLotListItemsHtml .= $viewManager->fillTemplate(
                         'views/bookbank/manager/view_overview_part_request_with_lot_editable_item',
                         [
-                            'item-heading-id' => 'item-header-request-' . $requestId,
-                            'item-body-id' => 'item-body-request-' . $requestId,
-                            'item-id' => $requestId,
-                            'item-title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
-                            'item-status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
-                            'item-lot-badge' => $lotBadge,
-                            'item-creation-date-human' => strftime(
+                            'heading-id' => 'header-request-' . $requestId,
+                            'body-id' => 'body-request-' . $requestId,
+                            'id' => $requestId,
+                            'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
+                            'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
+                            'lot-badge' => $lotBadge,
+                            'creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $request->getCreationDate()->getTimestamp()
                             ),
-                            'item-specification' => $specification,
-                            'item-lot-id' => $lot->getId(),
-                            'item-lot-title-human' =>
-                                Lot::statusToHuman($lot->getStatus())->getTitle() . ' de ' .
-                                DomainUtils::educationLevelToHuman($lot->getEducationLevel())->getTitle(),
-                            'item-lot-creation-date-human' => strftime(
+                            'specification' => $specification,
+                            'lot-id' => $lot->getId(),
+                            'lot-title-human' =>
+                                Lot::statusToHuman($lot->getStatus())->getTitle(),
+                            'lot-creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $lot->getCreationDate()->getTimestamp()
                             ),
-                            'item-lot-content-list-human' => $lotContentListHuman,
-                            'item-edit-url' => $app->getUrl() . RequestEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'
+                            'lot-content-list-human' => $lotContentListHuman,
+                            'edit-url' => $app->getUrl() . RequestAndLotEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'
                         ]
                     );
 
@@ -162,129 +281,24 @@ class StudentOverviewView extends ViewModel
                     $requestLotListItemsHtml .= $viewManager->fillTemplate(
                         'views/bookbank/manager/view_overview_part_request_editable_item',
                         [
-                            'item-heading-id' => 'item-header-request-' . $requestId,
-                            'item-body-id' => 'item-body-request-' . $requestId,
-                            'item-id' => $requestId,
-                            'item-title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
-                            'item-status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
-                            'item-lot-badge' => '',
-                            'item-creation-date-human' => strftime(
+                            'heading-id' => 'header-request-' . $requestId,
+                            'body-id' => 'body-request-' . $requestId,
+                            'id' => $requestId,
+                            'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
+                            'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
+                            'lot-badge' => '',
+                            'creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $request->getCreationDate()->getTimestamp()
                             ),
-                            'item-specification' => $specification,
-                            'item-edit-url' => $app->getUrl() . RequestEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'
+                            'specification' => $specification,
+                            'edit-url' => $app->getUrl() . RequestAndLotEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'
                         ]
                     );
                 }
             }
         }
 
-        $donationRepository = new DonationRepository($app->getDbConn());
-
-        $donationIds = $donationRepository->findByStudentId($this->student->getId());
-        $donationIdsCount = count($donationIds);
-
-        $donationListItemsHtml = '';
-
-        if (empty($donationIds)) {
-            $donationListItemsHtml .= $viewManager->fillTemplate(
-                'views/bookbank/common/part_card_empty',
-                []
-            );
-        } else {
-            foreach ($donationIds as $donationId) {
-                $donation = $donationRepository->retrieveById($donationId, true);
-
-                $donationContentListHuman = '';
-
-                if (empty($donation->getContents())) {
-                    $donationContentListHuman = $viewManager->fillTemplate(
-                        'views/bookbank/common/part_subject_list_empty', []
-                    );
-                } else {
-                    foreach ($donation->getContents() as $subject) {
-                        $bookImageUrl = $subject->getBookImageUrl() ??
-                            $app->getUrl() . '/img/graphic-default-book-image.svg';
-
-                        $bookName = $subject->getBookName() ??
-                            'Sin libro o libro no definido';
-                            
-                        $donationContentListHuman .= $viewManager->fillTemplate(
-                            'views/bookbank/common/part_subject_list_item',
-                            [
-                                'item-book-image-url' => $bookImageUrl,
-                                'item-title-human' =>
-                                    $subject->getName() . ' de ' .
-                                    DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                                'item-book-isbn' => $subject->getBookIsbn(),
-                                'item-book-name' => $bookName
-                            ]
-                        );
-                    }
-                }
-
-                $donationListItemsHtml .= $viewManager->fillTemplate(
-                    'views/bookbank/manager/view_overview_part_donation_editable_item',
-                    [
-                        'item-heading-id' => 'item-header-donation-' . $donationId,
-                        'item-body-id' => 'item-body-donation-' . $donationId,
-                        'item-id' => $donationId,
-                        'item-title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
-                        'item-creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
-                        'item-content-list-human' => $donationContentListHuman,
-                        'item-edit-url' => $app->getUrl() . DonationEditView::VIEW_ROUTE_BASE . $donationId . '/edit/'
-                    ]
-                );
-            }
-        }
-
-        $filling = [
-            'app-name' => $app->getName(),
-            'view-name' => $this->getName(),
-            'student-card-html' => $studentCardHtml,
-            'request-count' => $requestIdsCount,
-            'request-lot-list-human' => $requestLotListItemsHtml,
-            'donation-count' => $donationIdsCount,
-            'donation-create-url' => $app->getUrl() . DonationCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/',
-            'donation-list-human' => $donationListItemsHtml
-        ];
-
-        $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
-    }
-
-    private function generateStudentCardPart(): string
-    {
-        $app = App::getSingleton();
-
-        $viewManager = $app->getViewManagerInstance();
-
-        if ($this->student->getRepresentativeId() == null) {
-            $userRepresentativeHuman = '(No definido)';
-        } else {
-            $userRepository = new UserRepository($app->getDbConn());
-            $representative = $userRepository
-                ->retrieveById($this->student->getRepresentativeId());
-            $userRepresentativeHuman = $representative->getFullName();
-        }
-
-        $studentCardFilling = [
-            'accordion-id' => $this->student->getId(),
-            'user-profile-picture' => $app->getUrl() . '/img/default-user-image.png',
-            'user-id' => $this->student->getId(),
-            'user-full-name' => $this->student->getFullName(),
-            'user-gov-id' => $this->student->getGovId(true),
-            'user-email-address' => $this->student->getEmailAddress(),
-            'user-phone-number' => $this->student->getPhoneNumber(),
-            'user-representative-name-human' => $userRepresentativeHuman,
-            'user-status-human' => User::statusToHuman(
-                $this->student->getStatus()
-            )->getTitle()
-        ];
-
-        return $viewManager->fillTemplate(
-            'views/bookbank/common/part_student_profile_card',
-            $studentCardFilling
-        );
+        return $requestLotListItemsHtml;
     }
 }

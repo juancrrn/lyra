@@ -6,6 +6,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\BookBank\Request\Request;
 use Juancrrn\Lyra\Domain\Repository;
+use mysqli;
 
 /**
  * Repositorio de donaciones
@@ -20,19 +21,11 @@ use Juancrrn\Lyra\Domain\Repository;
 class RequestRepository implements Repository
 {
 
-    /**
-     * @var \mysqli $db     Conexión a la base de datos.
-     */
     protected $db;
 
-    /**
-     * Constructor
-     * 
-     * @param \mysqli $db   Conexión a la base de datos.
-     */
-    public function __construct(\mysqli $db)
+    public function __construct(mysqli $db)
     {
-        $this->db = App::getSingleton()->getDbConn();
+        $this->db = $db;
     }
 
     /**
@@ -100,6 +93,41 @@ class RequestRepository implements Repository
     public function update(): bool|int
     {
         throw new \Exception('Not implemented');
+    }
+
+    
+
+    public function updateStatusSpecificationAndEducationLevelById(
+        int $id,
+        string $newStatus,
+        string $newSpecification,
+        string $newEducationLevel
+    ): void
+    {
+        $query = <<< SQL
+        UPDATE
+            book_requests
+        SET
+            status = ?,
+            specification = ?,
+            education_level = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'sssi',
+            $newStatus,
+            $newSpecification,
+            $newEducationLevel,
+            $id
+        );
+        
+        $stmt->execute();
+
+        $stmt->close();
     }
 
     public function findById(int $testId): bool

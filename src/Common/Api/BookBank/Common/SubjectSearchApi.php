@@ -9,6 +9,8 @@ use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
 class SubjectSearchApi extends ApiModel
 {
 
+    public const API_ROUTE = '/bookbank/manage/subjects/search/';
+
     public function consume(object $requestContent): void
     {
         $app = App::getSingleton();

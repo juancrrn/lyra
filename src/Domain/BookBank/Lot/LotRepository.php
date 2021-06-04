@@ -8,6 +8,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\BookBank\Lot\Lot;
 use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
+use Juancrrn\Lyra\Domain\DomainConstraintsException;
 use Juancrrn\Lyra\Domain\Repository;
 use RuntimeException;
 
@@ -47,7 +48,7 @@ class LotRepository implements Repository
                 locked
             )
         VALUES
-            ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+            ( ?, ?, ?, ?, ?, ?, ?, ? )
         SQL;
 
         $stmt = $this->db->prepare($query);
@@ -69,7 +70,7 @@ class LotRepository implements Repository
         $locked = $item->isLocked();
 
         $stmt->bind_param(
-            'iiissisissi',
+            'iississi',
             $id,
             $requestId,
             $status,
@@ -157,7 +158,223 @@ class LotRepository implements Repository
         }
     }
 
-    public function updateStatus(
+    public function smartUpdate(int $id, string $newStatus, array $newContents): void
+    {
+        $formerLot = $this->retrieveById($id);
+
+        /*
+            - from initial to:
+                - initial : do nothing
+                - ready : do nothing
+                - rejected : do nothing
+                - picked up : pickup
+                - returned : add pickup y return
+            - from ready to:
+                - initial : do nothing
+                - ready : do nothing
+                - rejected : do nothing
+                - picked up : pickup
+                - returned : add pickup y return
+            - from rejected to:
+                - initial : do nothing
+                - ready : do nothing
+                - rejected : do nothing
+                - picked up : pickup
+                - returned : add pickup y return
+        */
+
+        if (
+            $formerLot->getStatus() == Lot::STATUS_INITIAL ||
+            $formerLot->getStatus() == Lot::STATUS_READY ||
+            $formerLot->getStatus() == Lot::STATUS_REJECTED
+        ) {
+            if ($newStatus == Lot::STATUS_PICKED_UP) {
+                $this->updatePickupDate($id);
+            } elseif (
+                $newStatus == Lot::STATUS_PICKED_UP ||
+                $newStatus == Lot::STATUS_RETURNED
+            ) {
+                $this->updatePickupDate($id);
+                $this->updateReturnDate($id);
+            }
+        }
+
+        /*
+            - from picked up to:
+                - initial : remove pickup
+                - ready : remove pickup
+                - rejected : remove pickup
+                - picked up : do nothing
+                - returned : add return
+        */
+
+        elseif ($formerLot->getStatus() == Lot::STATUS_PICKED_UP) {
+            if (
+                $newStatus == Lot::STATUS_INITIAL ||
+                $newStatus == Lot::STATUS_READY ||
+                $newStatus == Lot::STATUS_REJECTED
+            ) {
+                $this->updateRemovePickupDate($id);
+            } elseif ($newStatus == LOT::STATUS_RETURNED) {
+                $this->updateReturnDate($id);
+            }
+        }
+
+        /*
+            - from returned to:
+                - initial : remove pickup y return
+                - ready : remove pickup y return
+                - rejected : remove pickup y return
+                - picked up : remove return
+                - returned : do nothing
+        */
+        
+        elseif ($formerLot->getStatus() == Lot::STATUS_RETURNED) {
+            if (
+                $newStatus == Lot::STATUS_INITIAL ||
+                $newStatus == Lot::STATUS_READY ||
+                $newStatus == Lot::STATUS_REJECTED
+            ) {
+                $this->updateRemovePickupDate($id);
+                $this->updateRemoveReturnDate($id);
+            } elseif ($newStatus == LOT::STATUS_PICKED_UP) {
+                $this->updateRemoveReturnDate($id);
+            }
+        }
+
+        $this->updateStatus($id, $newStatus);
+        
+        $this->updateContentsWithIds($id, $newContents);
+    }
+
+    public function updateStatus(int $id, $newStatus): void
+    {
+        if (! Lot::validStatus($newStatus)) 
+            throw new InvalidArgumentException('Invalid status.');
+
+        $query = <<< SQL
+        UPDATE
+            book_lots
+        SET
+            status = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'si',
+            $newStatus,
+            $id
+        );
+            
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
+    public function updatePickupDate(int $id, ?DateTime $newPickupDate = null): void
+    {
+        $newPickupDate = $newPickupDate ?? new DateTime;
+        $pickupDate = $newPickupDate->format(CommonUtils::MYSQL_DATETIME_FORMAT);
+
+        $query = <<< SQL
+        UPDATE
+            book_lots
+        SET
+            pickup_date = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'si',
+            $pickupDate,
+            $itemId
+        );
+            
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
+    public function updateReturnDate(int $id, ?DateTime $newReturnDate = null): void
+    {
+        $newReturnDate = $newReturnDate ?? new DateTime;
+        $returnDate = $newReturnDate->format(CommonUtils::MYSQL_DATETIME_FORMAT);
+
+        $query = <<< SQL
+        UPDATE
+            book_lots
+        SET
+            return_date = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'si',
+            $returnDate,
+            $itemId
+        );
+            
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
+    public function updateRemovePickupDate(int $id): void
+    {
+        $query = <<< SQL
+        UPDATE
+            book_lots
+        SET
+            pickup_date = null
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'i',
+            $itemId
+        );
+            
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
+    public function updateRemoveReturnDate(int $id): void
+    {
+        $query = <<< SQL
+        UPDATE
+            book_lots
+        SET
+            return_date = null
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'i',
+            $itemId
+        );
+            
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
+    /*public function updateStatus(
         int $itemId,
         string $status,
         ?bool $setPickupDate = false,
@@ -233,7 +450,7 @@ class LotRepository implements Repository
         $stmt->close();
 
         return $result;
-    }
+    }*/
 
     public function findById(int $id): bool|int
     {
@@ -332,28 +549,34 @@ class LotRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    public function verifyConstraintsById(int $id): bool|array
+    public function verifyConstraintsById(int $id): array
     {
-        throw new \Exception('Not implemented');
+        $constraints = [];
+
+        if (! empty($this->findContentsById($id))) {
+            $constraints[] = 'book_lot_contents.lot_id';
+        }
+
+        return $constraints;
     }
 
     public function deleteById(int $id, ?bool $deleteContents = false): void
     {
-        throw new \Exception('Not implemented');
+        if ($deleteContents == true) {
+            $this->deleteAllContents($id);
+        }
 
-        // TODO delete contents and modify constraints validation
+        $constraints = $this->verifyConstraintsById($id);
 
-        $constraintsVerification = $this->verifyConstraintsById($id);
-
-        if (! $constraintsVerification)
-            throw new RuntimeException('Found constraints: ' . implode(',', $constraintsVerification));
+        if (! empty($constraints))
+            throw new DomainConstraintsException($constraints, 'Could not delete item: constraints exist.');
 
         $query = <<< SQL
-            DELETE FROM
-                book_lots
-            WHERE
-                id = ?
-            SQL;
+        DELETE FROM
+            book_lots
+        WHERE
+            id = ?
+        SQL;
 
         $stmt = $this->db->prepare($query);
 
@@ -373,7 +596,7 @@ class LotRepository implements Repository
      * 
      */
 
-    public function retrieveContentsById(int $lotId): array
+    public function findContentsById(int $lotId): array
     {
         $query = <<< SQL
         SELECT
@@ -391,13 +614,30 @@ class LotRepository implements Repository
 
         $elements = array();
 
-        $subjectRepository = new SubjectRepository($this->db);
-
         while($mysqli_object = $result->fetch_object()) {
-            $elements[] = $subjectRepository->retrieveById($mysqli_object->subject_id);
+            $elements[] = $mysqli_object->subject_id;
         }
 
         $stmt->close();
+
+        return $elements;
+    }
+
+    public function retrieveContentsById(int $lotId): array
+    {
+        $subjectIds = $this->findContentsById($lotId);
+
+        $elements = [];
+
+        if (! empty($subjectIds)) {
+
+            $subjectRepository = new SubjectRepository($this->db);
+            $elements = [];
+    
+            foreach ($subjectIds as $subjectId) {
+                $elements[] = $subjectRepository->retrieveById($subjectId);
+            }
+        }
 
         return $elements;
     }
@@ -447,7 +687,7 @@ class LotRepository implements Repository
         DELETE FROM
             book_lot_contents
         WHERE
-            lot_id = ?,
+            lot_id = ?
         AND
             subject_id = ?
         SQL;
@@ -467,10 +707,27 @@ class LotRepository implements Repository
         return $result;
     }
 
+    public function deleteContentsWithIds(int $lotId, array $subjectIds): void
+    {
+        foreach ($subjectIds as $subjectId)
+            $this->deleteContent($lotId, $subjectId);
+    }
+
+    public function deleteAllContents(int $id): void
+    {
+        $this->deleteContentsWithIds($id, $this->findContentsById($id));
+    }
+
     public function insertContents(int $lotId, array $subjects): void
     {
         foreach ($subjects as $subject)
             $this->insertContent($lotId, $subject->getId());
+    }
+
+    public function insertContentsById(int $lotId, array $subjectIds): void
+    {
+        foreach ($subjectIds as $subjectId)
+            $this->insertContent($lotId, $subjectId);
     }
 
     /**
@@ -481,22 +738,34 @@ class LotRepository implements Repository
      *                              contenidos que deberán quedar al final
      *                              del proceso.
      */
-    public function updateContents(int $lotId, array $newContentSubjects): void
+    
+    public function updateContents(int $requestId, array $newContentSubjects): void
     {
-        $currentContentSubjects = $this->retrieveContentsById($lotId);
+        $ids = [];
+
+        foreach ($newContentSubjects as $newContentSubject) {
+            $ids[] = $newContentSubject->getId();
+        }
+
+        $this->updateContentsWithIds($requestId, $ids);
+    }
+
+    public function updateContentsWithIds(int $requestId, array $newContentSubjectIds): void
+    {
+        $currentContentSubjects = $this->retrieveContentsById($requestId);
 
         // Contents to add
         // $newContents - $currentContents
 
-        foreach ($newContentSubjects as $newContentSubject) {
+        foreach ($newContentSubjectIds as $newContentSubjectId) {
             $inArray = false;
 
             foreach ($currentContentSubjects as $currentContentSubject)
-                if ($currentContentSubject->getId() == $newContentSubject->getId())
+                if ($currentContentSubject->getId() == $newContentSubjectId)
                     $inArray = true;
 
             if (! $inArray)
-                $this->insertContent($lotId, $newContentSubject->getId());
+                $this->insertContent($requestId, $newContentSubjectId);
         }
 
         // Contents to delete
@@ -505,12 +774,12 @@ class LotRepository implements Repository
         foreach ($currentContentSubjects as $currentContentSubject) {
             $inArray = false;
 
-            foreach ($newContentSubjects as $newContentSubject)
-                if ($newContentSubject->getId() == $currentContentSubject->getId())
+            foreach ($newContentSubjectIds as $newContentSubjectId)
+                if ($newContentSubjectId == $currentContentSubject->getId())
                     $inArray = true;
 
             if (! $inArray)
-                $this->deleteContent($lotId, $currentContentSubject->getId());
+                $this->deleteContent($requestId, $currentContentSubject->getId());
         }
     }
 }

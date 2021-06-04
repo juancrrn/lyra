@@ -103,7 +103,7 @@ class Lot
     private $contents;
 
     public function __construct(
-        int         $id,
+        ?int        $id,
         int         $requestId,
         string      $status,
         DateTime    $creationDate,
@@ -167,6 +167,11 @@ class Lot
      * 
      */
 
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function setContents(array $contents): void
     {
         $this->contents = $contents;
@@ -178,7 +183,7 @@ class Lot
      * 
      */
 
-    public function getId(): int
+    public function getId(): null|int
     {
         return $this->id;
     }
@@ -263,5 +268,21 @@ class Lot
                     self::STATUS_REJECTED, self::STATUS_REJECTED_TITLE, self::STATUS_REJECTED_DESC
                 );
         }
+    }
+
+    public static function getStatusesForSelectOptions(): array
+    {
+        $array = [];
+
+        foreach (self::STATUSES as $statusValue) {
+            $array[$statusValue] = self::statusToHuman($statusValue)->getTitle();
+        }
+
+        return $array;
+    }
+
+    public static function validStatus(string $testStatus): bool
+    {
+        return in_array($testStatus, self::STATUSES);
     }
 }

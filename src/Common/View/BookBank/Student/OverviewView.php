@@ -92,12 +92,12 @@ class OverviewView extends ViewModel
                             $lotContentListHuman .= $viewManager->fillTemplate(
                                 'views/bookbank/common/part_subject_list_item',
                                 [
-                                    'item-book-image-url' => $bookImageUrl,
-                                    'item-title-human' =>
+                                    'book-image-url' => $bookImageUrl,
+                                    'title-human' =>
                                         $subject->getName() . ' de ' .
                                         DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                                    'item-book-isbn' => $subject->getBookIsbn(),
-                                    'item-book-name' => $bookName
+                                    'book-isbn' => $subject->getBookIsbn(),
+                                    'book-name' => $bookName
                                 ]
                             );
                         }
@@ -114,25 +114,25 @@ class OverviewView extends ViewModel
                     $requestLotListItemsHtml .= $viewManager->fillTemplate(
                         'views/bookbank/student/view_overview_part_request_with_lot_item',
                         [
-                            'item-heading-id' => 'item-header-request-' . $requestId,
-                            'item-body-id' => 'item-body-request-' . $requestId,
-                            'item-id' => $requestId,
-                            'item-title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
-                            'item-status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
-                            'item-lot-badge' => $lotBadge,
-                            'item-creation-date-human' => strftime(
+                            'heading-id' => 'header-request-' . $requestId,
+                            'body-id' => 'body-request-' . $requestId,
+                            'id' => $requestId,
+                            'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
+                            'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
+                            'lot-badge' => $lotBadge,
+                            'creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $request->getCreationDate()->getTimestamp()
                             ),
-                            'item-specification' => $specification,
-                            'item-lot-id' => $lot->getId(),
-                            'item-lot-title-human' =>
+                            'specification' => $specification,
+                            'lot-id' => $lot->getId(),
+                            'lot-title-human' =>
                                 Lot::statusToHuman($lot->getStatus())->getTitle(),
-                            'item-lot-creation-date-human' => strftime(
+                            'lot-creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $lot->getCreationDate()->getTimestamp()
                             ),
-                            'item-lot-content-list-human' => $lotContentListHuman
+                            'lot-content-list-human' => $lotContentListHuman
                         ]
                     );
 
@@ -141,17 +141,17 @@ class OverviewView extends ViewModel
                     $requestLotListItemsHtml .= $viewManager->fillTemplate(
                         'views/bookbank/student/view_overview_part_request_item',
                         [
-                            'item-heading-id' => 'item-header-request-' . $requestId,
-                            'item-body-id' => 'item-body-request-' . $requestId,
-                            'item-id' => $requestId,
-                            'item-title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
-                            'item-status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
-                            'item-lot-badge' => '',
-                            'item-creation-date-human' => strftime(
+                            'heading-id' => 'header-request-' . $requestId,
+                            'body-id' => 'body-request-' . $requestId,
+                            'id' => $requestId,
+                            'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
+                            'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
+                            'lot-badge' => '',
+                            'creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $request->getCreationDate()->getTimestamp()
                             ),
-                            'item-specification' => $specification
+                            'specification' => $specification
                         ]
                     );
                 }
@@ -191,12 +191,12 @@ class OverviewView extends ViewModel
                         $donationContentListHuman .= $viewManager->fillTemplate(
                             'views/bookbank/common/part_subject_list_item',
                             [
-                                'item-book-image-url' => $bookImageUrl,
-                                'item-title-human' =>
+                                'book-image-url' => $bookImageUrl,
+                                'title-human' =>
                                     $subject->getName() . ' de ' .
                                     DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
-                                'item-book-isbn' => $subject->getBookIsbn(),
-                                'item-book-name' => $bookName
+                                'book-isbn' => $subject->getBookIsbn(),
+                                'book-name' => $bookName
                             ]
                         );
                     }
@@ -205,12 +205,12 @@ class OverviewView extends ViewModel
                 $donationListItemsHtml .= $viewManager->fillTemplate(
                     'views/bookbank/student/view_overview_part_donation_item',
                     [
-                        'item-heading-id' => 'item-header-donation-' . $donationId,
-                        'item-body-id' => 'item-body-donation-' . $donationId,
-                        'item-id' => $donationId,
-                        'item-title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
-                        'item-creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
-                        'item-content-list-human' => $donationContentListHuman
+                        'heading-id' => 'header-donation-' . $donationId,
+                        'body-id' => 'body-donation-' . $donationId,
+                        'id' => $donationId,
+                        'title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
+                        'creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
+                        'content-list-human' => $donationContentListHuman
                     ]
                 );
             }

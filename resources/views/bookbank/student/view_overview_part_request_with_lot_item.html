@@ -1,46 +1,53 @@
 <div class="accordion-item">
-    <h2 class="accordion-header" id="#item-heading-id#">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="##item-body-id#" aria-expanded="false" aria-controls="#item-body-id#">
+    <h2 class="accordion-header" id="#heading-id#">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="##body-id#" aria-expanded="false" aria-controls="#body-id#">
             <div class="container p-0">
                 <div class="row align-items-center">
                     <div class="col-md-2 font-monospace">
                         <span class="badge rounded-pill bg-secondary my-2">
                             <i class="material-icons">tag</i>
-                            #item-id#
+                            #id#
                         </span>
                     </div>
                     <div class="col">
-                        <p class="mb-1">#item-title-human#</p>
+                        <p class="mb-1">#title-human#</p>
                         <p class="mb-1">
-                            <small class="align-middle">#item-status-human#</small>
-                            <small class="align-middle">#item-lot-badge#</small>
+                            <small class="align-middle">#status-human#</small>
+                            <small class="align-middle">#lot-badge#</small>
                         </p>
-                        <p><small class="text-muted">#item-creation-date-human#</small></p>
+                        <p><small class="text-muted">#creation-date-human#</small></p>
                     </div>
                 </div>
             </div>
         </button>
     </h2>
-    <div id="#item-body-id#" class="accordion-collapse collapse" aria-labelledby="#item-heading-id#" data-bs-parent="#bookbank-student-overview-requests-lots-accordion">
+    <div id="#body-id#" class="accordion-collapse collapse" aria-labelledby="#heading-id#" data-bs-parent="#bookbank-student-overview-requests-lots-accordion">
         <div class="accordion-body">
             <p class="mb-2">Especificación</p>
 
-            <p class="mb-3 text-muted">#item-specification#</p>
+            <p class="mb-3 text-muted">#specification#</p>
+
+            <p class="mb-2">Paquete asociado</p>
 
             <div class="card">
                 <div class="card-body">
-                    <small class="text-mute">Paquete asociado</small>
-                    <p class="card-title mb-3">
-                        <span class="badge rounded-pill bg-secondary me-2">
-                            <i class="material-icons">tag</i>
-                            #item-lot-id#
-                        </span>
-                        #item-lot-title-human#
-                    </p>
-                    <p>Creado el #item-lot-creation-date-human#</p>
+                    <div class="container p-0">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 font-monospace">
+                                <span class="badge rounded-pill bg-secondary my-2">
+                                    <i class="material-icons">tag</i>
+                                    #lot-id#
+                                </span>
+                            </div>
+                            <div class="col">
+                                <p class="mb-1">#lot-title-human#</p>
+                                <p><small class="text-muted">#lot-creation-date-human#</small></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <ul class="list-group list-group-flush">
-                    #item-lot-content-list-human#
+                    #lot-content-list-human#
                 </ul>
             </div>
         </div>

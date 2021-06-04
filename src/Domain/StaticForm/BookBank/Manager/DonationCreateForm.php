@@ -61,11 +61,11 @@ class DonationCreateForm extends StaticFormModel
             'bookbank-common-subject-list-editable-item',
             'bookbank\common\template_subject_list_editable_item',
             [
-                'item-book-image-url' => '',
-                'item-title-human' => '',
-                'item-book-isbn' => '',
-                'item-book-name' => '',
-                'item-id' => '',
+                'book-image-url' => '',
+                'title-human' => '',
+                'book-isbn' => '',
+                'book-name' => '',
+                'id' => '',
                 'checkbox-name' => 'bookbank-manager-donation-create-form-contents'
             ]
         );
@@ -82,11 +82,11 @@ class DonationCreateForm extends StaticFormModel
             'bookbank-common-subject-search-item',
             'bookbank\common\template_subject_search_item',
             [
-                'item-book-image-url' => '',
-                'item-title-human' => '',
-                'item-book-isbn' => '',
-                'item-book-name' => '',
-                'item-id' => ''
+                'book-image-url' => '',
+                'title-human' => '',
+                'book-isbn' => '',
+                'book-name' => '',
+                'id' => ''
             ]
         );
         

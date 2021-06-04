@@ -4,13 +4,12 @@ namespace Juancrrn\Lyra\Common\Controller;
 
 use Exception;
 use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
-use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationCreateView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationEditView;
-use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestEditView;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestAndLotEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 
@@ -45,59 +44,69 @@ class BookBankManagerRouteGroup implements RouteGroupModel
         
         /*
          *
-         * Asignaturas
+         * Subjects
          * 
          */
         
-        // Lista de asignaturas
+        // Subject list
         $this->controllerInstance->get('/bookbank/manage/subjects/', function () use ($viewManager) {
             throw new Exception('Route declared but not implemented.');
         });
         
-        // Búsqueda AJAX de asignaturas
-        $this->controllerInstance->post('/bookbank/manage/subjects/search/', function () use ($apiManager) {
+        // Subject AJAX search
+        $this->controllerInstance->post(SubjectSearchApi::API_ROUTE, function () use ($apiManager) {
             $apiManager->call(new SubjectSearchApi);
         });
         
         /*
          *
-         * Gestión manual de paquetes de estudiantes
+         * Students' records manual management
          * 
          */
         
-        // Búsqueda de estudiantes
+        // Student search
         $this->controllerInstance->get(StudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new StudentSearchView);
         });
         
-        // Búsqueda de estudiantes (POST del formulario)
+        // Student search (form POST)
         $this->controllerInstance->post(StudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new StudentSearchView);
         });
         
-        // Listado de paquetes de un estudiante
+        // Student overview
         $this->controllerInstance->get(StudentOverviewView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new StudentOverviewView($itemId));
         });
         
-        // Creación de una donación
+        // Donation creation
         $this->controllerInstance->get(DonationCreateView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
             $viewManager->render(new DonationCreateView($studentId));
         });
         
-        // Creación de una donación (POST del formulario)
+        // Donation creation (form POST)
         $this->controllerInstance->post(DonationCreateView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
             $viewManager->render(new DonationCreateView($studentId));
         });
         
-        // Edición de una donación
+        // Donation edition
         $this->controllerInstance->get(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new DonationEditView($itemId));
         });
         
-        // Edición de una donación (POST del formulario)
+        // Donation edition (form POST)
         $this->controllerInstance->post(DonationEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new DonationEditView($itemId));
+        });
+        
+        // Request edition
+        $this->controllerInstance->get(RequestAndLotEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
+            $viewManager->render(new RequestAndLotEditView($itemId));
+        });
+        
+        // Request edition (form POST)
+        $this->controllerInstance->post(RequestAndLotEditView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
+            $viewManager->render(new RequestAndLotEditView($itemId));
         });
     }
 }
