@@ -6,10 +6,10 @@ $(() => {
 
         $clone.attr('data-subject-id', dataItem.id);
         $clone.find('input[name=\'' + checkBoxName + '[]\']').val(dataItem.id);
-        $clone.find('.t-item-book-image').css('background-image', 'url(\'' + dataItem.bookImageUrl + '\'');
-        $clone.find('.t-item-title-human').text(dataItem.compoundName);
-        $clone.find('.t-item-book-isbn').text(dataItem.bookIsbn);
-        $clone.find('.t-item-book-name').text(dataItem.bookName);
+        $clone.find('.t-book-image').css('background-image', 'url(\'' + dataItem.bookImageUrl + '\'');
+        $clone.find('.t-title-human').text(dataItem.compoundName);
+        $clone.find('.t-book-isbn').text(dataItem.bookIsbn);
+        $clone.find('.t-book-name').text(dataItem.bookName);
 
         return $clone;
     }
@@ -27,10 +27,10 @@ $(() => {
 
         $clone.attr('data-subject-serialized', JSON.stringify(dataItem));
         $clone.attr('data-subject-id', dataItem.id);
-        $clone.find('.t-item-book-image').css('background-image', 'url(\'' + dataItem.bookImageUrl + '\'');
-        $clone.find('.t-item-title-human').text(dataItem.compoundName);
-        $clone.find('.t-item-book-isbn').text(dataItem.bookIsbn);
-        $clone.find('.t-item-book-name').text(dataItem.bookName);
+        $clone.find('.t-book-image').css('background-image', 'url(\'' + dataItem.bookImageUrl + '\'');
+        $clone.find('.t-title-human').text(dataItem.compoundName);
+        $clone.find('.t-book-isbn').text(dataItem.bookIsbn);
+        $clone.find('.t-book-name').text(dataItem.bookName);
 
         return $clone;
     }
@@ -90,16 +90,32 @@ $(() => {
         clearAllResultsLists();
     });
 
+    function validateNotAlreadyAdded(dataItem, $targetList)
+    {
+        const listItems = $targetList.find('li.subject-list-item');
+
+        for (i = 0; i < listItems.length; i++) {
+            if ($(listItems[i]).data('subject-id') == dataItem.id) return false;
+        }
+        
+        return true;
+    }
+
     $('.subject-list-search-results').on('click', '.subject-search-item', function () {
         const $resultsList = $(this).closest('.subject-list-search-results');
         var $targetList = $('#' + $resultsList.data('target-list'));
         const dataItem = $(this).data('subject-serialized');
-        const checkBoxName = $targetList.data('checkbox-name');
 
-        $targetList.find('.subject-list-empty-item').remove();
+        if (validateNotAlreadyAdded(dataItem, $targetList)) {
+            const checkBoxName = $targetList.data('checkbox-name');
 
-        $targetList.append(constructSubjectListItem(dataItem, checkBoxName));
+            $targetList.find('.subject-list-empty-item').remove();
 
-        clearAllResultsLists();
+            $targetList.append(constructSubjectListItem(dataItem, checkBoxName));
+
+            clearAllResultsLists();
+        } else {
+            toast.error('La asignatura seleccionada ya estaba añadida.');
+        }
     });
 });
