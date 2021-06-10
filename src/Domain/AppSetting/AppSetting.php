@@ -26,7 +26,7 @@ class AppSetting
     private $description;
 
     /**
-     * @var string Value
+     * @var mixed Value
      */
     private $value;
 
@@ -82,7 +82,7 @@ class AppSetting
         return $this->description;
     }
 
-    public function getValue(): string
+    public function getValue(): mixed
     {
         return $this->value;
     }

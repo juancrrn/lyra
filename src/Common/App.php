@@ -7,6 +7,7 @@ use Juancrrn\Lyra\Common\SessionManager;
 
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\View\ViewManager;
+use Juancrrn\Lyra\Domain\AppSetting\AppSettingRepository;
 
 /**
  * Inicialización y funcionalidad general de la aplicación
@@ -175,8 +176,8 @@ class App
         $this->emailSettings = $emailSettings;
 
         // Inicializar gestión de la sesión de usuario.
-        $this->sessionInstance = new SessionManager;
-        $this->sessionInstance->init();
+        $this->sessionManagerInstance = new SessionManager;
+        $this->sessionManagerInstance->init();
 
         // Inicializar la gestión del controlador HTTP.
         $this->controllerInstance = new Controller($pathBase);
@@ -223,7 +224,7 @@ class App
 
     public function getSessionManagerInstance(): SessionManager
     {
-        return $this->sessionInstance;
+        return $this->sessionManagerInstance;
     }
 
     public function getControllerInstance(): Controller
@@ -274,5 +275,16 @@ class App
     public function getEmailSettings(): array
     {
         return $this->emailSettings;
+    }
+
+    /**
+     * Quick alias for app setting retrieving
+     */
+
+    public function getSetting(string $shortName): mixed
+    {
+        $repository = new AppSettingRepository($this->getDbConn());
+
+        return $repository->retrieveById($repository->findByShortName($shortName))->getValue();
     }
 }

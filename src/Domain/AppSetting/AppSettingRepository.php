@@ -114,7 +114,7 @@ class AppSettingRepository implements Repository
         return $return;
     }
 
-    public function findByShortName(int $testShortName): bool|int
+    public function findByShortName(string $testShortName): bool|int
     {
         $query = <<< SQL
         SELECT 

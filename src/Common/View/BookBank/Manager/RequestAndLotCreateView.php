@@ -47,19 +47,11 @@ class RequestAndLotCreateView extends ViewModel
 
         $this->student = $userRepository->retrieveById($studentId);
 
-        // TODO
         $this->form = new RequestAndLotCreateForm(self::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/', $this->student->getId()); 
 
         $this->form->handle();
 
-        $preloadedData = [
-            'studentFullName' => $this->student->getFullName(),
-            'creationDate' => 'Ahora mismo',
-            'creatorName' => $app->getSessionManagerInstance()->getLoggedInUser()->getFullName(),
-            'schoolYear' => DomainUtils::schoolYearToHuman(20212022),
-        ];
-
-        $this->form->initialize($preloadedData);
+        $this->form->initialize();
 
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;

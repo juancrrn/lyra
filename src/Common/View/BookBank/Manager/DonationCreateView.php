@@ -54,7 +54,7 @@ class DonationCreateView extends ViewModel
             'studentFullName' => $this->student->getFullName(),
             'creationDate' => 'Ahora mismo',
             'creatorName' => $app->getSessionManagerInstance()->getLoggedInUser()->getFullName(),
-            'schoolYear' => DomainUtils::schoolYearToHuman(20212022),
+            'schoolYear' => DomainUtils::schoolYearToHuman($app->getSetting('school-year')),
         ];
 
         $this->form->initialize($preloadedData);

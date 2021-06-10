@@ -150,7 +150,7 @@ class DonationCreateForm extends StaticFormModel
                 new DateTime,
                 $app->getSessionManagerInstance()->getLoggedInUser()->getId(),
                 $newEducationLevel,
-                20212022,
+                $app->getSetting('school-year'),
                 null
             );
 

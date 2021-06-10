@@ -223,6 +223,10 @@ class SubjectRepository implements Repository
 
     public function search(string $keyword, ?bool $loadModel = false): array
     {
+        $app = App::getSingleton();
+
+        $schoolYear = $app->getSetting('school-year');
+
         $keyword = '%' . $keyword . '%';
 
         $query = <<< SQL
@@ -231,7 +235,7 @@ class SubjectRepository implements Repository
         FROM
             book_subjects        
         WHERE
-            school_year = 20212022
+            school_year = ?
         AND
         (
             name LIKE ?
@@ -245,7 +249,8 @@ class SubjectRepository implements Repository
 
         $stmt = $this->db->prepare($query);
         $stmt->bind_param(
-            'sss',
+            'isss',
+            $schoolYear,
             $keyword,
             $keyword,
             $keyword
