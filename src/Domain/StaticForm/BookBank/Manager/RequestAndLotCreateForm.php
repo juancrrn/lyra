@@ -155,7 +155,6 @@ class RequestAndLotCreateForm extends StaticFormModel
                         $app->getSessionManagerInstance()->getLoggedInUser()->getId(),
                         $pickupDate,
                         $returnDate,
-                        false,
                         null
                     );
 

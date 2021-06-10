@@ -159,6 +159,7 @@ class DonationCreateForm extends StaticFormModel
                 $app->getSessionManagerInstance()->getLoggedInUser()->getId(),
                 $newEducationLevel,
                 $app->getSetting('school-year'),
+                false,
                 null
             );
 
