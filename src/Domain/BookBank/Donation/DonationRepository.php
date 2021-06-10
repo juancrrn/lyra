@@ -2,11 +2,11 @@
 
 namespace Juancrrn\Lyra\Domain\BookBank\Donation;
 
-use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\BookBank\Donation\Donation;
 use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
 use Juancrrn\Lyra\Domain\Repository;
+use mysqli;
 
 /**
  * Repositorio de donaciones
@@ -21,19 +21,11 @@ use Juancrrn\Lyra\Domain\Repository;
 class DonationRepository implements Repository
 {
 
-    /**
-     * @var \mysqli $db     Conexión a la base de datos.
-     */
     protected $db;
 
-    /**
-     * Constructor
-     * 
-     * @param \mysqli $db   Conexión a la base de datos.
-     */
-    public function __construct(\mysqli $db)
+    public function __construct(mysqli $db)
     {
-        $this->db = App::getSingleton()->getDbConn();
+        $this->db = $db;
     }
 
     /**
@@ -54,10 +46,11 @@ class DonationRepository implements Repository
                 creation_date,
                 creator_id,
                 education_level,
-                school_year
+                school_year,
+                locked
             )
         VALUES
-            ( ?, ?, ?, ?, ?, ? )
+            ( ?, ?, ?, ?, ?, ?, ? )
         SQL;
 
         $stmt = $this->db->prepare($query);
@@ -69,6 +62,7 @@ class DonationRepository implements Repository
         $creatorId = $item->getCreatorId();
         $educationLevel = $item->getEducationLevel();
         $schoolYear = $item->getSchoolYear();
+        $locked = $item->isLocked();
 
         $stmt->bind_param(
             'iisisi',
@@ -77,7 +71,8 @@ class DonationRepository implements Repository
             $creationDate,
             $creatorId,
             $educationLevel,
-            $schoolYear
+            $schoolYear,
+            $locked
         );
         
         $stmt->execute();
@@ -155,7 +150,8 @@ class DonationRepository implements Repository
             creation_date,
             creator_id,
             education_level,
-            school_year
+            school_year,
+            locked
         FROM
             book_donations
         WHERE

@@ -51,6 +51,11 @@ class Donation
     private $schoolYear;
 
     /**
+     * @var string $locked
+     */
+    private $locked;
+
+    /**
      * @var null|array $contents
      */
     private $contents;
@@ -62,6 +67,7 @@ class Donation
         int         $creatorId,
         string      $educationLevel,
         int         $schoolYear,
+        bool        $locked,
         ?array      $contents = null
     )
     {
@@ -71,6 +77,7 @@ class Donation
         $this->creatorId        = $creatorId;
         $this->educationLevel   = $educationLevel;
         $this->schoolYear       = $schoolYear;
+        $this->locked           = $locked;
         $this->contents         = $contents;
     }
 
@@ -87,7 +94,8 @@ class Donation
             $creationDate,
             $mysqli_object->creator_id,
             $mysqli_object->education_level,
-            $mysqli_object->school_year
+            $mysqli_object->school_year,
+            $mysqli_object->locked
         );
     }
 
@@ -136,6 +144,11 @@ class Donation
     public function getSchoolYear(): int
     {
         return $this->schoolYear;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked;
     }
 
     public function getContents(): null|array

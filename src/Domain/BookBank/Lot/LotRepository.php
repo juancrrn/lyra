@@ -4,13 +4,11 @@ namespace Juancrrn\Lyra\Domain\BookBank\Lot;
 
 use DateTime;
 use InvalidArgumentException;
-use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\BookBank\Lot\Lot;
 use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
 use Juancrrn\Lyra\Domain\DomainConstraintsException;
 use Juancrrn\Lyra\Domain\Repository;
-use RuntimeException;
 
 /**
  * Repositorio de paquetes
@@ -44,11 +42,10 @@ class LotRepository implements Repository
                 creation_date,
                 creator_id,
                 pickup_date,
-                return_date,
-                locked
+                return_date
             )
         VALUES
-            ( ?, ?, ?, ?, ?, ?, ?, ? )
+            ( ?, ?, ?, ?, ?, ?, ? )
         SQL;
 
         $stmt = $this->db->prepare($query);
@@ -67,18 +64,16 @@ class LotRepository implements Repository
             $item->getReturnDate()
                 ->format(CommonUtils::MYSQL_DATETIME_FORMAT):
             null;
-        $locked = $item->isLocked();
 
         $stmt->bind_param(
-            'iississi',
+            'iississ',
             $id,
             $requestId,
             $status,
             $creationDate,
             $creatorId,
             $pickupDate,
-            $returnDate,
-            $locked
+            $returnDate
         );
         
         $stmt->execute();
@@ -106,8 +101,7 @@ class LotRepository implements Repository
             creation_date = ?,
             creator_id = ?,
             pickup_date = ?,
-            return_date = ?,
-            locked = ?
+            return_date = ?
         WHERE
             id = ?
         SQL;
@@ -128,10 +122,9 @@ class LotRepository implements Repository
             $item->getReturnDate()
                 ->format(CommonUtils::MYSQL_DATETIME_FORMAT):
             null;
-        $locked = $item->isLocked();
 
         $stmt->bind_param(
-            'iissisissii',
+            'iissisissi',
             $requestId,
             $studentId,
             $status,
@@ -141,7 +134,6 @@ class LotRepository implements Repository
             $schoolYear,
             $pickupDate,
             $returnDate,
-            $locked,
             $id
         );
         

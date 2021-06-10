@@ -89,11 +89,6 @@ class Lot
     private $returnDate;
 
     /**
-     * @var bool $locked
-     */
-    private $locked;
-
-    /**
      * Contenido del paquete, si se ha solicitado su carga.
      * 
      * En caso afirmativo, debe ser un array de Subject.
@@ -110,7 +105,6 @@ class Lot
         int         $creatorId,
         ?DateTime   $pickupDate,
         ?DateTime   $returnDate,
-        bool        $locked,
         ?array      $contents
     )
     {
@@ -121,7 +115,6 @@ class Lot
         $this->creatorId       = $creatorId;
         $this->pickupDate      = $pickupDate;
         $this->returnDate      = $returnDate;
-        $this->locked          = $locked;
         $this->contents        = $contents;
     }
 
@@ -156,7 +149,6 @@ class Lot
             $mysqli_object->creator_id,
             $pickupDate,
             $returnDate,
-            $mysqli_object->locked,
             null
         );
     }
@@ -216,11 +208,6 @@ class Lot
     public function getReturnDate(): null|DateTime
     {
         return $this->returnDate;
-    }
-
-    public function isLocked(): bool
-    {
-        return $this->locked;
     }
 
     public function getContents(): null|array
