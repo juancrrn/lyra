@@ -55,6 +55,7 @@ $(() => {
         const $target = $(event.target);
         const requestUrl = $target.data('query-url');
         const query = $target.val();
+        const educationLevel = $('.subject-list-search-education-level-filter').first().val();
 
         $targetList = $('#' + $target.data('target-list'));
         $targetResults = $('#' + $target.data('target-results'));
@@ -66,9 +67,12 @@ $(() => {
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 data: JSON.stringify({
-                    'query': query
+                    'query': query,
+                    'educationLevel': educationLevel
                 }),
                 success: (result) => {
+                    console.log($target.width());
+                    $targetResults.css('width', $target.outerWidth());
                     $targetResults.removeClass('d-none').addClass('d-block');
                     $targetResultsList.empty();
 
@@ -118,4 +122,11 @@ $(() => {
             toast.error('La asignatura seleccionada ya estaba añadida.');
         }
     });
+
+    /**
+     * Handle education level changes
+     */
+    $('.subject-list-search-education-level-filter').on('change', (event) => {
+        // TODO
+    })
 });

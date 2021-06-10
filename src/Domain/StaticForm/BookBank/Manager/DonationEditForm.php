@@ -158,6 +158,14 @@ class DonationEditForm extends StaticFormModel
             foreach ($newContents as $newSubjectId) {
                 if (! $subjectRepository->findById($newSubjectId)) {
                     $viewManager->addErrorMessage('Hubo un error al procesar los contenidos.');
+                } else {
+                    $newSubject = $subjectRepository->retrieveById($newSubjectId);
+
+                    if ($newSubject->getEducationLevel() != $newEducationLevel) {
+                        $newContents = array_diff($newContents, [ $newSubjectId ]);
+
+                        $viewManager->addWarningMessage('Se ignoró un contenido cuyo nivel educativo no coincidía con el de la donación.');
+                    }
                 }
             }
         }

@@ -32,21 +32,31 @@ toast.create = (type, text) =>
 }
 
 /**
- * Creates and shows a success toast
- */
-toast.success = (text) =>
-{
-    var $toast = toast.create('exito', text);
-    $('#toasts-container').prepend($toast);
-    $toast.toast('show');
-}
-
-/**
  * Creates and shows an error toast
  */
 toast.error = (text) =>
 {
     var $toast = toast.create('error', text);
+    $('#toasts-container').prepend($toast);
+    $toast.toast('show');
+}
+
+/**
+ * Creates and shows a success toast
+ */
+toast.success = (text) =>
+{
+    var $toast = toast.create('success', text);
+    $('#toasts-container').prepend($toast);
+    $toast.toast('show');
+}
+
+/**
+ * Creates and shows a success toast
+ */
+toast.warning = (text) =>
+{
+    var $toast = toast.create('warning', text);
     $('#toasts-container').prepend($toast);
     $toast.toast('show');
 }

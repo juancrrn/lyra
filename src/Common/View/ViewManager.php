@@ -172,7 +172,27 @@ class ViewManager
     public function addSuccessMessage(string $mensaje, string $header_location = null): void
     {
         $_SESSION[self::SESSION_MESSAGES][] = [
-            "tipo" => "exito",
+            "tipo" => "success",
+            "contenido" => $mensaje
+        ];
+
+        if ($header_location !== null) {
+            header("Location: " . App::getSingleton()->getUrl() . $header_location);
+            die();
+        }
+    }
+    
+    /**
+     * Añade un mensaje de aviso a la cola de mensajes para el usuario.
+     * 
+     * @param string $message Mensaje a mostrar al usuario.
+     * @param string $header_location Opcional para redirigir al mismo tiempo 
+     * que se encola el mensaje.
+     */
+    public function addWarningMessage(string $mensaje, string $header_location = null): void
+    {
+        $_SESSION[self::SESSION_MESSAGES][] = [
+            "tipo" => "warning",
             "contenido" => $mensaje
         ];
 

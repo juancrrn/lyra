@@ -99,7 +99,7 @@ class RequestAndLotCreateForm extends StaticFormModel
 
             if ($newStatus == Request::STATUS_PROCESSED) {
                 $newLotStatus = $this->processNewLotStatus($postedData[self::FORM_FIELDS_NAME_PREFIX . 'lot-status']);
-                $newLotContents = $this->processNewLotContents($postedData[self::FORM_FIELDS_NAME_PREFIX . 'lot-contents']);
+                $newLotContents = $this->processNewLotContents($postedData[self::FORM_FIELDS_NAME_PREFIX . 'lot-contents'], $newEducationLevel);
             } else {
                 $newLotStatus = null;
                 $newLotContents = null;
@@ -338,7 +338,7 @@ class RequestAndLotCreateForm extends StaticFormModel
         return $newLotStatus;
     }
 
-    private function processNewLotContents($newLotContents = null): mixed
+    private function processNewLotContents($newLotContents = null, $newEducationLevel): mixed
     {
         $app = App::getSingleton();
 
@@ -352,6 +352,14 @@ class RequestAndLotCreateForm extends StaticFormModel
             foreach ($newLotContents as $newSubjectId) {
                 if (! $subjectRepository->findById($newSubjectId)) {
                     $viewManager->addErrorMessage('Hubo un error al procesar los contenidos del paquete asociado.');
+                } else {
+                    $newSubject = $subjectRepository->retrieveById($newSubjectId);
+
+                    if ($newSubject->getEducationLevel() != $newEducationLevel) {
+                        $newLotContents = array_diff($newLotContents, [ $newSubjectId ]);
+
+                        $viewManager->addWarningMessage('Se ignoró un contenido cuyo nivel educativo no coincidía con el de la solicitud.');
+                    }
                 }
             }
         }

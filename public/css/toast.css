@@ -29,10 +29,14 @@
     display: inline-block;
 }
 
-.type-indicator.exito {
+.type-indicator.success {
     background-color: #44c05d;
 }
 
 .type-indicator.error {
     background-color: #c45060;
+}
+
+.type-indicator.warning {
+    background-color: #d38520;
 }

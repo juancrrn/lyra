@@ -221,7 +221,7 @@ class SubjectRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    public function search(string $keyword, ?bool $loadModel = false): array
+    public function search(string $keyword, ?bool $loadModel = false, ?string $educationLevel = null): array
     {
         $app = App::getSingleton();
 
@@ -229,32 +229,65 @@ class SubjectRepository implements Repository
 
         $keyword = '%' . $keyword . '%';
 
-        $query = <<< SQL
-        SELECT 
-            id
-        FROM
-            book_subjects        
-        WHERE
-            school_year = ?
-        AND
-        (
-            name LIKE ?
-        OR
-            book_name LIKE ?
-        OR
-            book_isbn LIKE ?
-        )
-        LIMIT 8
-        SQL;
+        if ($educationLevel) {
+            $query = <<< SQL
+            SELECT 
+                id
+            FROM
+                book_subjects        
+            WHERE
+                school_year = ?
+            AND
+                education_level = ?
+            AND
+            (
+                name LIKE ?
+            OR
+                book_name LIKE ?
+            OR
+                book_isbn LIKE ?
+            )
+            LIMIT 8
+            SQL;
+    
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param(
+                'issss',
+                $schoolYear,
+                $educationLevel,
+                $keyword,
+                $keyword,
+                $keyword
+            );
+        } else {
+            $query = <<< SQL
+            SELECT 
+                id
+            FROM
+                book_subjects        
+            WHERE
+                school_year = ?
+            AND
+            (
+                name LIKE ?
+            OR
+                book_name LIKE ?
+            OR
+                book_isbn LIKE ?
+            )
+            LIMIT 8
+            SQL;
 
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param(
-            'isss',
-            $schoolYear,
-            $keyword,
-            $keyword,
-            $keyword
-        );
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param(
+                'isss',
+                $schoolYear,
+                $keyword,
+                $keyword,
+                $keyword
+            );
+        }
+
         $stmt->execute();
 
         $result = $stmt->get_result();

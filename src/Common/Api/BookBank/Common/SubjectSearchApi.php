@@ -17,9 +17,15 @@ class SubjectSearchApi extends ApiModel
 
         $apiManager = $app->getApiManagerInstance();
 
-        $subjectRepository = new SubjectRepository($app->getDbConn()); 
+        $subjectRepository = new SubjectRepository($app->getDbConn());
 
-        $searchResult = $subjectRepository->search($requestContent->query, true);
+        if (isset($requestContent->educationLevel)) {
+            $educationLevelFilter = $requestContent->educationLevel;
+        } else {
+            $educationLevelFilter = null;
+        }
+
+        $searchResult = $subjectRepository->search($requestContent->query, true, $educationLevelFilter);
 
         $apiManager->apiRespond(
             200,
