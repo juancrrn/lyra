@@ -54,8 +54,13 @@ class AppManagerRouteGroup implements RouteGroupModel
             throw new Exception('Route declared but not implemented.');
         });
         
-        // Configuración
+        // App settings
         $this->controllerInstance->get(AppSettingsView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new AppSettingsView);
+        });
+        
+        // App settings (form POST)
+        $this->controllerInstance->post(AppSettingsView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new AppSettingsView);
         });
     }

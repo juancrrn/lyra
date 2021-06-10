@@ -173,7 +173,7 @@ class AppSettingRepository implements Repository
         return $element;
     }
 
-    public function retrieveAll(?bool $loadPermissionGroups = false): array
+    public function retrieveAll(): array
     {
         $query = <<< SQL
         SELECT
@@ -183,7 +183,7 @@ class AppSettingRepository implements Repository
             description,
             value
         FROM
-            users
+            app_settings
         SQL;
 
         $stmt = $this->db->prepare($query);
