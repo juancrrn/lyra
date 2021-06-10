@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
 
 /**
  * Vistas de usuarios con permisos de gestor de la aplicación (AppManager)
@@ -54,8 +55,8 @@ class AppManagerRouteGroup implements RouteGroupModel
         });
         
         // Configuración
-        $this->controllerInstance->get('/manage/settings/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        $this->controllerInstance->get(AppSettingsView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new AppSettingsView);
         });
     }
 }

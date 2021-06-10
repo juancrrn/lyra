@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Common\View\Common;
 
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
@@ -64,22 +65,34 @@ class HeaderPartView extends ViewModel
         $userMenuBuffer = ''; 
 
         if ($sessionManager->isLoggedIn()) {
-            $logoutForm = new LogoutForm('/auth/logout/');
-            $logoutForm->handle();
-            $logoutForm->initialize();
+            /* App settings view link */
+            if ($user->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
+                $appSettingsLinkActive =
+                    $viewManager->getCurrentRenderingView() instanceof AppSettingsView ?
+                    'active' : '';
+                $appSettingsUrl = $app->getUrl() . AppSettingsView::VIEW_ROUTE;
+                $userMenuBuffer .= $viewManager->generateUserMenuItem(
+                    '<a class="nav-link ' . $appSettingsLinkActive . '" href="' . $appSettingsUrl . '">' . AppSettingsView::VIEW_NAME . '</a>'
+                );
+            }
 
+            /* User profile view link */
             $user = $sessionManager->getLoggedInUser();
             
             $fullName = $user->getFullName();
 
-            $profileUrl = $app->getUrl() . '/self/profile/';
-
             $profileLinkActive =
                 $viewManager->getCurrentRenderingView() instanceof ProfileView ?
                 'active' : '';
+            $profileUrl = $app->getUrl() . ProfileView::VIEW_ROUTE;
             $userMenuBuffer .= $viewManager->generateUserMenuItem(
                 '<a class="nav-link ' . $profileLinkActive . '" href="' . $profileUrl . '">' . $fullName . '</a>'
             );
+
+            /* Logout form */
+            $logoutForm = new LogoutForm('/auth/logout/');
+            $logoutForm->handle();
+            $logoutForm->initialize();
             $userMenuBuffer .= $viewManager->generateUserMenuItem($logoutForm->getHtml());
         } else {
             $loginUrl = $app->getUrl() . '/auth/login/';
