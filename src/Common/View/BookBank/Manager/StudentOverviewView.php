@@ -67,6 +67,7 @@ class StudentOverviewView extends ViewModel
         $filling = [
             'app-name' => $app->getName(),
             'view-name' => $this->getName(),
+            'back-to-search-url' => $app->getUrl() . StudentSearchView::VIEW_ROUTE,
             'student-card-html' => $this->generateStudentCardPart(),
             //'request-count' => 0,//$requestIdsCount,
             'request-and-lot-create-url' => $app->getUrl() . RequestAndLotCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/requests/create/',
@@ -169,7 +170,10 @@ class StudentOverviewView extends ViewModel
                     [
                         'heading-id' => 'header-donation-' . $donationId,
                         'body-id' => 'body-donation-' . $donationId,
-                        'id' => $donationId,
+                        'id-badge' => $viewManager->fillTemplate(
+                            'views/bookbank/common/part_id_badge_donation',
+                            [ 'id' => $donationId ]
+                        ),
                         'title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
                         'creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
                         'content-list-human' => $donationContentListHuman,
@@ -256,7 +260,10 @@ class StudentOverviewView extends ViewModel
                         [
                             'heading-id' => 'header-request-' . $requestId,
                             'body-id' => 'body-request-' . $requestId,
-                            'id' => $requestId,
+                            'id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_request',
+                                [ 'id' => $requestId ]
+                            ),
                             'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
                             'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
                             'lot-badge' => $lotBadge,
@@ -265,7 +272,10 @@ class StudentOverviewView extends ViewModel
                                 $request->getCreationDate()->getTimestamp()
                             ),
                             'specification' => $specification,
-                            'lot-id' => $lot->getId(),
+                            'lot-id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_lot',
+                                [ 'id' => $lot->getId() ]
+                            ),
                             'lot-title-human' =>
                                 Lot::statusToHuman($lot->getStatus())->getTitle(),
                             'lot-creation-date-human' => strftime(
@@ -284,7 +294,10 @@ class StudentOverviewView extends ViewModel
                         [
                             'heading-id' => 'header-request-' . $requestId,
                             'body-id' => 'body-request-' . $requestId,
-                            'id' => $requestId,
+                            'id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_request',
+                                [ 'id' => $requestId ]
+                            ),
                             'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
                             'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
                             'lot-badge' => '',

@@ -10,6 +10,9 @@
 
 :root {
     --disabled-input-background-color: #e9ecef;
+    --lyra-donation-theme-color: #b1ffca;
+    --lyra-request-theme-color: #f2d1ff;
+    --lyra-lot-theme-color: #ffe6ce;
 }
 
 *, html, body, header,footer, section, aside, div, ul, li, a, p, h1, h2, h3, h4, span, table, tr, td {
@@ -74,4 +77,38 @@
 
 .associated-lot .accordion-button[disabled] {
     background-color: var(--disabled-input-background-color);
+}
+
+.domain-id-badge {
+    display: inline-block;
+    padding: .35em;
+    line-height: 1;
+    color: var(--bs-gray-dark);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 1rem;
+    background-color: #eeeeee;
+    width: 3.3rem;
+}
+
+.domain-id-badge.donation {
+    background-color: var(--lyra-donation-theme-color);
+}
+
+.domain-id-badge.request {
+    background-color: var(--lyra-request-theme-color);
+}
+
+.domain-id-badge.lot {
+    background-color: var(--lyra-lot-theme-color);
+}
+
+.domain-id-badge .id {
+    font-size: .9em;
+}
+
+.domain-id-badge .icon {
+    margin-bottom: .3rem;
+    font-size: 1.4rem;
 }

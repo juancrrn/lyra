@@ -116,7 +116,12 @@ class OverviewView extends ViewModel
                         [
                             'heading-id' => 'header-request-' . $requestId,
                             'body-id' => 'body-request-' . $requestId,
-                            'id' => $requestId,
+                            'id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_request',
+                                [
+                                    'id' => $requestId
+                                ]
+                            ),
                             'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
                             'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
                             'lot-badge' => $lotBadge,
@@ -125,7 +130,12 @@ class OverviewView extends ViewModel
                                 $request->getCreationDate()->getTimestamp()
                             ),
                             'specification' => $specification,
-                            'lot-id' => $lot->getId(),
+                            'lot-id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_lot',
+                                [
+                                    'id' => $lot->getId()
+                                ]
+                            ),
                             'lot-title-human' =>
                                 Lot::statusToHuman($lot->getStatus())->getTitle(),
                             'lot-creation-date-human' => strftime(
@@ -143,7 +153,12 @@ class OverviewView extends ViewModel
                         [
                             'heading-id' => 'header-request-' . $requestId,
                             'body-id' => 'body-request-' . $requestId,
-                            'id' => $requestId,
+                            'id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_request',
+                                [
+                                    'id' => $requestId
+                                ]
+                            ),
                             'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
                             'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
                             'lot-badge' => '',
@@ -207,7 +222,12 @@ class OverviewView extends ViewModel
                     [
                         'heading-id' => 'header-donation-' . $donationId,
                         'body-id' => 'body-donation-' . $donationId,
-                        'id' => $donationId,
+                        'id-badge' => $viewManager->fillTemplate(
+                            'views/bookbank/common/part_id_badge_donation',
+                            [
+                                'id' => $donationId
+                            ]
+                        ),
                         'title-human' => 'Donación de ' . DomainUtils::educationLevelToHuman($donation->getEducationLevel())->getTitle(),
                         'creation-date-human' => strftime(CommonUtils::HUMAN_DATETIME_FORMAT_STRF, $donation->getCreationDate()->getTimestamp()),
                         'content-list-human' => $donationContentListHuman
