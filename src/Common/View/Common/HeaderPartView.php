@@ -6,6 +6,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\SubjectListView;
 use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
 use Juancrrn\Lyra\Common\View\Home\DashboardView;
 use Juancrrn\Lyra\Common\View\ViewModel;
@@ -55,6 +56,8 @@ class HeaderPartView extends ViewModel
 
             if ($user->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
                 $mainMenuBuffer .= $viewManager->generateMainMenuLink(StudentSearchView::class);
+
+                $mainMenuBuffer .= $viewManager->generateMainMenuLink(SubjectListView::class);
             }
         } else {
             $mainMenuBuffer .= $viewManager->generateMainMenuLink(HomeView::class);
