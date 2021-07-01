@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Common\Controller;
 
 use Exception;
 use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
+use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
@@ -65,6 +66,11 @@ class BookBankManagerRouteGroup implements RouteGroupModel
          * Students' records manual management
          * 
          */
+        
+        // Student search API
+        $this->controllerInstance->post(StudentSearchApi::API_ROUTE, function () use ($apiManager) {
+            $apiManager->call(new StudentSearchApi);
+        });
         
         // Student search
         $this->controllerInstance->get(StudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
