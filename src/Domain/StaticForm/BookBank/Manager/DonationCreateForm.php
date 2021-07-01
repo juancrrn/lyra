@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager;
 
 use DateTime;
+use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\TemplateUtils;
@@ -100,7 +101,7 @@ class DonationCreateForm extends StaticFormModel
             'student-full-name' => $preloadedData['studentFullName'],
             'education-level-select-options-html' => $educationLevelSelectOptionsHtml,
             'school-year-human' => $preloadedData['schoolYear'],
-            'query-url' => $app->getUrl() . '/bookbank/manage/subjects/search/',
+            'query-url' => $app->getUrl() . SubjectSearchApi::API_ROUTE,
             'initial-contents-list-html' => $initialContentsListHtml,
             'creator-name' => $preloadedData['creatorName'],
             'creation-date-human' => $preloadedData['creationDate'],

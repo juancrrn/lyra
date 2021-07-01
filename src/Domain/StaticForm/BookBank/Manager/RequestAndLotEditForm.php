@@ -67,7 +67,7 @@ class RequestAndLotEditForm extends StaticFormModel
             'student-full-name' => $userRepository->retrieveById($request->getStudentId())->getFullName(),
             'education-level-select-options-html' => $educationLevelSelectOptionsHtml,
             'school-year-human' => DomainUtils::schoolYearToHuman($request->getSchoolYear()),
-            'query-url' => $app->getUrl() . '/bookbank/manage/subjects/search/',
+            'query-url' => $app->getUrl() . SubjectSearchApi::API_ROUTE,
             'creator-name' => $userRepository->retrieveById($request->getCreatorId())->getFullName(),
             'creation-date-human' => strftime(
                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,

@@ -9,7 +9,7 @@ use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
 class SubjectSearchApi extends ApiModel
 {
 
-    public const API_ROUTE = '/bookbank/manage/subjects/search/';
+    public const API_ROUTE = '/api/bookbank/subjects/search/';
 
     public function consume(object $requestContent): void
     {

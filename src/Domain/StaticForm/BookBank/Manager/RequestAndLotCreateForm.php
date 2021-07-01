@@ -65,7 +65,7 @@ class RequestAndLotCreateForm extends StaticFormModel
             'student-full-name' => $this->student->getFullName(),
             'education-level-select-options-html' => $educationLevelSelectOptionsHtml,
             'school-year-human' => DomainUtils::schoolYearToHuman($app->getSetting('school-year')), // TODO Change to AppSetting
-            'query-url' => $app->getUrl() . '/bookbank/manage/subjects/search/',
+            'query-url' => $app->getUrl() . SubjectSearchApi::API_ROUTE,
             'creator-name' => $app->getSessionManagerInstance()->getLoggedInUser()->getFullName(),
             'creation-date-human' => 'Ahora',
             'form-fields-name-prefix' => self::FORM_FIELDS_NAME_PREFIX,
