@@ -153,6 +153,42 @@ class SubjectRepository implements Repository
         $stmt->close();
     }
 
+    public function updateNameAndBookAttributes(
+        int $id,
+        string $name,
+        string $bookName,
+        string $bookIsbn,
+        string $bookImageUrl
+    ): void
+    {
+        $query = <<< SQL
+        UPDATE
+            book_subjects
+        SET
+            name = ?,
+            book_name = ?,
+            book_isbn = ?,
+            book_image_url = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'ssssi',
+            $name,
+            $bookName,
+            $bookIsbn,
+            $bookImageUrl,
+            $id
+        );
+        
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
     public function findById(int $testId): bool|int
     {
         $query = <<< SQL

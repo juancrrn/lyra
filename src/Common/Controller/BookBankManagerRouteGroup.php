@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
 use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\DonationCreateView;
@@ -15,6 +16,8 @@ use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestAndLotEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\SubjectListView;
+use Juancrrn\Lyra\Domain\AjaxForm\BookBank\Manager\SubjectEditForm;
+use Juancrrn\Lyra\Domain\DomainUtils;
 
 /**
  * Vistas de usuarios con permisos de gestor del banco de libros
@@ -55,6 +58,19 @@ class BookBankManagerRouteGroup implements RouteGroupModel
         $this->controllerInstance->get(SubjectListView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new SubjectListView);
         });
+
+        // Subject AJAX forms are separated in education levels
+        foreach (DomainUtils::EDU_LEVELS as $eduLevel) {
+            // Edit GET
+            $this->controllerInstance->get(SubjectEditForm::SUBMIT_URL, function () use ($eduLevel) {
+                (new SubjectEditForm($eduLevel))->handle();
+            });
+
+            // Edit PATCH
+            $this->controllerInstance->patch(SubjectEditForm::SUBMIT_URL, function () use ($eduLevel) {
+                (new SubjectEditForm($eduLevel))->handle();
+            });
+        }
         
         // Subject AJAX search
         $this->controllerInstance->post(SubjectSearchApi::API_ROUTE, function () use ($apiManager) {

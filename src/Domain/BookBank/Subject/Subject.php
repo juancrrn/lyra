@@ -125,19 +125,22 @@ class Subject implements JsonSerializable
 
     public function jsonSerialize(): mixed
     {
+        $eduLevelHuman = DomainUtils::educationLevelToHuman($this->getEducationLevel());
+
         return [
+            'uniqueId' => $this->getId(),
             'id' => $this->getId(),
             'name' => $this->getName(),
             'compoundName' => 
                 $this->getName() . ' de ' .
-                DomainUtils::educationLevelToHuman($this->getEducationLevel())->getTitle(),
+                $eduLevelHuman->getTitle(),
             'educationLevel' => $this->getEducationLevel(),
+            'educationLevelHumanDescription' => $eduLevelHuman->getDescription(),
             'schoolYear' => $this->getSchoolYear(),
             'bookName' => $this->getBookName(),
             'bookIsbn' => $this->getBookIsbn(),
             'bookImageUrl' => $this->getBookImageUrl(),
             'creationDate' => $this->getCreationDate()
-            //'creatorId' => $this->
         ];
     }
 

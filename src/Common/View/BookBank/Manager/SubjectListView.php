@@ -5,6 +5,7 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Manager;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\AjaxForm\BookBank\Manager\SubjectEditForm;
 use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
 use Juancrrn\Lyra\Domain\DomainUtils;
 use Juancrrn\Lyra\Domain\User\User;
@@ -44,8 +45,6 @@ class SubjectListView extends ViewModel
 
         $viewManager = $app->getViewManagerInstance();
 
-        
-
         $filling = [
             'app-url' => $app->getUrl(),
             'view-name' => $this->getName(),
@@ -69,6 +68,8 @@ class SubjectListView extends ViewModel
         foreach (DomainUtils::EDU_LEVELS as $eduLevel) {
             $human = DomainUtils::educationLevelToHuman($eduLevel);
 
+            $currentSubjectEditForm = new SubjectEditForm($eduLevel);
+
             $subjectRepo = new SubjectRepository($app->getDbConn());
 
             $subjectIds = $subjectRepo->findByEducationLevel($eduLevel);
@@ -78,7 +79,24 @@ class SubjectListView extends ViewModel
             foreach ($subjectIds as $subjectId) {
                 $subject = $subjectRepo->retrieveById($subjectId);
 
-                $content .= $subject->getName();
+                $bookImageUrl = $subject->getBookImageUrl() ??
+                    $app->getUrl() . '/img/graphic-default-book-image.svg';
+
+                $bookName = $subject->getBookName() ??
+                    'Sin libro o libro no definido';
+
+                $content .= $viewManager->fillTemplate(
+                    'views/bookbank/manager/view_subject_list_part_accordion_item_part_subject_item_editable',
+                    [
+                        'book-image-url' => $bookImageUrl,
+                        'title-human' =>
+                            $subject->getName() . ' de ' .
+                            DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
+                        'book-isbn' => $subject->getBookIsbn(),
+                        'book-name' => $bookName,
+                        'edit-button' => $currentSubjectEditForm->generateButton('Editar', $subject->getId(), true)
+                    ]
+                );
             }
 
             $html .= $viewManager->fillTemplate(
@@ -88,6 +106,7 @@ class SubjectListView extends ViewModel
                     'title' => $human->getDescription() . ' (' . $human->getTitle() . ')',
                     'accordion-id' => self::VIEW_ID . '-accordion',
                     'accordion-item-prefix' => self::VIEW_ID . '-accordion-item-',
+                    'subject-edit-form-modal-html' => $currentSubjectEditForm->generateModal(),
                     'content' => $content
                 ]
             );
