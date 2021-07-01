@@ -2,6 +2,7 @@
 
 namespace Juancrrn\Lyra\Domain\AjaxForm;
 
+use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Http;
 use stdClass;
 
@@ -147,9 +148,11 @@ abstract class AjaxFormModel
 
         if (mb_strtolower($contentType) !=
             mb_strtolower(self::JSON_ADMITTED_CONTENT_TYPE)) {
-            $this->respondJsonError(400, array( // Bad request
-                'Content type not supported'
-            ));
+            $this->respondJsonError(400, // Bad request
+                [
+                    'Content type not supported'
+                ]
+            );
         }
 
         // Check request method
@@ -181,38 +184,23 @@ abstract class AjaxFormModel
                 if ($this->CsrfValidateToken($submittedCsrfToken)) {
                     $this->processSubmit($data);
                 } else {
-                    $errorMessages = array('La validación CSRF ha fallado. Por favor, vuelve a cargar el formulario.');
+                    $errorMessages = [
+                        'La validación CSRF ha fallado. Por favor, vuelve a cargar el formulario.'
+                    ];
 
                     $this->respondJsonError(400, $errorMessages);
                 }
             }
         } else {
-            $this->respondJsonError(400, // Bad request
-                array('Method not supported')
+            $this->respondJsonError(
+                400, // Bad request
+                [
+                    'Method not supported'
+                ]
             );
         }
 
         // End script execution.
-        die();
-    }
-
-    /**
-     * Generates an HTTP response with a JSON-encoded data and an HTTP status 
-     * code, and stops script execution
-     * 
-     * @param array $data     Data to send in the response
-     * @param int   $httpCode HTTP status code
-     */
-    public function respondJson(int $httpCode, array $data): void
-    {
-        http_response_code($httpCode);
-
-        header('Content-Type: application/json; charset=utf-8');
-
-        // This should be the only echo in all the code
-        echo json_encode($data);
-
-        // Nothing else should be sent
         die();
     }
 
@@ -227,16 +215,121 @@ abstract class AjaxFormModel
         // Generate a new CSRF token.
         $newCsrfToken = $this->CsrfGenerateToken();
 
-        $errorData = array(
+        $errorData = [
             'status' => 'error',
             self::FORM_ID_FIELD => $this->id,
             self::CSRF_TOKEN_FIELD => $newCsrfToken,
             'error' => $httpErrorCode,
             'messages' => $messages
-        );
+        ];
 
-        $this->respondJson($httpErrorCode, $errorData);
+        Http::respondJson($httpErrorCode, $errorData);
     }
+
+    /**
+     * Quick alias for JSON error response.
+     * 
+     * 400 - Bad Request
+     * 
+     * The server could not understand the request due to invalid syntax.
+     */
+    public function respondJsonBadRequest(array $messages): void
+    {
+        $this->respondJsonError(400, $messages);
+    }
+
+    /**
+     * Quick alias for JSON error response.
+     * 
+     * 401 - Unauthorized
+     * 
+     * Although the HTTP standard specifies "unauthorized", semantically this
+     * response means "unauthenticated". That is, the client must authenticate
+     * itself to get the requested response.
+     */
+    public function respondJsonUnauthorized(array $messages): void
+    {
+        $this->respondJsonError(401, $messages);
+    }
+
+    /**
+     * Quick alias for JSON error response.
+     * 
+     * 403 - Forbidden
+     * 
+     * The client does not have access rights to the content; that is, it is
+     * unauthorized, so the server is refusing to give the requested resource.
+     * Unlike 401, the client's identity is known to the server.
+     */
+    public function respondJsonForbidden(array $messages): void
+    {
+        $this->respondJsonError(403, $messages);
+    }
+
+    /**
+     * Quick alias for JSON error response.
+     * 
+     * 404 - Not Found
+     * 
+     * The server can not find the requested resource. In the browser, this
+     * means the URL is not recognized. In an API, this can also mean that the
+     * endpoint is valid but the resource itself does not exist. Servers may
+     * also send this response instead of 403 to hide the existence of a
+     * resource from an unauthorized client. This response code is probably the
+     * most famous one due to its frequent occurrence on the web.
+     */
+    public function respondJsonNotFound(array $messages): void
+    {
+        $this->respondJsonError(404, $messages);
+    }
+
+    /**
+     * Quick alias for JSON error response.
+     * 
+     * 405 - Method Not Allowed
+     * 
+     * The request method is known by the server but is not supported by the
+     * target resource. For example, an API may forbid DELETE-ing a resource.
+     */
+    public function respondJsonMethodNotAllowed(array $messages): void
+    {
+        $this->respondJsonError(405, $messages);
+    }
+
+    /**
+     * Quick alias for JSON error response.
+     * 
+     * 406 - Not Acceptable
+     * 
+     * This response is sent when the web server, after performing server-driven
+     * content negotiation, doesn't find any content that conforms to the
+     * criteria given by the user agent.
+     */
+    public function respondJsonNotAcceptable(array $messages): void
+    {
+        $this->respondJsonError(406, $messages);
+    }
+
+    /**
+     * Quick alias for JSON error response.
+     * 
+     * 409 - Conflict
+     * 
+     * This response is sent when a request conflicts with the current state of
+     * the server.
+     */
+    public function respondJsonConflict(array $messages): void
+    {
+        $this->respondJsonError(409, $messages);
+    }
+
+
+    
+
+
+
+
+
 
     /**
      * Responds with an HTTP 200 OK and message
@@ -245,13 +338,13 @@ abstract class AjaxFormModel
      */
     public function respondJsonOk(array $data): void
     {
-        $okData = array(
+        $okData = [
             'status' => 'ok',
-        );
+        ];
 
         $responseData = array_merge($okData, $data);
 
-        $this->respondJson(200, $responseData);
+        Http::respondJson(200, $responseData);
     }
 
     /**
@@ -269,7 +362,7 @@ abstract class AjaxFormModel
      */
     protected function getDefaultData(array $requestData) : array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -292,10 +385,10 @@ abstract class AjaxFormModel
         } else {
             $csrfToken = $this->CsrfGenerateToken();
 
-            $formHiddenData = array(
+            $formHiddenData = [
                 self::FORM_ID_FIELD => $this->id,
                 self::CSRF_TOKEN_FIELD => $csrfToken
-            );
+            ];
 
             $all = array_merge($formHiddenData, $defaultData);
 
@@ -308,7 +401,7 @@ abstract class AjaxFormModel
      * 
      * @param array $data Data sent in form submission
      */
-    abstract public function processSubmit(array $data = array()): void;
+    abstract public function processSubmit(array $data = []): void;
 
     /**
      * Generates specific form inputs as placeholders for AJAX preloading
@@ -324,71 +417,44 @@ abstract class AjaxFormModel
      */
     public function generateModal(): string
     {
-        $inputs = $this->generateFormInputs();
-
-        $formId = $this->id;
-        $formName = $this->formName;
-        $formIdField = self::FORM_ID_FIELD;
-        $csrfTokenField = self::CSRF_TOKEN_FIELD;
-
-        $targetObjectNameData = 
-            'data-' . self::TARGET_CLASS_NAME_FIELD .
-            '="' . $this->targetObjectName . '"';
-
-        $readOnlyData = 'data-' . self::READ_ONLY_FIELD .
-        '="' . ($this->isReadOnly() ? 'true' : 'false') . '"';
-
-        // Optional on success event name
-        $onSuccessEventNameData = $this->onSuccessEventName ?
-            'data-' . self::ON_SUCCESS_EVENT_NAME_FIELD .
-            '="' . $this->onSuccessEventName . '"' : '';
-
-        // Optional on success event target
-        $onSuccessEventTargetData = $this->onSuccessEventTarget ?
-            'data-' . self::ON_SUCCESS_EVENT_TARGET_FIELD .
-            '="' . $this->onSuccessEventTarget . '"' : '';
-
-        $submitUrlData =
-            'data-' . self::SUBMIT_URL_FIELD .
-            '="' . $this->submitUrl . '"';
-
-        $expectedSubmitMethodData =
-            'data-' . self::EXPECTED_SUBMIT_METHOD_FIELD .
-            '="' . $this->expectedSubmitMethod . '"';
-
-        if (! $this->isReadOnly()) {
-            $footer = <<< HTML
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Continue</button>
-            </div>
-            HTML;
-        } else {
-            $footer = '';
-        }
-
-        $html = <<< HTML
-        <div class="modal fade ajax-modal" data-ajax-form-id="$formId" $readOnlyData $onSuccessEventNameData $onSuccessEventTargetData $submitUrlData $expectedSubmitMethodData $targetObjectNameData tabindex="-1" role="dialog" aria-labelledby="$formId-modal-label" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <form class="modal-content" id="$formId">
-                    <input type="hidden" name="$formIdField">
-                    <input type="hidden" name="$csrfTokenField">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="$formId-modal-label">$formName</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        return App::getSingleton()->getViewManagerInstance()->fillTemplate(
+            'ajax-forms/common/modal-master-template',
+            [
+                'form-id' => $this->id,
+                'form-id-field' => self::FORM_ID_FIELD,
+                'form-name' => $this->formName,
+                'csrf-token-field' => self::CSRF_TOKEN_FIELD,
+                'target-object-name-data' =>
+                    'data-' . self::TARGET_CLASS_NAME_FIELD .
+                    '="' . $this->targetObjectName . '"',
+                'read-only-data' =>
+                    'data-' . self::READ_ONLY_FIELD .
+                    '="' . ($this->isReadOnly() ? 'true' : 'false') . '"',
+                'on-success-event-name-data' => 
+                    $this->onSuccessEventName ?
+                    'data-' . self::ON_SUCCESS_EVENT_NAME_FIELD .
+                    '="' . $this->onSuccessEventName . '"' : '',
+                'on-success-event-target-data' =>
+                    $this->onSuccessEventTarget ?
+                    'data-' . self::ON_SUCCESS_EVENT_TARGET_FIELD .
+                    '="' . $this->onSuccessEventTarget . '"' : '',
+                'submit-url-data' =>
+                    'data-' . self::SUBMIT_URL_FIELD .
+                    '="' . $this->submitUrl . '"',
+                'expected-submit-method-data' =>
+                    'data-' . self::EXPECTED_SUBMIT_METHOD_FIELD .
+                    '="' . $this->expectedSubmitMethod . '"',
+                'inputs' => $this->generateFormInputs(),
+                'footer' =>
+                    $this->isReadOnly() ? '' :
+                    <<< HTML
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
-                    <div class="modal-body">
-                        $inputs
-                    </div>
-                    $footer
-                </form>
-            </div>
-        </div>
-        HTML;
-
-        return $html;
+                    HTML,
+            ]
+        );
     }
 
     /**
@@ -398,6 +464,9 @@ abstract class AjaxFormModel
      */
     private function CsrfGenerateToken(): string
     {
+        if (App::getSingleton()->isDevMode())
+            return '';
+
         $token = hash('sha512', mt_rand(0, mt_getrandmax()));
 
         $_SESSION[self::CSRF_PREFIX . '_' . $this->id] = $token;
@@ -414,6 +483,9 @@ abstract class AjaxFormModel
      */
     private function CsrfValidateToken(null|string $token): bool
     {
+        if (App::getSingleton()->isDevMode())
+            return true;
+
         if (! $token) return false;
 
         if (isset($_SESSION[self::CSRF_PREFIX . '_' . $this->id])
@@ -445,7 +517,7 @@ abstract class AjaxFormModel
         $link->rel = $rel;
         $link->selectType = $selectType;
 
-        if (! is_array($data)) $data = array($data); // Ensure it is an array
+        if (! is_array($data)) $data = [ $data ]; // Ensure it is an array
 
         $link->data = array_values($data); // Ensure array is unkeyed
 

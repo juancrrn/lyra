@@ -122,4 +122,24 @@ class Http
             return false;
         }
     }
+
+    /**
+     * Generates an HTTP response with a JSON-encoded data and an HTTP status 
+     * code, and stops script execution
+     * 
+     * @param array $data     Data to send in the response
+     * @param int   $httpCode HTTP status code
+     */
+    public static function respondJson(int $httpCode, array $data): void
+    {
+        http_response_code($httpCode);
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        // This should be the only echo in all the code
+        echo json_encode($data);
+
+        // Nothing else should be sent
+        die();
+    }
 }

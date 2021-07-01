@@ -1,0 +1,16 @@
+<div class="modal fade ajax-modal" data-ajax-form-id="#form-id#" #read-only-data# #on-success-event-name-data# #on-success-event-target-data# #submit-url-data# #expected-submit-method-data# #target-object-name-data# tabindex="-1" role="dialog" aria-labelledby="#form-id#-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form class="modal-content" id="#form-id#">
+            <input type="hidden" name="#form-id-field#">
+            <input type="hidden" name="#csrf-token-field#">
+            <div class="modal-header">
+                <h5 class="modal-title" id="#form-id#-modal-label">#form-name#</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                #inputs#
+            </div>
+            #footer#
+        </form>
+    </div>
+</div>
