@@ -13,6 +13,7 @@ use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestAndLotCreateView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestAndLotEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
+use Juancrrn\Lyra\Common\View\BookBank\Manager\SubjectListView;
 
 /**
  * Vistas de usuarios con permisos de gestor del banco de libros
@@ -50,8 +51,8 @@ class BookBankManagerRouteGroup implements RouteGroupModel
          */
         
         // Subject list
-        $this->controllerInstance->get('/bookbank/manage/subjects/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        $this->controllerInstance->get(SubjectListView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new SubjectListView);
         });
         
         // Subject AJAX search

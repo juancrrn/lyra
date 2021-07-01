@@ -22,27 +22,27 @@ class DomainUtils
      */
     public const EDU_LEVEL_ESO_1    = 'edu_level_eso_1';
     private const EDU_LEVEL_ESO_1_TITLE = 'ESO 1';
-    private const EDU_LEVEL_ESO_1_DESC = '1er curso de ESO';
+    private const EDU_LEVEL_ESO_1_DESC = 'Primer curso de ESO';
 
     public const EDU_LEVEL_ESO_2    = 'edu_level_eso_2';
     private const EDU_LEVEL_ESO_2_TITLE = 'ESO 2';
-    private const EDU_LEVEL_ESO_2_DESC = '2o curso de ESO';
+    private const EDU_LEVEL_ESO_2_DESC = 'Segundo curso de ESO';
 
     public const EDU_LEVEL_ESO_3    = 'edu_level_eso_3';
     private const EDU_LEVEL_ESO_3_TITLE = 'ESO 3';
-    private const EDU_LEVEL_ESO_3_DESC = '3er curso de ESO';
+    private const EDU_LEVEL_ESO_3_DESC = 'Tercer curso de ESO';
 
     public const EDU_LEVEL_ESO_4    = 'edu_level_eso_4';
     private const EDU_LEVEL_ESO_4_TITLE = 'ESO 4';
-    private const EDU_LEVEL_ESO_4_DESC = '4o curso de ESO';
+    private const EDU_LEVEL_ESO_4_DESC = 'Cuarto curso de ESO';
 
     public const EDU_LEVEL_BACH_1   = 'edu_level_bach_1';
     private const EDU_LEVEL_BACH_1_TITLE = 'Bach 1';
-    private const EDU_LEVEL_BACH_1_DESC = '1er curso de Bachillerato';
+    private const EDU_LEVEL_BACH_1_DESC = 'Primer curso de Bachillerato';
 
     public const EDU_LEVEL_BACH_2   = 'edu_level_bach_2';
     private const EDU_LEVEL_BACH_2_TITLE = 'Bach 2';
-    private const EDU_LEVEL_BACH_2_DESC = '2o curso de Bachillerato';
+    private const EDU_LEVEL_BACH_2_DESC = 'Segundo curso de Bachillerato';
 
     public const EDU_LEVEL_OTHER    = 'edu_level_other';
     private const EDU_LEVEL_OTHER_TITLE = 'Otro';

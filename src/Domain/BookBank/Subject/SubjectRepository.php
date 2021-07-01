@@ -182,6 +182,43 @@ class SubjectRepository implements Repository
         return $return;
     }
 
+    public function findByEducationLevel(string $testEducationLevel): array
+    {
+        $app = App::getSingleton();
+        $schoolYear = $app->getSetting('school-year');
+
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            book_subjects
+        WHERE
+            education_level = ?
+        AND
+            school_year = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param(
+            'si',
+            $testEducationLevel,
+            $schoolYear
+        );
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $items = array();
+
+        while ($item = $result->fetch_object()) {
+            $items[] = $item->id;
+        }
+
+        $stmt->close();
+
+        return $items;
+    }
+
     public function retrieveById(int $id): Subject
     {
         $query = <<< SQL
