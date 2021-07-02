@@ -160,7 +160,6 @@ class RequestAndLotEditForm extends StaticFormModel
                         $app->getSessionManagerInstance()->getLoggedInUser()->getId(),
                         $pickupDate,
                         $returnDate,
-                        false,
                         null
                     );
 
@@ -434,7 +433,7 @@ class RequestAndLotEditForm extends StaticFormModel
         return $newLotStatus;
     }
 
-    private function processNewLotContents($newLotContents = null, $newEducationLevel): mixed
+    private function processNewLotContents($newLotContents, $newEducationLevel): mixed
     {
         $app = App::getSingleton();
 
