@@ -184,6 +184,92 @@ class RequestRepository implements Repository
 
         return $items;
     }
+    
+    public function findReturnsByStudentId(int $studentId): array
+    {
+        $query = <<< SQL
+        SELECT
+            id
+        FROM
+            book_requests
+        WHERE
+            student_id = ?
+        AND
+            status = 'book_request_status_processed'
+        AND
+            EXISTS (
+                SELECT
+                    id
+                FROM
+                    book_lots
+                WHERE
+                    status = 'book_lot_status_picked_up'
+                AND
+                    request_id = book_requests.id
+            )
+        ORDER BY
+            creation_date
+        DESC
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $studentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $items = array();
+
+        while ($item = $result->fetch_object()) {
+            $items[] = $item->id;
+        }
+
+        $stmt->close();
+
+        return $items;
+    }
+    
+    public function findPickupsByStudentId(int $studentId): array
+    {
+        $query = <<< SQL
+        SELECT
+            id
+        FROM
+            book_requests
+        WHERE
+            student_id = ?
+        AND
+            status = 'book_request_status_processed'
+        AND
+            EXISTS (
+                SELECT
+                    id
+                FROM
+                    book_lots
+                WHERE
+                    status = 'book_lot_status_ready'
+                AND
+                    request_id = book_requests.id
+            )
+        ORDER BY
+            creation_date
+        DESC
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $studentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $items = array();
+
+        while ($item = $result->fetch_object()) {
+            $items[] = $item->id;
+        }
+
+        $stmt->close();
+
+        return $items;
+    }
 
     public function retrieveById(int $id): Request
     {

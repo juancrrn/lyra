@@ -13,21 +13,18 @@
         <div class="col-md-3"></div>
     </div>
 
-    <div class="row mb-3">
+    <div class="row mb-4">
         <div class="col-xl-1"></div>
-        <div class="col-xl-5">
+        <div class="col-xl-5 mb-4">
             <div class="row align-items-center mb-3">
                 <div class="col">
                     <h4 class="text-secondary">
-                        <a href="#TODO#" class="btn btn-primary rounded-pill me-3">
-                            <span class="material-icons d-inline-block align-middle">add</span>
-                        </a>
                         <span class="material-icons-outlined d-inline-block align-middle me-2">file_download</span>
-                        <span class="d-inline-block align-middle">Devoluciones</span>
+                        <span class="d-inline-block align-middle">Devoluciones (#returns-count#)</span>
                     </h4>
                 </div>
             </div>
-            <div class="accordion mb-4" id="bookbank-student-overview-donations-accordion">
+            <div class="accordion" id="#returns-accordion-id#">
                 #returns-content#
             </div>
         </div>
@@ -35,15 +32,12 @@
             <h4 class="row text-secondary mb-3">
                 <div class="col">
                     <h4 class="text-secondary">
-                        <a href="#TODO#" class="btn btn-primary rounded-pill me-3">
-                            <span class="material-icons d-inline-block align-middle">add</span>
-                        </a>
                         <span class="material-icons-outlined d-inline-block align-middle me-2">file_upload</span>
-                        <span class="d-inline-block align-middle">Recogidas</span>
+                        <span class="d-inline-block align-middle">Recogidas (#pickups-count#)</span>
                     </h4>
                 </div>
             </h4>
-            <div class="accordion mb-4" id="bookbank-student-overview-requests-lots-accordion">
+            <div class="accordion" id="#pickups-accordion-id#">
                 #pickups-content#
             </div>
         </div>
@@ -52,36 +46,46 @@
 
     <div class="row">
         <div class="col-xl-1"></div>
-        <div class="col-xl-5">
+        <div class="col-xl-5 mb-4">
             <div class="row align-items-center mb-3">
                 <div class="col">
                     <h4 class="text-secondary">
-                        <a href="#TODO#" class="btn btn-primary rounded-pill me-3">
-                            <span class="material-icons d-inline-block align-middle">add</span>
-                        </a>
                         <span class="material-icons-outlined d-inline-block align-middle me-2">favorite_border</span>
                         <span class="d-inline-block align-middle">Donaciones</span>
                     </h4>
                 </div>
             </div>
-            <div class="accordion mb-4" id="bookbank-student-overview-donations-accordion">
-                #donations-content#
+            <div class="card p-3">
+                <div class="row align-items-center">
+                    <div class="col">Siempre se pueden crear donaciones 😃</div>
+                    <div class="col-md-4 text-end">
+                        <a href="#donations-btn-url#" class="btn btn-primary rounded-pill">
+                            <span class="d-inline-block align-middle material-icons-outlined">add</span>
+                            <span class="d-inline-block align-middle">Nueva</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-xl-5">
             <h4 class="row text-secondary mb-3">
                 <div class="col">
                     <h4 class="text-secondary">
-                        <a href="#TODO#" class="btn btn-primary rounded-pill me-3">
-                            <span class="material-icons d-inline-block align-middle">add</span>
-                        </a>
                         <span class="material-icons-outlined d-inline-block align-middle me-2">book</span>
                         <span class="d-inline-block align-middle">Solicitudes</span>
                     </h4>
                 </div>
             </h4>
-            <div class="accordion mb-4" id="bookbank-student-overview-requests-lots-accordion">
-                #requests-content#
+            <div class="card p-3">
+                <div class="row align-items-center">
+                    <div class="col">#requests-text#</div>
+                    <div class="col-md-4 text-end">
+                        <a href="#requests-btn-url#" class="btn btn-primary rounded-pill #requests-btn-disabled-class#" #requests-btn-disabled-attibutes#>
+                            <span class="d-inline-block align-middle material-icons-outlined">add</span>
+                            <span class="d-inline-block align-middle">Nueva</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-xl-1"></div>

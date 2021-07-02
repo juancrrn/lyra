@@ -34,6 +34,11 @@ class CheckInAssistantStudentOverviewView extends ViewModel
 
     private $student;
 
+    private $returnsContent;
+    private $returnsCount;
+    private $pickupsContent;
+    private $pickupsCount;
+
     public function __construct(int $studentId)
     {
         $app = App::getSingleton();
@@ -64,11 +69,44 @@ class CheckInAssistantStudentOverviewView extends ViewModel
 
         $viewManager = $app->getViewManagerInstance();
 
+        $this->initializeReturnsContent();
+        $this->initializePickupsContent();
+
+        if ($this->returnsCount != 0) {
+            $requestsText = 'No es posible crear solicitudes si existen devoluciones pendientes.';
+            $requestsBtnUrl = '#';
+            $requestsBtnDisabledClass = 'disabled';
+            $requestsBtnDisabledAttributes = 'aria-disabled="true" tabindex="-1"';
+        } else {
+            $requestsText = 'Es posible crear solicitudes.';
+            $requestsBtnUrl = '#';
+            $requestsBtnDisabledClass = '';
+            $requestsBtnDisabledAttributes = '';
+        }
+
         $filling = [
             'app-name' => $app->getName(),
             'view-name' => $this->getName(),
             'back-to-search-url' => $app->getUrl() . CheckInAssistantStudentSearchView::VIEW_ROUTE,
             'student-card-html' => $this->generateStudentCardPart(),
+
+            'returns-count' => $this->returnsCount,
+            'returns-accordion-id' => self::VIEW_ID . '-returns-accordion',
+            // Mostrar todas las devoluciones (solicitudes procesadas y con paquete en estado picked-up) y enlace a formulario "lite" para transformar a estado siguiente (solicitud procesada y paquete returned)
+            'returns-content' => $this->getReturnsContent(),
+
+            'pickups-count' => $this->pickupsCount,
+            'pickups-accordion-id' => self::VIEW_ID . '-pickups-accordion',
+            // Mostrar todas las recogidas (solicitudes procesadas y con paquete en estado ready) y enlace a formulario "lite" para transformar (y modificar contenido) a estados siguientes (solicitud procesada y paquete a estados picked-up o rejected)
+            'pickups-content' => $this->getPickupsContent(),
+
+            'donations-btn-url' => '#',
+
+            'requests-text' => $requestsText,
+            'requests-btn-url' => $requestsBtnUrl,
+            'requests-btn-disabled-class' => $requestsBtnDisabledClass,
+            'requests-btn-disabled-attributes' => $requestsBtnDisabledAttributes,
+
             //'request-count' => 0,//$requestIdsCount,
             //'request-and-lot-create-url' => '',//$app->getUrl() . RequestAndLotCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/requests/create/',
             //'request-lot-list-human' => $this->generateRequestListItemsHtml(),
@@ -114,6 +152,209 @@ class CheckInAssistantStudentOverviewView extends ViewModel
             $studentCardFilling
         );
     }
+
+    private function initializeReturnsContent(): void
+    {
+        $this->returnsContent = '';
+
+        $app = App::getSingleton();
+
+        $viewManager = $app->getViewManagerInstance();
+
+        $requestRepository = new RequestRepository($app->getDbConn());
+
+        $requestIds = $requestRepository->findReturnsByStudentId($this->student->getId());
+        
+        $this->returnsCount = count($requestIds);
+
+        if (empty($requestIds)) {
+            $this->returnsContent .= $viewManager->fillTemplate(
+                'views/bookbank/common/part_card_empty',
+                []
+            );
+        } else {
+            foreach ($requestIds as $requestId) {
+                $request = $requestRepository->retrieveById($requestId, true);
+
+                $specification = 
+                    $request->getSpecification() == '' ? '(Vacía)' :
+                    $request->getSpecification();
+
+                if ($request->getStatus() == Request::STATUS_PROCESSED) {
+                    $lotRepository = new LotRepository($app->getDbConn());
+
+                    $lot = $lotRepository->retrieveById($lotRepository->findByRequestId($requestId), true);
+
+                    $lotContentListHuman = '';
+
+                    if (empty($lot->getContents())) {
+                        $lotContentListHuman = $viewManager->fillTemplate(
+                            'views/bookbank/common/part_subject_list_empty', []
+                        );
+                    } else {
+                        foreach ($lot->getContents() as $subject) {
+                            $bookImageUrl = $subject->getBookImageUrl() ??
+                                $app->getUrl() . '/img/graphic-default-book-image.svg';
+
+                            $bookName = $subject->getBookName() ??
+                                'Sin libro o libro no definido';
+                                
+                            $lotContentListHuman .= $viewManager->fillTemplate(
+                                'views/bookbank/common/part_subject_list_item',
+                                [
+                                    'book-image-url' => $bookImageUrl,
+                                    'title-human' =>
+                                        $subject->getName() . ' de ' .
+                                        DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
+                                    'book-isbn' => $subject->getBookIsbn(),
+                                    'book-name' => $bookName
+                                ]
+                            );
+                        }
+                    }
+
+                    $this->returnsContent .= $viewManager->fillTemplate(
+                        'views/bookbank/manager/view_overview_part_request_with_lot_editable_item', ////////////////////// TODO
+                        [
+                            'heading-id' => 'header-request-' . $requestId,
+                            'body-id' => 'body-request-' . $requestId,
+                            'id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_request',
+                                [ 'id' => $requestId ]
+                            ),
+                            'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
+                            'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
+                            'lot-badge' => '<span class="badge rounded-pill bg-warning"><i class="material-icons">report_problem</i> Paquete pendiente de devolución</span>',
+                            'creation-date-human' => strftime(
+                                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
+                                $request->getCreationDate()->getTimestamp()
+                            ),
+                            'specification' => $specification,
+                            'lot-id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_lot',
+                                [ 'id' => $lot->getId() ]
+                            ),
+                            'lot-title-human' =>
+                                Lot::statusToHuman($lot->getStatus())->getTitle(),
+                            'lot-creation-date-human' => strftime(
+                                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
+                                $lot->getCreationDate()->getTimestamp()
+                            ),
+                            'lot-content-list-human' => $lotContentListHuman,
+                            'edit-url' => '',//$app->getUrl() . RequestAndLotEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'  ////////////////////// TODO
+                        ]
+                    );
+                }
+            }
+        }
+    }
+
+    private function initializePickupsContent(): void
+    {
+        $this->pickupsContent = '';
+
+        $app = App::getSingleton();
+
+        $viewManager = $app->getViewManagerInstance();
+
+        $requestRepository = new RequestRepository($app->getDbConn());
+
+        $requestIds = $requestRepository->findPickupsByStudentId($this->student->getId());
+        
+        $this->pickupsCount = count($requestIds);
+
+        if (empty($requestIds)) {
+            $this->pickupsContent .= $viewManager->fillTemplate(
+                'views/bookbank/common/part_card_empty',
+                []
+            );
+        } else {
+            foreach ($requestIds as $requestId) {
+                $request = $requestRepository->retrieveById($requestId, true);
+
+                $specification = 
+                    $request->getSpecification() == '' ? '(Vacía)' :
+                    $request->getSpecification();
+
+                if ($request->getStatus() == Request::STATUS_PROCESSED) {
+                    $lotRepository = new LotRepository($app->getDbConn());
+
+                    $lot = $lotRepository->retrieveById($lotRepository->findByRequestId($requestId), true);
+
+                    $lotContentListHuman = '';
+
+                    if (empty($lot->getContents())) {
+                        $lotContentListHuman = $viewManager->fillTemplate(
+                            'views/bookbank/common/part_subject_list_empty', []
+                        );
+                    } else {
+                        foreach ($lot->getContents() as $subject) {
+                            $bookImageUrl = $subject->getBookImageUrl() ??
+                                $app->getUrl() . '/img/graphic-default-book-image.svg';
+
+                            $bookName = $subject->getBookName() ??
+                                'Sin libro o libro no definido';
+                                
+                            $lotContentListHuman .= $viewManager->fillTemplate(
+                                'views/bookbank/common/part_subject_list_item',
+                                [
+                                    'book-image-url' => $bookImageUrl,
+                                    'title-human' =>
+                                        $subject->getName() . ' de ' .
+                                        DomainUtils::educationLevelToHuman($subject->getEducationLevel())->getTitle(),
+                                    'book-isbn' => $subject->getBookIsbn(),
+                                    'book-name' => $bookName
+                                ]
+                            );
+                        }
+                    }
+
+                    $this->pickupsContent .= $viewManager->fillTemplate(
+                        'views/bookbank/manager/view_overview_part_request_with_lot_editable_item', ////////////////////// TODO
+                        [
+                            'heading-id' => 'header-request-' . $requestId,
+                            'body-id' => 'body-request-' . $requestId,
+                            'id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_request',
+                                [ 'id' => $requestId ]
+                            ),
+                            'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
+                            'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
+                            'lot-badge' => '<span class="badge rounded-pill bg-success"><i class="material-icons">done</i> Paquete listo para recoger</span>',
+                            'creation-date-human' => strftime(
+                                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
+                                $request->getCreationDate()->getTimestamp()
+                            ),
+                            'specification' => $specification,
+                            'lot-id-badge' => $viewManager->fillTemplate(
+                                'views/bookbank/common/part_id_badge_lot',
+                                [ 'id' => $lot->getId() ]
+                            ),
+                            'lot-title-human' =>
+                                Lot::statusToHuman($lot->getStatus())->getTitle(),
+                            'lot-creation-date-human' => strftime(
+                                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
+                                $lot->getCreationDate()->getTimestamp()
+                            ),
+                            'lot-content-list-human' => $lotContentListHuman,
+                            'edit-url' => '',//$app->getUrl() . RequestAndLotEditView::VIEW_ROUTE_BASE . $requestId . '/edit/'  ////////////////////// TODO
+                        ]
+                    );
+                }
+            }
+        }
+    }
+
+    private function getReturnsContent(): string
+    {
+        return $this->returnsContent;
+    }
+
+    private function getPickupsContent(): string
+    {
+        return $this->pickupsContent;
+    }
+
 /*
     private function generateDonationListItemsHtml(): string
     {
