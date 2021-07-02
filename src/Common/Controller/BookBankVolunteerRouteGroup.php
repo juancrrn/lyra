@@ -6,6 +6,8 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentOverviewView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchView;
 
 /**
  * Vistas de usuarios con permisos de voluntario del banco de libros
@@ -43,10 +45,15 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
          * Asistente de recepción
          * 
          */
-
-        // Búsqueda de usuario
-        $this->controllerInstance->get('/bookbank/check-in/search/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        
+        // Student search
+        $this->controllerInstance->get(CheckInAssistantStudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new CheckInAssistantStudentSearchView);
+        });
+        
+        // Student search (form POST)
+        $this->controllerInstance->post(CheckInAssistantStudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new CheckInAssistantStudentSearchView);
         });
 
         // Resumen de un usuario en el banco de libros y oferta de gestiones
@@ -54,9 +61,15 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
             // Devolución: devolver un paquete de libros
             // Solicitud: solicitar un paquete de libros
             // Recogida: recoger un paquete de libros
-        $this->controllerInstance->get('/bookbank/check-in/([0-9]+)/overview/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        
+        // Student overview
+        $this->controllerInstance->get(CheckInAssistantStudentOverviewView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantStudentOverviewView($itemId));
         });
+
+
+
+        
 
         // Finalización de gestiones (POST del formulario)
         $this->controllerInstance->post('/bookbank/check-in/([0-9]+)/process/', function () use ($viewManager) {
