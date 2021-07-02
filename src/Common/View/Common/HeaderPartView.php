@@ -52,17 +52,44 @@ class HeaderPartView extends ViewModel
             $mainMenuBuffer .= $viewManager->generateMainMenuLink(DashboardView::class);
 
             if ($user->hasPermission(User::NPG_STUDENT)) {
-                $mainMenuBuffer .= $viewManager->generateMainMenuLink(OverviewView::class);
+                $mainMenuBuffer .= $viewManager->generateNavBarItemDropdown(
+                    null,
+                    'Estudiante',
+                    [
+                        OverviewView::class
+                    ]
+                );
             }
 
             if ($user->hasPermission(User::NPG_BOOKBANK_VOLUNTEER)) {
-                $mainMenuBuffer .= $viewManager->generateMainMenuLink(CheckInAssistantStudentSearchView::class);
+                $mainMenuBuffer .= $viewManager->generateNavBarItemDropdown(
+                    null,
+                    'Voluntario BDL',
+                    [
+                        CheckInAssistantStudentSearchView::class
+                    ]
+                );
             }
 
             if ($user->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
-                $mainMenuBuffer .= $viewManager->generateMainMenuLink(StudentSearchView::class);
-
-                $mainMenuBuffer .= $viewManager->generateMainMenuLink(SubjectListView::class);
+                $mainMenuBuffer .= $viewManager->generateNavBarItemDropdown(
+                    null,
+                    'Gestor BDL',
+                    [
+                        StudentSearchView::class,
+                        SubjectListView::class
+                    ]
+                );
+            }
+            
+            if ($user->hasPermission(User::NPG_APP_MANAGER)) {
+                $mainMenuBuffer .= $viewManager->generateNavBarItemDropdown(
+                    null,
+                    'Gestor app',
+                    [
+                        AppSettingsView::class
+                    ]
+                );
             }
         } else {
             $mainMenuBuffer .= $viewManager->generateMainMenuLink(HomeView::class);
@@ -73,28 +100,15 @@ class HeaderPartView extends ViewModel
         $userMenuBuffer = ''; 
 
         if ($sessionManager->isLoggedIn()) {
-            /* App settings view link */
-            if ($user->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
-                $appSettingsLinkActive =
-                    $viewManager->getCurrentRenderingView() instanceof AppSettingsView ?
-                    'active' : '';
-                $appSettingsUrl = $app->getUrl() . AppSettingsView::VIEW_ROUTE;
-                $userMenuBuffer .= $viewManager->generateUserMenuItem(
-                    '<a class="nav-link ' . $appSettingsLinkActive . '" href="' . $appSettingsUrl . '">' . AppSettingsView::VIEW_NAME . '</a>'
-                );
-            }
-
             /* User profile view link */
             $user = $sessionManager->getLoggedInUser();
-            
-            $fullName = $user->getFullName();
 
             $profileLinkActive =
                 $viewManager->getCurrentRenderingView() instanceof ProfileView ?
                 'active' : '';
             $profileUrl = $app->getUrl() . ProfileView::VIEW_ROUTE;
             $userMenuBuffer .= $viewManager->generateUserMenuItem(
-                '<a class="nav-link ' . $profileLinkActive . '" href="' . $profileUrl . '">' . $fullName . '</a>'
+                '<a class="nav-link ' . $profileLinkActive . '" href="' . $profileUrl . '">Mi perfil</a>'
             );
 
             /* Logout form */

@@ -392,6 +392,23 @@ class ViewManager
         //die(); // TODO No necesario
     }
 
+    public static function validateViewClasses(array $viewClasses): void
+    {
+        foreach ($viewClasses as $viewClass) {
+            if (! class_exists($viewClass)) {
+                throw new InvalidArgumentException('Specified view class ($viewClass = ' . $viewClass . ') does not exist.');
+            }
+    
+            if (
+                ! defined($viewClass . '::VIEW_ID') ||
+                ! defined($viewClass . '::VIEW_NAME') ||
+                ! defined($viewClass . '::VIEW_ROUTE')
+            ) {
+                throw new InvalidArgumentException('Specified view class ($viewClass = ' . $viewClass . ') must have VIEW_ID, VIEW_NAME and VIEW_ROUTE constants defined and public.');
+            }
+        }
+    }
+
     /*
      * 
      * Elementos de menú
@@ -411,17 +428,7 @@ class ViewManager
      */
     public function generateMainMenuLink(string $viewClass): string
     {
-        if (! class_exists($viewClass)) {
-            throw new InvalidArgumentException('Specified view class ($viewClass = ' . $viewClass . ') does not exist.');
-        }
-
-        if (
-            ! defined($viewClass . '::VIEW_ID') ||
-            ! defined($viewClass . '::VIEW_NAME') ||
-            ! defined($viewClass . '::VIEW_ROUTE')
-        ) {
-            throw new InvalidArgumentException('Specified view class ($viewClass = ' . $viewClass . ') must have VIEW_ID, VIEW_NAME and VIEW_ROUTE constants defined and public.');
-        }
+        self::validateViewClasses([ $viewClass ]);
 
         $viewId = $viewClass::VIEW_ID;
         $viewName = $viewClass::VIEW_NAME;
@@ -439,6 +446,51 @@ class ViewManager
         HTML;
 
         return $a;
+    }
+
+    /**
+     * Genera un item de una lista no ordenada (<li> de una <ul>) para el menú 
+     * principal lateral.
+     * 
+     * Por defecto añade la ruta de la URL principal al principio del enlace.
+     * 
+     * @param string $url
+     * @param string $titulo
+     * @param string $paginaId Identificador de la página de destino, para saber
+     *                         si es la actual.
+     */
+    public function generateNavBarItemDropdown(?string $href, string $text, array $viewClasses): string
+    {
+        self::validateViewClasses($viewClasses);
+
+        $appUrl = App::getSingleton()->getUrl();
+
+        $subItems = '';
+
+        foreach ($viewClasses as $viewClass) {
+            $viewName = $viewClass::VIEW_NAME;
+            $viewRoute = $viewClass::VIEW_ROUTE;
+            
+            $hrefAttr = 'href="' . $appUrl . $viewRoute . '"';
+
+            $subItems .= <<< HTML
+            <li><a class="dropdown-item" $hrefAttr>$viewName</a></li>
+            HTML;
+        }
+
+        $href = $href ?? '#';
+        $hrefAttr = 'href="' . $href . '"';
+
+        return <<< HTML
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" $hrefAttr role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                $text
+            </a>
+            <ul class="dropdown-menu">
+                $subItems
+            </ul>
+        </li>
+        HTML;
     }
 
     /**

@@ -23,7 +23,7 @@ use Juancrrn\Lyra\Domain\User\User;
 class SubjectListView extends ViewModel
 {
     private const VIEW_RESOURCE_FILE    = 'views/bookbank/manager/view_subject_list';
-    public  const VIEW_NAME             = 'Asignaturas';
+    public  const VIEW_NAME             = 'Gestión de asignaturas';
     public  const VIEW_ID               = 'bookbank-manage-subject-list';
     public  const VIEW_ROUTE            = '/bookbank/manage/subjects/';
 

@@ -20,7 +20,7 @@ use Juancrrn\Lyra\Domain\User\User;
 class StudentSearchView extends ViewModel
 {
     private const VIEW_RESOURCE_FILE    = 'views/bookbank/manager/view_student_search';
-    public  const VIEW_NAME             = 'Gestión de banco de libros';
+    public  const VIEW_NAME             = 'Gestión de movimientos';
     public  const VIEW_ID               = 'bookbank-manage-student-search';
     public  const VIEW_ROUTE            = '/bookbank/manage/students/';
 
