@@ -16,6 +16,7 @@ use Juancrrn\Lyra\Common\View\BookBank\Manager\RequestAndLotEditView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\SubjectListView;
+use Juancrrn\Lyra\Domain\AjaxForm\BookBank\Manager\SubjectCreateForm;
 use Juancrrn\Lyra\Domain\AjaxForm\BookBank\Manager\SubjectEditForm;
 use Juancrrn\Lyra\Domain\DomainUtils;
 
@@ -61,6 +62,16 @@ class BookBankManagerRouteGroup implements RouteGroupModel
 
         // Subject AJAX forms are separated in education levels
         foreach (DomainUtils::EDU_LEVELS as $eduLevel) {
+            // Create GET
+            $this->controllerInstance->get(SubjectCreateForm::SUBMIT_URL, function () use ($eduLevel) {
+                (new SubjectCreateForm($eduLevel))->handle();
+            });
+
+            // Create POST
+            $this->controllerInstance->post(SubjectCreateForm::SUBMIT_URL, function () use ($eduLevel) {
+                (new SubjectCreateForm($eduLevel))->handle();
+            });
+
             // Edit GET
             $this->controllerInstance->get(SubjectEditForm::SUBMIT_URL, function () use ($eduLevel) {
                 (new SubjectEditForm($eduLevel))->handle();
