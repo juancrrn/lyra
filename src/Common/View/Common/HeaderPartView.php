@@ -13,6 +13,7 @@ use Juancrrn\Lyra\Common\View\Home\DashboardView;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
 use Juancrrn\Lyra\Common\View\Self\ProfileView;
+use Juancrrn\Lyra\Common\View\TimePlanner\LandingView;
 use Juancrrn\Lyra\Domain\StaticForm\Auth\LogoutForm;
 use Juancrrn\Lyra\Domain\User\User;
 
@@ -95,6 +96,8 @@ class HeaderPartView extends ViewModel
             $mainMenuBuffer .= $viewManager->generateMainMenuLink(HomeView::class);
         }
 
+        $mainMenuBuffer .= $viewManager->generateMainMenuLink(LandingView::class);
+
         // Generar elementos de la navegación del menú de sesión de usuario.
 
         $userMenuBuffer = ''; 
@@ -117,9 +120,9 @@ class HeaderPartView extends ViewModel
             $logoutForm->initialize();
             $userMenuBuffer .= $viewManager->generateUserMenuItem($logoutForm->getHtml());
         } else {
-            $loginUrl = $app->getUrl() . '/auth/login/';
+            /*$loginUrl = $app->getUrl() . '/auth/login/';
 
-            $userMenuBuffer .= $viewManager->generateUserMenuItem("<a class=\"nav-link\" href=\"$loginUrl\">Iniciar sesión</a>", LoginView::class);
+            $userMenuBuffer .= $viewManager->generateUserMenuItem("<a class=\"nav-link\" href=\"$loginUrl\">Iniciar sesión</a>", LoginView::class);*/
         }
 
         $filling = array(

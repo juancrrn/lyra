@@ -202,4 +202,14 @@ class ValidationUtils
 
 		return true;
 	}
+
+	public static function validateDate(mixed $testItem): bool
+	{
+		return preg_match(CommonUtils::REGEX_DATE_FORMAT, $testItem) === 1;
+	}
+
+	public static function validateTime(mixed $testItem): bool
+	{
+		return preg_match(CommonUtils::REGEX_TIME_FORMAT, $testItem) === 1;
+	}
 }

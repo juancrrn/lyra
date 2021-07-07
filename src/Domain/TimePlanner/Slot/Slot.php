@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\TimePlanner\Slot;
 
 use DateTime;
+use Juancrrn\Lyra\Common\CommonUtils;
 use stdClass;
 
 /**
@@ -62,8 +63,14 @@ class Slot
     {
         return new self(
             $object->id,
-            $object->date,
-            $object->time,
+            DateTime::createFromFormat(
+                CommonUtils::MYSQL_DATE_FORMAT,
+                $object->date
+            ),
+            DateTime::createFromFormat(
+                CommonUtils::MYSQL_TIME_FORMAT,
+                $object->time
+            ),
             $object->duration,
             $object->max_appointments
         );

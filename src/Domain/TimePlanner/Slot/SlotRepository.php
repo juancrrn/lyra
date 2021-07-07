@@ -37,7 +37,7 @@ class SlotRepository implements Repository
     {
         $query = <<< SQL
         SELECT
-            *
+            id
         FROM
             time_planner_slots
         WHERE
@@ -52,22 +52,22 @@ class SlotRepository implements Repository
 
         $stmt->execute();
         $result = $stmt->get_result();
-        $slots = array();
+        $slotIds = array();
 
         while ($slot = $result->fetch_object()) {
-            $slots[] = Slot::fromMysqlFetch($slot);
+            $slotIds[] = $slot->id;
         }
 
         $stmt->close();
 
-        return $slots;
+        return $slotIds;
     }
 
     public function findByDateAndTime(DateTime $testDate, DateTime $testTime): array
     {
         $query = <<< SQL
         SELECT
-            *
+            id
         FROM
             time_planner_slots
         WHERE
@@ -89,15 +89,15 @@ class SlotRepository implements Repository
 
         $stmt->execute();
         $result = $stmt->get_result();
-        $slots = array();
+        $slotIds = array();
 
         while ($slot = $result->fetch_object()) {
-            $slots[] = Slot::fromMysqlFetch($slot);
+            $slotIds[] = $slot->id;
         }
 
         $stmt->close();
 
-        return $slots;
+        return $slotIds;
     }
 
     public function retrieveById(int $id): mixed
@@ -158,11 +158,13 @@ class SlotRepository implements Repository
         $availableDates = array();
         
         foreach ($allSlots as $slot) {
+            $formattedDate = $slot->getDate()->format(CommonUtils::MYSQL_DATE_FORMAT);
+
             if (
-                ! in_array($slot->getDate(), $availableDates) &&
+                ! in_array($formattedDate, $availableDates) &&
                 ! $this->isFull($slot->getId())
             ) {
-                $availableDates[] = $slot->getDate();
+                $availableDates[] = $formattedDate;
             }
         }
         
@@ -178,8 +180,10 @@ class SlotRepository implements Repository
         foreach ($allSlotIds as $slotId) {
             $slot = $this->retrieveById($slotId);
 
+            $formattedTime = $slot->getTime()->format(CommonUtils::MYSQL_TIME_FORMAT);
+
             if (! $this->isFull($slot->getId())) {
-                $availableTimes[] = $slot->getTime();
+                $availableTimes[] = $formattedTime;
             }
         }
         
@@ -192,7 +196,7 @@ class SlotRepository implements Repository
 
         $appointmentRepo = new AppointmentRepository($this->db);
 
-        return $appointmentRepo->countBySlotId($slot->getId()) < $slot->getMaxAppointments();
+        return $appointmentRepo->countBySlotId($slot->getId()) >= $slot->getMaxAppointments();
     }
 
     public function validateDateAndTimeAvailability(DateTime $testDate, DateTime $testTime): bool

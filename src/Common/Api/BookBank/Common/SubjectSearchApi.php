@@ -11,7 +11,7 @@ class SubjectSearchApi extends ApiModel
 
     public const API_ROUTE = '/api/bookbank/subjects/search/';
 
-    public function consume(object $requestContent): void
+    public function consume(?object $requestContent): void
     {
         $app = App::getSingleton();
 

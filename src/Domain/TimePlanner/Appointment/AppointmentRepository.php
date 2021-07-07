@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\TimePlanner\Appointment;
 
 use DateTime;
+use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\Repository;
 use Juancrrn\Lyra\Domain\TimePlanner\Slot\SlotRepository;
 use mysqli;
@@ -62,13 +63,19 @@ class AppointmentRepository implements Repository
         $studentGovId           = $appointment->getStudentGovId();
         $studentFirstName       = $appointment->getStudentFirstName();
         $studentLastName        = $appointment->getStudentLastName();
-        $studentBirthDate       = $appointment->getStudentBirthDate();
+        $studentBirthDate       =
+            $appointment->getStudentBirthDate() != null ?
+            $appointment->getStudentBirthDate()->format(CommonUtils::MYSQL_DATE_FORMAT) :
+            null;
         $studentEmailAddress    = $appointment->getStudentEmailAddress();
         $studentPhoneNumber     = $appointment->getStudentPhoneNumber();
         $legalRepGovId          = $appointment->getLegalRepGovId();
         $legalRepFirstName      = $appointment->getLegalRepFirstName();
         $legalRepLastName       = $appointment->getLegalRepLastName();
-        $legalRepBirthDate      = $appointment->getLegalRepBirthDate();
+        $legalRepBirthDate      =
+            $appointment->getLegalRepBirthDate() != null ?
+            $appointment->getLegalRepBirthDate()->format(CommonUtils::MYSQL_DATE_FORMAT) :
+            null;
         $legalRepEmailAddress   = $appointment->getLegalRepEmailAddress();
         $legalRepPhoneNumber    = $appointment->getLegalRepPhoneNumber();
         $requestSpecification   = $appointment->getRequestSpecification();

@@ -41,6 +41,12 @@ toast.error = (text) =>
     $toast.toast('show');
 }
 
+toast.errors = (array) =>
+{
+    for (var i = 0; i < array.length; i++)
+        toast.error(array[i]);
+}
+
 /**
  * Creates and shows a success toast
  */
@@ -49,6 +55,12 @@ toast.success = (text) =>
     var $toast = toast.create('success', text);
     $('#toasts-container').prepend($toast);
     $toast.toast('show');
+}
+
+toast.successes = (array) =>
+{
+    for (var i = 0; i < array.length; i++)
+        toast.success(array[i]);
 }
 
 /**

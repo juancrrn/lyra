@@ -11,16 +11,16 @@
  */
 
 /**
- * Objeto para namespace.
+ * Namespace object
  */
- var auxUtils = {};
+var auxUtils = {};
 
  /**
-  * Retrieves a form's data and converts it to a JSON string
+  * Retrieves a form's data and converts it to a JSON object
   * 
   * @param {jQuery} $form
   */
- auxUtils.jQueryFormToJsonString = ($form) =>
+ auxUtils.jQueryFormToJson = ($form) =>
  {
      var resultObject = {};
  
@@ -47,7 +47,17 @@
          }
      }
  
-     return JSON.stringify(resultObject);
+     return resultObject;
+ }
+
+ /**
+  * Retrieves a form's data and converts it to a JSON string
+  * 
+  * @param {jQuery} $form
+  */
+ auxUtils.jQueryFormToJsonString = ($form) =>
+ {
+    return JSON.stringify(auxUtils.jQueryFormToJson($form));
  }
  
  /**

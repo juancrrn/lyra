@@ -1,0 +1,149 @@
+<div class="container">
+    
+    <div class="row mb-2">
+        <div class="col"></div>
+        <div class="col-md-6">
+            <h2 class="mb-4">#view-name#</h2>
+            <p class="mb-3">Te damos la bienvenida al servicio de gestión de cita previa de Lyra, la app que gestiona el banco de libros del IES Alfonso X el Sabio.</p>
+            <p class="mb-3">A continuación podrás reservar una cita eligiendo entre los espacios disponibles.</p>
+            <p class="mb-3">Recuerda que <strong>la hora de la cita es orientativa</strong>. Esto quiere decir que, aunque trabajamos para agilizar el proceso lo máximo posible, es posible que se generen retrasos.</p>
+            <p class="mb-3">Si tiene alguna duda o problema, no dude en contactar con nosotros a través de la aplicación de peticiones e incidencias en <a href="https://soporte.iax.es">soporte.iax.es</a>.</p>
+            <p class="mb-3">El siguiente periodo habilitado para solicitud de cita previa es: <strong>lunes 12 a viernes 16 de julio de 2021 para donación, devolución y solicitud de libros para el curso 2021 - 2022</strong>.</p>
+            <p class="mb-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#time-planner-landing-modal">Acceder a la solicitud de cita previa</button>
+            </p>
+            <p class="text-muted">No olvides guardar cualquier cambio antes de salir de la página.</p>
+        </div>
+        <div class="col"></div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="time-planner-landing-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form id="time-planner-landing-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Solicitar cita previa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                
+                    <p class="mb-3 mx-2"><small>Los siguientes datos son necesarios para la identificación y/o alta del estudiante en Lyra a la hora de atenderlo. Al recogerlos ahora, se evita que tenga que hacerlo al llegar al centro y se reducen los tiempos de espera y de procesamiento.</small></p>
+
+                    <p class="mb-3 mx-2"><small>Los campos marcados con <span class="text-danger"><sup>✱</sup></span> son obligatorios siempre. Los campos del representante legal, marcados con <span class="text-danger"><sup>✱✱</sup></span>, son obligatorios en caso de que el estudiante sea <strong>menor de 14 años</strong>, por motivos de protección de datos.</small></p>
+
+                    <h4 class="mb-3 mx-2">Datos del estudiante</h4>
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label class="form-label">NIF o NIE</label>
+                                <input type="text" class="form-control" name="student-gov-id" placeholder="NIF o NIE">
+                                <small class="text-muted">Con formato <code>12345678A</code> o <code>X1234567B</code>. Si el estudiante no tiene NIF o NIE, deja este campo vacío.</small>
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="form-label">Número de teléfono<span class="text-danger"><sup>✱</sup></span></label>
+                                <input type="text" class="form-control" required="required" name="student-phone-number" placeholder="Número de teléfono" value="a">
+                                <small class="text-muted">Con formato <code>612345678</code>.</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label class="form-label">Nombre<span class="text-danger"><sup>✱</sup></span></label>
+                                <input type="text" class="form-control" required="required" name="student-first-name" placeholder="Nombre" value="a">
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="form-label">Apellidos<span class="text-danger"><sup>✱</sup></span></label>
+                                <input type="text" class="form-control" required="required" name="student-last-name" placeholder="Apellidos" value="a">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label class="form-label">Fecha de nacimiento<span class="text-danger"><sup>✱</sup></span></label>
+                                <input type="date" class="form-control" required="required" name="student-birth-date" placeholder="Fecha de nacimiento" value="1999-11-17">
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="form-label">Dirección de correo electrónico<span class="text-danger"><sup>✱</sup></span></label>
+                                <input type="email" class="form-control" required="required" name="student-email-address" placeholder="Dirección de correo electrónico" value="a@a.es">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="mb-3 mx-2 mt-4">Datos del representante legal</h4>
+
+                    <p class="mb-3 mx-2 text-muted"><small>En caso de vayas a solicitar libros para el curso 2021 - 2022, describe detalladamente el curso académico, la modalidad, las asignaturas optativas, etc. Verificaremos esta información contigo en la cita, al registrar la solicitud.</small></p>
+                    
+                    <div class="mb-3 mx-2">
+                        <label class="form-label">Especificación de la solicitud</label>
+                        <textarea class="form-control" name="request-specification" rows="3"></textarea>
+                    </div>
+
+                    <h4 class="mb-3 mx-2 mt-4">Datos del representante legal</h4>
+                    
+                    <p class="mb-3 mx-2"><small>En caso de que el estudiante sea <strong>menor de 14 años</strong>, deben facilitarse los datos de su representante legal, por motivos de protección de datos y autorización para el almacenamiento de los datos del etudiante.</small></p>
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label class="form-label">NIF o NIE<span class="text-danger"><sup>✱✱</sup></span></label>
+                                <input type="text" class="form-control" name="legal-rep-gov-id" placeholder="NIF o NIE">
+                                <small class="text-muted">Con formato <code>12345678A</code> o <code>X1234567B</code>. Si el estudiante no tiene NIF o NIE, deje este campo vacío.</small>
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="form-label">Número de teléfono<span class="text-danger"><sup>✱✱</sup></span></label>
+                                <input type="text" class="form-control" name="legal-rep-phone-number" placeholder="Número de teléfono">
+                                <small class="text-muted">Con formato <code>612345678</code>.</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label class="form-label">Nombre<span class="text-danger"><sup>✱✱</sup></span></label>
+                                <input type="text" class="form-control" name="legal-rep-first-name" placeholder="Nombre">
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="form-label">Apellidos<span class="text-danger"><sup>✱✱</sup></span></label>
+                                <input type="text" class="form-control" name="legal-rep-last-name" placeholder="Apellidos">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label class="form-label">Fecha de nacimiento<span class="text-danger"><sup>✱✱</sup></span></label>
+                                <input type="date" class="form-control" name="legal-rep-birth-date" placeholder="Fecha de nacimiento">
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="form-label">Dirección de correo electrónico<span class="text-danger"><sup>✱✱</sup></span></label>
+                                <input type="email" class="form-control" name="legal-rep-email-address" placeholder="Dirección de correo electrónico">
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="mb-3 mx-2 mt-4">Cita</h4>
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label class="form-label">Día de la cita<span class="text-danger"><sup>✱</sup></span></label>
+                                <select name="appointment-date" class="form-select" required="required">
+                                    <option selected="selected" disabled="disabled">Escoge un día</option>
+                                </select>
+                            </div>
+                            <div class="col-md mb-3">
+                                <label class="form-label">Hora de la cita<span class="text-danger"><sup>✱</sup></span></label>
+                                <select name="appointment-time" class="form-select" disabled="disabled" required="required">
+                                    <option selected="selected" disabled="disabled">Escoge una hora</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Continuar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
