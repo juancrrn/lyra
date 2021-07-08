@@ -8,6 +8,7 @@ use Juancrrn\Lyra\Common\Api\TimePlanner\Slot\AvailableTimesApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\Http;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
 use Juancrrn\Lyra\Common\View\Auth\PasswordResetProcessView;
 use Juancrrn\Lyra\Common\View\Auth\PasswordResetRequestView;
@@ -83,6 +84,11 @@ class AnyoneRouteGroup implements RouteGroupModel
         // Proceso de restablecimiento de contraseña (POST del formulario)
         $this->controllerInstance->post('/auth/reset/process/([0-9a-zA-Z]*)', function ($token) use ($viewManager) {
             $viewManager->render(new PasswordResetProcessView($token));
+        });
+
+        // Express time planner functionality route redirect
+        $this->controllerInstance->get('/timeplanner/?', function () use ($app) {
+            Http::redirect($app->getUrl() . LandingView::VIEW_ROUTE);
         });
 
         // Express time planner functionality
