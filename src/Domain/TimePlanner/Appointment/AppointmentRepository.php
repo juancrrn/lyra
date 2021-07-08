@@ -164,10 +164,8 @@ class AppointmentRepository implements Repository
 
         $stmt = $this->db->prepare($query);
 
-        foreach($slotRepo->findByDate($testSlotDate) as $slot) {
-            $currentSlotId = $slot->getId();
-
-            $stmt->bind_param('is', $currentSlotId, $testStudentGovId);
+        foreach($slotRepo->findByDate($testSlotDate) as $slotId) {
+            $stmt->bind_param('is', $slotId, $testStudentGovId);
             $stmt->execute();
 
             $stmt->store_result();
