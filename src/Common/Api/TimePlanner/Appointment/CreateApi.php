@@ -70,6 +70,7 @@ class CreateApi extends ApiModel
         $requestSpecification = $requestContent->{'request-specification'};
 
         $legalRepGovId = $requestContent->{'legal-rep-gov-id'};
+        $legalRepGovId = $legalRepGovId != '' ? $legalRepGovId : null;
 
         if (! empty($legalRepGovId) && ! ValidationUtils::validateGovId($legalRepGovId))
             $messages[] = 'El campo de NIF o NIE del representante legal no contiene un NIF o NIE válido.';
