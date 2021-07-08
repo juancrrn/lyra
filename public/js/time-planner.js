@@ -106,7 +106,12 @@ $(() => {
         ).done(
             function(data, status) {
                 $(timePlanner.landingModalSelector).modal('hide');
-                toast.successes(data.messages);
+
+                if (! Array.isArray(data.messages)) { //  data.hasOwnProperty('messages')
+                    toast.error('Ocurrió un error en el servidor. Por favor, póngase en contacto con nosotros a través de <a href="https:\\\\soporte.iax.es">soporte.iax.es</a>.');
+                } else {
+                    toast.successes(data.messages);
+                }
             }
         ).fail(
             function (data, status) {
