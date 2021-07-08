@@ -2,6 +2,7 @@
 
 namespace Juancrrn\Lyra\Domain\Email;
 
+use DateTime;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\TemplateUtils;
 use Juancrrn\Lyra\Common\ValidationUtils;
@@ -222,6 +223,44 @@ class EmailUtils
 			array(
 				'reset-url' => App::getSingleton()->getUrl() . PasswordResetProcessView::VIEW_ROUTE_BASIC . $user->getToken()
 			)
+		);
+	}
+
+
+
+	public static function sendTimePlannerAppointmentReservedMessage(
+		string $userFirstName,
+		string $userEmailAddress,
+		string $dateTime,
+		string $supportUrl,
+		string $supportUrlNice
+	): bool
+	{
+		$user = new User(
+			0,
+			null,
+			$userFirstName,
+			'',
+			new DateTime,
+			$userEmailAddress,
+			'',
+			null,
+			new DateTime,
+			null,
+			null,
+			'',
+			null
+		);
+
+		return self::sendGenericMessage(
+			$user,
+			'Restablecer contraseña',
+			'time_planner/email_appointment_reserved',
+			[
+				'date-time' => $dateTime,
+				'support-url' => $supportUrl,
+				'support-url-nice' => $supportUrlNice
+			]
 		);
 	}
 }

@@ -7,6 +7,7 @@ use Juancrrn\Lyra\Common\Api\ApiModel;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\ValidationUtils;
+use Juancrrn\Lyra\Domain\Email\EmailUtils;
 use Juancrrn\Lyra\Domain\TimePlanner\Appointment\Appointment;
 use Juancrrn\Lyra\Domain\TimePlanner\Appointment\AppointmentRepository;
 use Juancrrn\Lyra\Domain\TimePlanner\Slot\SlotRepository;
@@ -161,6 +162,19 @@ class CreateApi extends ApiModel
             $appointmentRepo->insert($appointment);
         }
 
+        $emailDateTime =
+            $selectedDate->format(CommonUtils::HUMAN_DATE_FORMAT) .
+            ' a las ' .
+            $selectedTime->format(CommonUtils::HUMAN_TIME_FORMAT);
+
+        EmailUtils::sendTimePlannerAppointmentReservedMessage(
+            $studentFirstName,
+            $studentEmailAddress,
+            $emailDateTime,
+            'https://soporte.iax.es',
+            'soporte.iax.es'
+        );
+
         $reminderMessage =
             'Por favor, anote su cita para el próximo día <strong>' .
             $selectedDate->format(CommonUtils::HUMAN_DATE_FORMAT) .
@@ -173,7 +187,7 @@ class CreateApi extends ApiModel
             null,
             [
                 $reminderMessage,
-                'La reserva se realizó correctamente'
+                'La reserva se realizó correctamente. Le hemos enviado un mensaje de confirmación por correo electrónico.'
             ]
         );
     }
