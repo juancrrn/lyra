@@ -254,7 +254,7 @@ class EmailUtils
 
 		return self::sendGenericMessage(
 			$user,
-			'Restablecer contraseña',
+			'Cita previa reservada',
 			'time_planner/email_appointment_reserved',
 			[
 				'date-time' => $dateTime,
