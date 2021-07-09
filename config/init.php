@@ -27,6 +27,10 @@ if (LYRA_DEV_MODE) {
     ini_set('display_errors', 'On');
     error_reporting(E_ALL);
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+} else {
+    ini_set('display_errors', 'Off');
+    error_reporting(0);
+    mysqli_report(MYSQLI_REPORT_OFF);
 }
 
 /**
