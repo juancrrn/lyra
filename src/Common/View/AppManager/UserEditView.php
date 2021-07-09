@@ -5,6 +5,7 @@ namespace Juancrrn\Lyra\Common\View\AppManager;
 use Juancrrn\Lyra\Common\Api\AppManager\UserSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\StaticForm\AppManager\UserEditForm;
 use Juancrrn\Lyra\Domain\User\User;
 
 /**
@@ -25,7 +26,7 @@ class UserEditView extends ViewModel
     public  const VIEW_ROUTE_BASIC      = '/manage/users/';
     public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASIC . '([0-9]+)/edit/';
 
-    /*private $form;*/
+    private $form;
 
     public function __construct(int $userId)
     {
@@ -35,15 +36,11 @@ class UserEditView extends ViewModel
 
         $sessionManager->requirePermissionGroups([ User::NPG_APP_MANAGER ]);
 
-        /*$this->form = new AppSettingsEditForm(self::VIEW_ROUTE);
-
-        $appSettingRepository = new AppSettingRepository($app->getDbConn());
+        $this->form = new UserEditForm(self::VIEW_ROUTE, $userId);
 
         $this->form->handle();
 
-        $appSettings = $appSettingRepository->retrieveAll();
-
-        $this->form->initialize($appSettings);*/
+        $this->form->initialize();
 
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
@@ -55,27 +52,10 @@ class UserEditView extends ViewModel
 
         $viewManager = $app->getViewManagerInstance();
 
-        $viewManager->addTemplateElement(
-            'common-user-search-form-results-item',
-            'common/template_user_search_form_results_item',
-            []
-        );
-
-        $viewManager->addTemplateElement(
-            'common-user-search-form-results-item-empty',
-            'common/template_user_search_form_results_item_empty',
-            []
-        );
-
         $filling = [
             'view-name' => $this->getName(),
-            'user-search-form-html' => $viewManager->fillTemplate(
-                'ajax-forms/common/part_user_search_form',
-                [
-                    'query-url' => $app->getUrl() . UserSearchApi::API_ROUTE,
-                    'target-url' => $app->getUrl() . 'TODO' . '{id}/overview/'
-                ]
-            )
+            'back-to-search-url' => $app->getUrl() . UserSearchView::VIEW_ROUTE,
+            'user-edit-form-html' => '',
         ];
         
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
