@@ -2,8 +2,7 @@
 
 namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
-use Juancrrn\Lyra\Common\Api\Common\StudentSearchApi as CommonStudentSearchApi;
-use Juancrrn\Lyra\Common\Api\Coommon\StudentSearchApi;
+use Juancrrn\Lyra\Common\Api\BookBank\Volunteer\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager\StudentSearchForm;
@@ -61,7 +60,7 @@ class CheckInAssistantStudentSearchView extends ViewModel
             'student-search-form-html' => $viewManager->fillTemplate(
                 'ajax-forms/common/part_user_search_form',
                 [
-                    'query-url' => $app->getUrl() . CommonStudentSearchApi::API_ROUTE,
+                    'query-url' => $app->getUrl() . StudentSearchApi::API_ROUTE,
                     'target-url' => $app->getUrl() . CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASIC . '{id}/overview/'
                 ]
             )

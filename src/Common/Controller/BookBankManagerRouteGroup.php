@@ -4,7 +4,6 @@ namespace Juancrrn\Lyra\Common\Controller;
 
 use Exception;
 use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
-use Juancrrn\Lyra\Common\Api\BookBank\Manager\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\Controller\Controller;

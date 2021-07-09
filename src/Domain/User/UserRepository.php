@@ -8,6 +8,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\PermissionGroup\PermissionGroupRepository;
 use Juancrrn\Lyra\Domain\Repository;
+use mysqli;
 
 /**
  * Repositorio de usuarios
@@ -22,19 +23,11 @@ use Juancrrn\Lyra\Domain\Repository;
 class UserRepository implements Repository
 {
 
-    /**
-     * @var \mysqli $db     Conexión a la base de datos.
-     */
     protected $db;
 
-    /**
-     * Constructor
-     * 
-     * @param \mysqli $db   Conexión a la base de datos.
-     */
-    public function __construct(\mysqli $db)
+    public function __construct(mysqli $db)
     {
-        $this->db = App::getSingleton()->getDbConn();
+        $this->db = $db;
     }
 
     /**
@@ -284,20 +277,99 @@ class UserRepository implements Repository
 
         $result = $stmt->get_result();
 
-        $items = [];
+        $ids = [];
 
         while ($object = $result->fetch_object()) {
-            $items[] = $object->id;
+            $ids[] = $object->id;
         }
 
         if ($loadModel) {
             $return = [];
 
-            foreach ($items as $userId) {
+            foreach ($ids as $userId) {
                 $return[] = $this->retrieveById($userId);
             }
         } else {
-            $return = $items;
+            $return = $ids;
+        }
+
+        $stmt->close();
+
+        return $return;
+    }
+
+    
+
+    public function searchStudents(string $keyword, ?bool $loadModel = false): array
+    {
+        $keyword = '%' . $keyword . '%';
+
+        $query = <<< SQL
+        SELECT 
+            id
+        FROM
+            users        
+        WHERE
+            (
+                    gov_id LIKE ?
+                OR
+                    first_name LIKE ?
+                OR
+                    last_name LIKE ?
+                OR
+                    email_address LIKE ?
+                OR
+                    phone_number LIKE ?
+            )
+            AND
+                EXISTS
+                (
+                    SELECT
+                        id
+                    FROM
+                        user_permission_group_links
+                    WHERE
+                        user_id = users.id
+                    AND
+                        permission_group_id IN (
+                            SELECT
+                                id
+                            FROM
+                                permission_groups
+                            WHERE
+                                short_name = 'student'
+                        )
+                )
+        LIMIT 8
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param(
+            'sssss',
+            $keyword,
+            $keyword,
+            $keyword,
+            $keyword,
+            $keyword
+        );
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        $ids = [];
+
+        while ($object = $result->fetch_object()) {
+            $ids[] = $object->id;
+        }
+
+        if ($loadModel) {
+            $return = [];
+
+            foreach ($ids as $userId) {
+                $return[] = $this->retrieveById($userId);
+            }
+        } else {
+            $return = $ids;
         }
 
         $stmt->close();

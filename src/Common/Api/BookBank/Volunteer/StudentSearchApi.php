@@ -1,6 +1,6 @@
 <?php
 
-namespace Juancrrn\Lyra\Common\Api\Common;
+namespace Juancrrn\Lyra\Common\Api\BookBank\Volunteer;
 
 use Juancrrn\Lyra\Common\Api\ApiModel;
 use Juancrrn\Lyra\Common\App;
@@ -10,7 +10,7 @@ use Juancrrn\Lyra\Domain\User\UserRepository;
 class StudentSearchApi extends ApiModel
 {
 
-    public const API_ROUTE = '/api/bookbank/manage/students/search/';
+    public const API_ROUTE = '/api/bookbank/volunteer/students/search/';
 
     public function consume(?object $requestContent): void
     {
@@ -24,7 +24,7 @@ class StudentSearchApi extends ApiModel
 
         $userRepository = new UserRepository($app->getDbConn()); 
 
-        $searchResult = $userRepository->search($requestContent->query, true);
+        $searchResult = $userRepository->searchStudents($requestContent->query, true);
 
         $apiManager->apiRespond(
             200,

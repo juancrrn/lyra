@@ -3,7 +3,7 @@
 namespace Juancrrn\Lyra\Common\Controller;
 
 use Exception;
-use Juancrrn\Lyra\Common\Api\Common\StudentSearchApi;
+use Juancrrn\Lyra\Common\Api\BookBank\Volunteer\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
