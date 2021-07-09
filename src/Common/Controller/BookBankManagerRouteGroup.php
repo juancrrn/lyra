@@ -94,11 +94,6 @@ class BookBankManagerRouteGroup implements RouteGroupModel
          * 
          */
         
-        // Student search API
-        $this->controllerInstance->post(StudentSearchApi::API_ROUTE, function () use ($apiManager) {
-            $apiManager->call(new StudentSearchApi);
-        });
-        
         // Student search
         $this->controllerInstance->get(StudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new StudentSearchView);

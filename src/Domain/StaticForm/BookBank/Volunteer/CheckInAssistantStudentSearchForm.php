@@ -11,6 +11,8 @@ use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
 /**
+ * @deprecated
+ * 
  * Check-in assistant student search form
  * 
  * @package lyra

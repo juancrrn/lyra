@@ -47,6 +47,11 @@ toast.errors = (array) =>
         toast.error(array[i]);
 }
 
+toast.fail = () =>
+{
+    toast.error('Ocurrió un error. Por favor, póngase en contacto con nosotros a través de <a href="https:\\\\soporte.iax.es">soporte.iax.es</a>.');
+}
+
 /**
  * Creates and shows a success toast
  */

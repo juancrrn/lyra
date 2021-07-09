@@ -2,6 +2,8 @@
 
 namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
+use Juancrrn\Lyra\Common\Api\Common\StudentSearchApi as CommonStudentSearchApi;
+use Juancrrn\Lyra\Common\Api\Coommon\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager\StudentSearchForm;
@@ -20,12 +22,11 @@ use Juancrrn\Lyra\Domain\User\User;
 
 class CheckInAssistantStudentSearchView extends ViewModel
 {
+    
     private const VIEW_RESOURCE_FILE    = 'views/bookbank/volunteer/view_check_in_assistant_student_search';
     public  const VIEW_NAME             = 'Asistente de recepción';
     public  const VIEW_ID               = 'bookbank-volunteering-check-in-assistant-student-search';
     public  const VIEW_ROUTE            = '/bookbank/check-in/students/search/';
-
-    private $form;
 
     public function __construct()
     {
@@ -35,11 +36,6 @@ class CheckInAssistantStudentSearchView extends ViewModel
 
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
-
-        $this->form = new CheckInAssistantStudentSearchForm(self::VIEW_ROUTE); 
-
-        $this->form->handle();
-        $this->form->initialize();
     }
 
     public function processContent(): void
@@ -48,9 +44,27 @@ class CheckInAssistantStudentSearchView extends ViewModel
 
         $viewManager = $app->getViewManagerInstance();
 
+        $viewManager->addTemplateElement(
+            'common-user-search-form-results-item',
+            'common/template_user_search_form_results_item',
+            []
+        );
+
+        $viewManager->addTemplateElement(
+            'common-user-search-form-results-item-empty',
+            'common/template_user_search_form_results_item_empty',
+            []
+        );
+
         $filling = [
             'view-name' => $this->getName(),
-            'student-search-form-html' => $this->form->getHtml()
+            'student-search-form-html' => $viewManager->fillTemplate(
+                'ajax-forms/common/part_user_search_form',
+                [
+                    'query-url' => $app->getUrl() . CommonStudentSearchApi::API_ROUTE,
+                    'target-url' => $app->getUrl() . CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASIC . '{id}/overview/'
+                ]
+            )
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

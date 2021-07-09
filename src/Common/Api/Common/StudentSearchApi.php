@@ -1,6 +1,6 @@
 <?php
 
-namespace Juancrrn\Lyra\Common\Api\BookBank\Manager;
+namespace Juancrrn\Lyra\Common\Api\Common;
 
 use Juancrrn\Lyra\Common\Api\ApiModel;
 use Juancrrn\Lyra\Common\App;
@@ -18,7 +18,7 @@ class StudentSearchApi extends ApiModel
 
         $sessionManager = $app->getSessionManagerInstance();
 
-        $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_MANAGER ]);
+        $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_VOLUNTEER ]);
 
         $apiManager = $app->getApiManagerInstance();
 

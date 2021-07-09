@@ -250,6 +250,7 @@ class User implements JsonSerializable
             'govId' => $this->govId,
             'firstName' => $this->firstName,
             'lastName' => $this->lastName,
+            'fullName' => $this->firstName . ' ' . $this->lastName,
             'birthDate' => $this->birthDate,
             'emailAddress' => $this->emailAddress,
             'phoneNumber' => $this->phoneNumber,
