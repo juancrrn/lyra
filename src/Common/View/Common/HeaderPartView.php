@@ -14,6 +14,7 @@ use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
 use Juancrrn\Lyra\Common\View\Self\ProfileView;
 use Juancrrn\Lyra\Common\View\TimePlanner\LandingView;
+use Juancrrn\Lyra\Common\View\TimePlanner\Volunteer\AppointmentListView;
 use Juancrrn\Lyra\Domain\StaticForm\Auth\LogoutForm;
 use Juancrrn\Lyra\Domain\User\User;
 
@@ -67,7 +68,8 @@ class HeaderPartView extends ViewModel
                     null,
                     'Voluntario BDL',
                     [
-                        CheckInAssistantStudentSearchView::class
+                        CheckInAssistantStudentSearchView::class,
+                        AppointmentListView::class
                     ]
                 );
             }

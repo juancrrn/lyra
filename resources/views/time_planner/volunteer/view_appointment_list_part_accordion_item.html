@@ -1,0 +1,70 @@
+<div class="accordion-item">
+    <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="##accordion-item-prefix##id#" aria-expanded="true" aria-controls="#accordion-item-prefix##id#">
+            <div class="container-fluid p-0 pe-3">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-2"><small><span class="d-inline-block align-middle">#date# a las #time#</span></small></p>
+                        <p class="mb-2">#student-full-name#</p>
+                        <p><small><span class="material-icons-outlined d-inline-block align-middle me-2">badge</span><span class="d-inline-block align-middle">#student-gov-id#</span></small></p>
+                        #gov-id-not-found-notice#
+                    </div>
+                    <div class="col-md-6 text-muted">
+                        <p class="mb-1"><small><span class="material-icons-outlined d-inline-block align-middle me-2">phone</span><span class="d-inline-block align-middle">#student-phone-number#</span></small></p>
+                        <p><small><span class="material-icons-outlined d-inline-block align-middle me-2">alternate_email</span><span class="d-inline-block align-middle">#student-email-address#</span></small></p>
+                    </div>
+                </div>
+            </div>
+        </button>
+    </h2>
+    <div id="#accordion-item-prefix##id#" class="accordion-collapse collapse" data-bs-parent="##accordion-id#">
+        <div class="accordion-body">
+            <div class="mb-3">
+                #action-buttons#
+            </div>
+            <p class="mb-1">Datos de la solicitud</p>
+            <div class="card p-2 mb-3">
+                <div>
+                    <p class="mb-1 text-muted">Especificación</p>
+                    <p>#request-specification#</p>
+                </div>
+            </div>
+            <p class="mb-1">Otros datos del estudiante</p>
+            <div class="card p-2 mb-3">
+                <div>
+                    <p class="mb-1 text-muted">Fecha de nacimiento</p>
+                    <p>#student-birth-date#</p>
+                </div>
+            </div>
+            <p class="mb-1">Datos del representante legal</p>
+            <div class="card container-fluid p-2">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <p class="mb-1 text-muted">Nombre completo</p>
+                        <p>#legal-rep-full-name#</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <p class="mb-1 text-muted">NIF o NIE</p>
+                        <p>#legal-rep-gov-id#</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <p class="mb-1 text-muted">Fecha de nacimiento</p>
+                        <p>#legal-rep-birth-date#</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <p class="mb-1 text-muted">Número de teléfono</p>
+                        <p>#legal-rep-phone-number#</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Dirección de correo electrónico</p>
+                        <p>#legal-rep-email-address#</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

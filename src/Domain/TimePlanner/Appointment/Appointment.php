@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\TimePlanner\Appointment;
 
 use DateTime;
+use Juancrrn\Lyra\Common\CommonUtils;
 use stdClass;
 
 /**
@@ -24,7 +25,7 @@ class Appointment
     private $id;
 
     /**
-     * @var null|int
+     * @var int
      */
     private $slotId;
 
@@ -101,7 +102,7 @@ class Appointment
     public function __construct(
         ?int      $id,
 
-        ?int      $slotId,
+        int       $slotId,
 
         ?string   $studentId,
 
@@ -147,6 +148,19 @@ class Appointment
     
     public static function fromMysqlFetch(stdClass $object): self
     {
+        $studentBirthDate =
+            $object->student_birth_date == null ? null :
+            DateTime::createFromFormat(
+                CommonUtils::MYSQL_DATE_FORMAT,
+                $object->student_birth_date
+            );
+        $legalRepBirthDate =
+            $object->legal_rep_birth_date == null ? null :
+            DateTime::createFromFormat(
+                CommonUtils::MYSQL_DATE_FORMAT,
+                $object->legal_rep_birth_date
+            );
+
         return new self(
             $object->id,
 
@@ -157,14 +171,14 @@ class Appointment
             $object->student_gov_id,
             $object->student_first_name,
             $object->student_last_name,
-            $object->student_birth_date,
+            $studentBirthDate,
             $object->student_email_address,
             $object->student_phone_number,
 
             $object->legal_rep_gov_id,
             $object->legal_rep_first_name,
             $object->legal_rep_last_name,
-            $object->legal_rep_birth_date,
+            $legalRepBirthDate,
             $object->legal_rep_email_address,
             $object->legal_rep_phone_number,
 
@@ -177,7 +191,7 @@ class Appointment
         return $this->id;
     }
 
-    public function getSlotId(): ?int
+    public function getSlotId(): int
     {
         return $this->slotId;
     }

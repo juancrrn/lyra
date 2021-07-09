@@ -177,41 +177,92 @@ class AppointmentRepository implements Repository
         return false;
     }
 
-    public function retrieveById(int $id): mixed
+    public function findFuture(): array
     {
+        $currentDate = (new DateTime)->format(CommonUtils::MYSQL_DATE_FORMAT);
 
+        $query = <<< SQL
+        SELECT
+            id
+        FROM
+            time_planner_appointments
+        WHERE
+            slot_id
+        IN (
+            SELECT
+                id
+            FROM
+                time_planner_slots
+            WHERE
+                `date` >= ?
+            ORDER BY
+                `date` ASC,
+                `time` ASC
+        )
+        SQL;
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param(
+            's',
+            $currentDate
+        );
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $appointmentIds = [];
+
+        while ($appointment = $result->fetch_object()) {
+            $appointmentIds[] = $appointment->id;
+        }
+
+        $stmt->close();
+
+        return $appointmentIds;
     }
 
-    public function retrieveAll(): array
+    public function retrieveById(int $id): Appointment
     {
-        /*
-         * ATENCIÓN: LIMITADO PARA QUE NO APAREZCAN LOS DE JUNIO. ///////////// TODO Limitar a partir de la fecha actual
-         */
-
         $query = <<< SQL
         SELECT
             *
         FROM
             time_planner_appointments
         WHERE
-            slot_id > 150
-        ORDER BY
-            slot_id
+            id = ?
+        LIMIT 1
         SQL;
         
         $stmt = $this->db->prepare($query);
 
+        $stmt->bind_param(
+            'i',
+            $id
+        );
+
         $stmt->execute();
         $result = $stmt->get_result();
-        $appointments = array();
 
-        while ($appointment = $result->fetch_object()) {
-            $appointments[] = Appointment::fromMysqlFetch($appointment);
-        }
+        $item = Appointment::fromMysqlFetch($result->fetch_object());
 
         $stmt->close();
 
-        return $appointments;
+        return $item;
+    }
+
+    public function retrieveAll(): array
+    {
+        throw new \Exception('Not implemented');
+    }
+
+    public function retrieveByIds(array $ids): array
+    {
+        $items = [];
+
+        foreach ($ids as $id) {
+            $items[] = $this->retrieveById($id);
+        }
+
+        return $items;
     }
 
     public function countBySlotId(int $slotId): int
@@ -239,11 +290,11 @@ class AppointmentRepository implements Repository
 
     public function verifyConstraintsById(int $id): bool|array
     {
-        return false;
+        throw new \Exception('Not implemented');
     }
 
     public function deleteById(int $id): void
     {
-
+        throw new \Exception('Not implemented');
     }
 }

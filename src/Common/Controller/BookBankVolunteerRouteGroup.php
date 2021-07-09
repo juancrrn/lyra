@@ -8,6 +8,7 @@ use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchView;
+use Juancrrn\Lyra\Common\View\TimePlanner\Volunteer\AppointmentListView;
 
 /**
  * Vistas de usuarios con permisos de voluntario del banco de libros
@@ -42,6 +43,16 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         
         /*
          *
+         * Time planner (reserved appointments)
+         * 
+         */
+
+        $this->controllerInstance->get(AppointmentListView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new AppointmentListView);
+        });
+        
+        /*
+         *
          * Asistente de recepción
          * 
          */
@@ -66,10 +77,6 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         $this->controllerInstance->get(CheckInAssistantStudentOverviewView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new CheckInAssistantStudentOverviewView($itemId));
         });
-
-
-
-        
 
         // Finalización de gestiones (POST del formulario)
         $this->controllerInstance->post('/bookbank/check-in/([0-9]+)/process/', function () use ($viewManager) {
