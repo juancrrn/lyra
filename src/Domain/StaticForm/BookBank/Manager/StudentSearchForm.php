@@ -10,6 +10,8 @@ use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
 /**
+ * @deprecated
+ * 
  * Formulario de búsqueda de estudiantes para gestión en el banco de libros
  * 
  * @package lyra
