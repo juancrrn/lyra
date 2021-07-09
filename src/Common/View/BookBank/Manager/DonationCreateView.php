@@ -25,7 +25,7 @@ class DonationCreateView extends ViewModel
     public  const VIEW_NAME             = 'Crear donación';
     public  const VIEW_ID               = 'bookbank-manager-donation-create';
     public  const VIEW_ROUTE_BASE       = '/bookbank/manage/students/';
-    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9])+/donations/create/';
+    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/donations/create/';
 
     private $student;
     private $form;

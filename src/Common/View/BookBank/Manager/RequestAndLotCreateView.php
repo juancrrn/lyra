@@ -26,7 +26,7 @@ class RequestAndLotCreateView extends ViewModel
     public  const VIEW_NAME             = 'Crear solicitud y paquete';
     public  const VIEW_ID               = 'bookbank-manager-request-and-lot-create';
     public  const VIEW_ROUTE_BASE       = '/bookbank/manage/students/';
-    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9])+/requests/create/';
+    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/requests/create/';
 
     private $student;
     private $form;
