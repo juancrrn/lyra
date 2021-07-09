@@ -433,7 +433,7 @@ class RequestAndLotEditForm extends StaticFormModel
         return $newLotStatus;
     }
 
-    private function processNewLotContents($newLotContents, $newEducationLevel): mixed
+    private function processNewLotContents(mixed $newLotContents, string $newEducationLevel): mixed
     {
         $app = App::getSingleton();
 
