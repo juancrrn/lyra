@@ -242,37 +242,56 @@ class UserRepository implements Repository
         return $result;
     }
 
-    public function search(string $keyword, ?bool $loadModel = false): array
+    public function search(string $query, ?bool $loadModel = false): array
     {
-        $keyword = '%' . $keyword . '%';
+        $keywords = explode(' ', $query);
 
         $query = <<< SQL
         SELECT 
             id
         FROM
             users        
-        WHERE
-            gov_id LIKE ?
-        OR
-            first_name LIKE ?
-        OR
-            last_name LIKE ?
-        OR
-            email_address LIKE ?
-        OR
-            phone_number LIKE ?
+        WHERE\n
+        SQL;
+
+        for ($i = 0; $i < count($keywords); $i++) {
+            $query .= <<< SQL
+                (
+                        gov_id LIKE ?
+                    OR
+                        first_name LIKE ?
+                    OR
+                        last_name LIKE ?
+                    OR
+                        email_address LIKE ?
+                    OR
+                        phone_number LIKE ?
+                )\n
+            SQL;
+
+            if ($i != count($keywords) - 1)
+                $query .= "\tAND\n";
+        }
+        
+        $query .= <<< SQL
         LIMIT 8
         SQL;
 
         $stmt = $this->db->prepare($query);
+
+        $paramTypes = str_repeat('sssss', count($keywords));
+
+        $paramValues = [];
+
+        for ($i = 0; $i < count($keywords); $i++)
+            for ($j = 0; $j < 5; $j++)
+                $paramValues[] = '%' . $keywords[$i] . '%';
+
         $stmt->bind_param(
-            'sssss',
-            $keyword,
-            $keyword,
-            $keyword,
-            $keyword,
-            $keyword
+            $paramTypes,
+            ...$paramValues
         );
+
         $stmt->execute();
 
         $result = $stmt->get_result();
@@ -300,9 +319,9 @@ class UserRepository implements Repository
 
     
 
-    public function searchStudents(string $keyword, ?bool $loadModel = false): array
+    public function searchStudents(string $query, ?bool $loadModel = false): array
     {
-        $keyword = '%' . $keyword . '%';
+        $keywords = explode(' ', $query);
 
         $query = <<< SQL
         SELECT 
@@ -310,19 +329,7 @@ class UserRepository implements Repository
         FROM
             users        
         WHERE
-            (
-                    gov_id LIKE ?
-                OR
-                    first_name LIKE ?
-                OR
-                    last_name LIKE ?
-                OR
-                    email_address LIKE ?
-                OR
-                    phone_number LIKE ?
-            )
-            AND
-                EXISTS
+            EXISTS
                 (
                     SELECT
                         id
@@ -340,18 +347,47 @@ class UserRepository implements Repository
                                 short_name = 'student'
                         )
                 )
+            AND\n
+        SQL;
+
+        for ($i = 0; $i < count($keywords); $i++) {
+            $query .= <<< SQL
+                (
+                        gov_id LIKE ?
+                    OR
+                        first_name LIKE ?
+                    OR
+                        last_name LIKE ?
+                    OR
+                        email_address LIKE ?
+                    OR
+                        phone_number LIKE ?
+                )\n
+            SQL;
+
+            if ($i != count($keywords) - 1)
+                $query .= "\tAND\n";
+        }
+        
+        $query .= <<< SQL
         LIMIT 8
         SQL;
 
         $stmt = $this->db->prepare($query);
+
+        $paramTypes = str_repeat('sssss', count($keywords));
+
+        $paramValues = [];
+
+        for ($i = 0; $i < count($keywords); $i++)
+            for ($j = 0; $j < 5; $j++)
+                $paramValues[] = '%' . $keywords[$i] . '%';
+
         $stmt->bind_param(
-            'sssss',
-            $keyword,
-            $keyword,
-            $keyword,
-            $keyword,
-            $keyword
+            $paramTypes,
+            ...$paramValues
         );
+
         $stmt->execute();
 
         $result = $stmt->get_result();
