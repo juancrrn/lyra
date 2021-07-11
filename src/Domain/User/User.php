@@ -5,6 +5,7 @@ namespace Juancrrn\Lyra\Domain\User;
 use DateTime;
 use InvalidArgumentException;
 use JsonSerializable;
+use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\GenericHumanModel;
 
@@ -426,5 +427,38 @@ class User implements JsonSerializable
                     self::STATUS_RESET, self::STATUS_RESET_TITLE, self::STATUS_RESET_DESC
                 );
         }
+    }
+
+    public function generateCard(): string
+    {
+        $app = App::getSingleton();
+
+        $viewManager = $app->getViewManagerInstance();
+
+        if ($this->getRepresentativeId() == null) {
+            $userRepresentativeHuman = '(No definido)';
+        } else {
+            $userRepository = new UserRepository($app->getDbConn());
+            $representative = $userRepository
+                ->retrieveById($this->getRepresentativeId());
+            $userRepresentativeHuman = $representative->getFullName();
+        }
+
+        return $viewManager->fillTemplate(
+            'views/bookbank/common/part_student_profile_card',
+            [
+                'accordion-id' => $this->getId(),
+                'user-profile-picture' => $app->getUrl() . '/img/default-user-image.png',
+                'user-id' => $this->getId(),
+                'user-full-name' => $this->getFullName(),
+                'user-gov-id' => $this->getGovId(true),
+                'user-email-address' => $this->getEmailAddress(),
+                'user-phone-number' => $this->getPhoneNumber(),
+                'user-representative-name-human' => $userRepresentativeHuman,
+                'user-status-human' => User::statusToHuman(
+                    $this->getStatus()
+                )->getTitle()
+            ]
+        );
     }
 }

@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\BookBank\Request\RequestRepository;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
@@ -26,6 +27,10 @@ class CheckInAssistantReturnLiteView extends ViewModel
     public  const VIEW_ROUTE_BASE       = '/bookbank/check-in/students/';
     public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/requests/([0-9]+)/return/';
 
+    private $student;
+
+    private $form;
+
     public function __construct(int $studentId, int $requestId)
     {
         $app = App::getSingleton();
@@ -34,16 +39,32 @@ class CheckInAssistantReturnLiteView extends ViewModel
 
         $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_VOLUNTEER ]);
 
+        $viewManager = $app->getViewManagerInstance();
+
         $userRepo = new UserRepository($app->getDbConn());
 
         if (! $userRepo->findById($studentId)) {
-            $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
+            $viewManager->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
         }
 
         $this->student = $userRepo->retrieveById($studentId, true);
 
         if (! $this->student->hasPermission(User::NPG_STUDENT)) {
-            $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
+            $viewManager->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
+        }
+
+        $requestRepo = new RequestRepository($app->getDbConn());
+
+        if (
+            // Request exists
+            ! $requestRepo->findById($requestId) ||
+            // Request is associated with student
+            $requestRepo->retrieveById($requestId)->getStudentId() != $studentId
+        ) {
+            $viewManager->addErrorMessage(
+                'El parámetro de identificador de solicitud es inválido.',
+                CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/'
+            );
         }
 
         $this->name = self::VIEW_NAME;
@@ -60,44 +81,9 @@ class CheckInAssistantReturnLiteView extends ViewModel
             'view-name' => 'Devolver paquete',
             'assistant-view-name' => CheckInAssistantStudentOverviewView::VIEW_NAME,
             'back-to-overview-url' => CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/',
-            'student-card' => $this->generateStudentCard()
+            'student-card' => $this->student->generateCard()
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
-    }
-
-    private function generateStudentCard(): string
-    {
-        $app = App::getSingleton();
-
-        $viewManager = $app->getViewManagerInstance();
-
-        if ($this->student->getRepresentativeId() == null) {
-            $userRepresentativeHuman = '(No definido)';
-        } else {
-            $userRepository = new UserRepository($app->getDbConn());
-            $representative = $userRepository
-                ->retrieveById($this->student->getRepresentativeId());
-            $userRepresentativeHuman = $representative->getFullName();
-        }
-
-        $studentCardFilling = [
-            'accordion-id' => $this->student->getId(),
-            'user-profile-picture' => $app->getUrl() . '/img/default-user-image.png',
-            'user-id' => $this->student->getId(),
-            'user-full-name' => $this->student->getFullName(),
-            'user-gov-id' => $this->student->getGovId(true),
-            'user-email-address' => $this->student->getEmailAddress(),
-            'user-phone-number' => $this->student->getPhoneNumber(),
-            'user-representative-name-human' => $userRepresentativeHuman,
-            'user-status-human' => User::statusToHuman(
-                $this->student->getStatus()
-            )->getTitle()
-        ];
-
-        return $viewManager->fillTemplate(
-            'views/bookbank/common/part_student_profile_card',
-            $studentCardFilling
-        );
     }
 }
