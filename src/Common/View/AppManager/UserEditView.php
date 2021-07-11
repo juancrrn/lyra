@@ -55,7 +55,7 @@ class UserEditView extends ViewModel
         $filling = [
             'view-name' => $this->getName(),
             'back-to-search-url' => $app->getUrl() . UserSearchView::VIEW_ROUTE,
-            'user-edit-form-html' => '',
+            'user-edit-form-html' => $this->form->getHtml(),
         ];
         
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\StaticForm\AppManager;
 
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\StaticForm\StaticFormModel;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
@@ -44,7 +45,18 @@ class UserEditForm extends StaticFormModel
         return $viewManager->fillTemplate(
             'forms/app_manager/inputs_user_edit_form',
             [
-                
+                'app-name'      => $app->getName(),
+                'user-image'    => $app->getUrl() . '/img/default-user-image.png',
+                'prefix'        => self::FORM_FIELDS_NAME_PREFIX,
+                'id'            => $this->user->getId(),
+                'fist-name'     => $this->user->getFirstName(),
+                'last-name'     => $this->user->getLastName(),
+                'gov-id'        => mb_strtoupper($this->user->getGovId()),
+                'email-address' => $this->user->getEmailAddress(),
+                'phone-number'  => $this->user->getPhoneNumber(),
+                'birth-date'    => $this->user->getBirthDate()->format(CommonUtils::MYSQL_DATE_FORMAT),
+                'last-login-date' => $this->user->getLastLoginDate()->format(CommonUtils::HUMAN_DATETIME_FORMAT),
+                'password-reset-btn-target-url' => 'TEST_TODO',
             ]
         );
     }
