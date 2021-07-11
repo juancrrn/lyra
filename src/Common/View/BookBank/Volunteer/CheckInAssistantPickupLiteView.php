@@ -4,6 +4,11 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\BookBank\Lot\Lot;
+use Juancrrn\Lyra\Domain\BookBank\Lot\LotRepository;
+use Juancrrn\Lyra\Domain\BookBank\Request\Request;
+use Juancrrn\Lyra\Domain\BookBank\Request\RequestRepository;
+use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\CheckInAssistantPickupLiteForm;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
@@ -26,6 +31,10 @@ class CheckInAssistantPickupLiteView extends ViewModel
     public  const VIEW_ROUTE_BASE       = '/bookbank/check-in/students/';
     public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/requests/([0-9]+)/pickup/';
 
+    private $student;
+
+    private $form;
+
     public function __construct(int $studentId, int $requestId)
     {
         $app = App::getSingleton();
@@ -33,6 +42,8 @@ class CheckInAssistantPickupLiteView extends ViewModel
         $sessionManager = $app->getSessionManagerInstance();
 
         $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_VOLUNTEER ]);
+
+        $viewManager = $app->getViewManagerInstance();
 
         $userRepo = new UserRepository($app->getDbConn());
 
@@ -45,6 +56,41 @@ class CheckInAssistantPickupLiteView extends ViewModel
         if (! $this->student->hasPermission(User::NPG_STUDENT)) {
             $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
         }
+
+        $requestRepo = new RequestRepository($app->getDbConn());
+
+        if (
+            // Request exists
+            ! $requestRepo->findById($requestId) ||
+            // Request is returnable (request status: processed)
+            $requestRepo->retrieveById($requestId)->getStatus() != Request::STATUS_PROCESSED ||
+            // Request is associated with student
+            $requestRepo->retrieveById($requestId)->getStudentId() != $studentId
+        ) {
+            $viewManager->addErrorMessage(
+                'El parámetro de identificador de solicitud es inválido.',
+                CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/'
+            );
+        }
+
+        $lotRepo = new LotRepository($app->getDbConn());
+
+        // Request is returnable (lot status: ready)
+        if (! $lotRepo->retrieveById($lotRepo->findByRequestId($requestId))->getStatus() == Lot::STATUS_READY) {
+            $viewManager->addErrorMessage(
+                'El parámetro de identificador de solicitud es inválido.',
+                CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/'
+            );
+        }
+
+        $this->form = new CheckInAssistantPickupLiteForm(
+            self::VIEW_ROUTE_BASE . $studentId . '/requests/' . $requestId . '/pickup/',
+            $requestId
+        );
+
+        $this->form->handle();
+
+        $this->form->initialize();
 
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
@@ -60,7 +106,8 @@ class CheckInAssistantPickupLiteView extends ViewModel
             'view-name' => 'Recoger paquete',
             'assistant-view-name' => CheckInAssistantStudentOverviewView::VIEW_NAME,
             'back-to-overview-url' => CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/',
-            'student-card' => $this->student->generateCard()
+            'student-card' => $this->student->generateCard(),
+            'form' => $this->form->getHtml()
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

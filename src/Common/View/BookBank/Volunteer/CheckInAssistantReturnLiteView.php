@@ -4,6 +4,9 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\BookBank\Lot\Lot;
+use Juancrrn\Lyra\Domain\BookBank\Lot\LotRepository;
+use Juancrrn\Lyra\Domain\BookBank\Request\Request;
 use Juancrrn\Lyra\Domain\BookBank\Request\RequestRepository;
 use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\CheckInAssistantReturnLiteForm;
 use Juancrrn\Lyra\Domain\User\User;
@@ -59,9 +62,21 @@ class CheckInAssistantReturnLiteView extends ViewModel
         if (
             // Request exists
             ! $requestRepo->findById($requestId) ||
+            // Request is returnable (request status: processed)
+            $requestRepo->retrieveById($requestId)->getStatus() != Request::STATUS_PROCESSED ||
             // Request is associated with student
             $requestRepo->retrieveById($requestId)->getStudentId() != $studentId
         ) {
+            $viewManager->addErrorMessage(
+                'El parámetro de identificador de solicitud es inválido.',
+                CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/'
+            );
+        }
+
+        $lotRepo = new LotRepository($app->getDbConn());
+
+        // Request is returnable (lot status: picked-up)
+        if (! $lotRepo->retrieveById($lotRepo->findByRequestId($requestId))->getStatus() == Lot::STATUS_PICKED_UP) {
             $viewManager->addErrorMessage(
                 'El parámetro de identificador de solicitud es inválido.',
                 CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/'

@@ -1,0 +1,76 @@
+<div class="accordion mb-4" id="bookbank-manager-associated-lot-accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="item-header-request-1">
+            <button class="accordion-button #button-collapsed-class#" type="button" data-bs-toggle="collapse" data-bs-target="##attr-bs-target#" aria-expanded="#attr-aria-expanded#" aria-controls="#attr-aria-controls#" #button-disabled-attr#>
+                <div class="container p-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 font-monospace">
+                            <span class="badge rounded-pill bg-secondary my-2">
+                                <i class="material-icons-outlined">tag</i>
+                                #id#
+                            </span>
+                        </div>
+                        <div class="col">
+                            <p class="mb-1">#status-human#</p>
+                            <p><small class="text-muted">#creation-date-human#</small></p>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </h2>
+        <div id="bookbank-manager-associated-lot-accordion-body" class="accordion-collapse collapse #collapse-show-class#" aria-labelledby="item-header-request-1" data-bs-parent="#bookbank-manager-associated-lot-accordion">
+            <div class="accordion-body">
+                <div class="mb-3">
+                    <label for="#form-fields-name-prefix#status" class="form-label">Estado</label>
+                    <select name="#form-fields-name-prefix#status" id="#form-fields-name-prefix#status" class="form-select mb-2">
+                        #status-select-options-html#
+                    </select>
+                </div>
+
+                <p class="mb-2">Contenidos</p>
+
+                <div class="card">
+                    <div class="card-header">
+                        <label class="form-label" for="#form-fields-name-prefix#subject-search">Añadir asignaturas</label>
+                        <input type="text" class="form-control subject-list-search" data-query-url="#query-url#" data-target-results="#form-fields-name-prefix#search-results" placeholder="Buscar asignaturas para añadir...">
+                        <div class="subject-list-search-results card position-absolute d-none" style="z-index: 1000;" id="#form-fields-name-prefix#search-results" data-target-list="#form-fields-name-prefix#contents-list">
+                            <ul class="list-group list-group-flush"></ul>
+                        </div>
+                    </div>
+                    
+                    <ul id="#form-fields-name-prefix#contents-list" data-checkbox-name="#checkbox-name#" class="list-group list-group-flush subject-list-editable">
+                        #contents#
+                    </ul>
+                </div>
+                
+                <hr>
+
+                <div class="form-text mb-3">Estas propiedades se modifican de forma automática.</div>
+
+                <div class="mb-3">
+                    <label class="form-label">Fecha y hora de recogida</label>
+                    <input type="text" class="form-control" value="#pickup-date-human#"  disabled="disabled">
+                </div>
+
+                <div>
+                    <label class="form-label">Fecha y hora de devolución</label>
+                    <input type="text" class="form-control" value="#return-date-human#" disabled="disabled">
+                </div>
+
+                <hr>
+
+                <div class="form-text mb-3">Estas propiedades no pueden modificarse.</div>
+
+                <div class="mb-3">
+                    <label class="form-label">Creador</label>
+                    <input type="text" class="form-control" value="#creator-name#"  disabled="disabled">
+                </div>
+
+                <div>
+                    <label class="form-label">Fecha y hora de creación</label>
+                    <input type="text" class="form-control" value="#creation-date-human#" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
