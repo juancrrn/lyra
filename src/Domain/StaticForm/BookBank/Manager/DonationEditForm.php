@@ -170,6 +170,10 @@ class DonationEditForm extends StaticFormModel
             }
         }
 
+        if (empty($newContents)) {
+            $viewManager->addErrorMessage('La lista de contenidos no puede quedar vacía.');
+        }
+
         if (! $viewManager->anyErrorMessages()) {
             $donationRepository = new DonationRepository($app->getDbConn());
 
