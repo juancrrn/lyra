@@ -224,7 +224,7 @@ class CheckInAssistantStudentOverviewView extends ViewModel
                             ),
                             'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
                             'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
-                            'lot-badge' => '<span class="badge rounded-pill bg-warning"><i class="material-icons">report_problem</i> Paquete pendiente de devolución</span>',
+                            'lot-badge' => '<span class="badge rounded-pill bg-warning"><i class="material-icons-outlined">report_problem</i> Paquete pendiente de devolución</span>',
                             'creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $request->getCreationDate()->getTimestamp()
@@ -320,7 +320,7 @@ class CheckInAssistantStudentOverviewView extends ViewModel
                             ),
                             'title-human' => 'Solicitud de ' . DomainUtils::educationLevelToHuman($request->getEducationLevel())->getTitle(),
                             'status-human' => Request::statusToHuman($request->getStatus())->getTitle(),
-                            'lot-badge' => '<span class="badge rounded-pill bg-success"><i class="material-icons">done</i> Paquete listo para recoger</span>',
+                            'lot-badge' => '<span class="badge rounded-pill bg-success"><i class="material-icons-outlined">done</i> Paquete listo para recoger</span>',
                             'creation-date-human' => strftime(
                                 CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
                                 $request->getCreationDate()->getTimestamp()

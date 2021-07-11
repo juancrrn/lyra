@@ -25,12 +25,12 @@
     border-collapse: collapse;
 }
 
-.material-icons {
+.material-icons, .material-icons-outlined {
     display: inline-block;
     vertical-align: middle;
     font-weight: inherit;
     line-height: inherit;
-    font-size: inherit;
+    font-size: inherit !important;
 }
 
 .lyra-pretext {

@@ -248,9 +248,9 @@ class StudentOverviewView extends ViewModel
                     }
 
                     if ($lot->getStatus() == Lot::STATUS_READY) {
-                        $lotBadge = '<span class="badge rounded-pill bg-success"><i class="material-icons">done</i> Paquete listo para recoger</span>';
+                        $lotBadge = '<span class="badge rounded-pill bg-success"><i class="material-icons-outlined">done</i> Paquete listo para recoger</span>';
                     } elseif ($lot->getStatus() == Lot::STATUS_PICKED_UP) {
-                        $lotBadge = '<span class="badge rounded-pill bg-warning"><i class="material-icons">report_problem</i> Paquete pendiente de devolución</span>';
+                        $lotBadge = '<span class="badge rounded-pill bg-warning"><i class="material-icons-outlined">report_problem</i> Paquete pendiente de devolución</span>';
                     } else {
                         $lotBadge = '';
                     }
