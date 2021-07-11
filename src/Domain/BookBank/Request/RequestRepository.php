@@ -41,7 +41,6 @@ class RequestRepository implements Repository
         INSERT INTO
             book_requests
             (
-                id,
                 student_id,
                 status,
                 creation_date,
@@ -52,12 +51,11 @@ class RequestRepository implements Repository
                 locked
             )
         VALUES
-            ( ?, ?, ?, ?, ?, ?, ?, ?, ? )
+            ( ?, ?, ?, ?, ?, ?, ?, ? )
         SQL;
 
         $stmt = $this->db->prepare($query);
 
-        $id = $item->getId();
         $studentId = $item->getStudentId();
         $status = $item->getStatus();
         $creationDate = $item->getCreationDate()
@@ -69,8 +67,7 @@ class RequestRepository implements Repository
         $locked = $item->isLocked();
 
         $stmt->bind_param(
-            'iissisisi',
-            $id,
+            'issisisi',
             $studentId,
             $status,
             $creationDate,
@@ -81,7 +78,7 @@ class RequestRepository implements Repository
             $locked
         );
         
-        $result = $stmt->execute();
+        $stmt->execute();
 
         $id = $this->db->insert_id;
 

@@ -96,7 +96,7 @@ class Request
     private $locked;
 
     public function __construct(
-        int         $id,
+        ?int        $id,
         int         $studentId,
         string      $status,
         DateTime    $creationDate,

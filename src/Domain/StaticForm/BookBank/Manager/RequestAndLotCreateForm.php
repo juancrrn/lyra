@@ -24,6 +24,8 @@ use Juancrrn\Lyra\Domain\User\UserRepository;
  * @author juancrrn
  *
  * @version 0.0.1
+ * 
+ * // TODO test and examine for errors
  */
 
 class RequestAndLotCreateForm extends StaticFormModel

@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\CheckInAssistantRequestLiteForm;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
@@ -26,6 +27,10 @@ class CheckInAssistantRequestLiteView extends ViewModel
     public  const VIEW_ROUTE_BASE       = '/bookbank/check-in/students/';
     public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/requests/create/';
 
+    private $student;
+
+    private $form;
+
     public function __construct(int $studentId)
     {
         $app = App::getSingleton();
@@ -46,6 +51,14 @@ class CheckInAssistantRequestLiteView extends ViewModel
             $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
         }
 
+        // TODO Verify if student can create a request
+
+        $this->form = new CheckInAssistantRequestLiteForm(self::VIEW_ROUTE_BASE . $this->student->getId() . '/requests/create/', $this->student->getId()); 
+
+        $this->form->handle();
+
+        $this->form->initialize();
+
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
     }
@@ -60,7 +73,8 @@ class CheckInAssistantRequestLiteView extends ViewModel
             'view-name' => 'Crear solicitud',
             'assistant-view-name' => CheckInAssistantStudentOverviewView::VIEW_NAME,
             'back-to-overview-url' => CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/',
-            'student-card' => $this->generateStudentCard()
+            'student-card' => $this->generateStudentCard(),
+            'form' => $this->form->getHtml()
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
