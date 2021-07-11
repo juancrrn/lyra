@@ -459,7 +459,7 @@ class RequestAndLotEditForm extends StaticFormModel
             }
         }
 
-        if (empty($newContents)) {
+        if (empty($newLotContents)) {
             $viewManager->addErrorMessage('La lista de contenidos no puede quedar vacía.');
         }
 
