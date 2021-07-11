@@ -7,6 +7,10 @@ use Juancrrn\Lyra\Common\Api\BookBank\Volunteer\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantDonationLiteView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantPickupLiteView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantRequestLiteView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantReturnLiteView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchView;
 use Juancrrn\Lyra\Common\View\TimePlanner\Volunteer\AppointmentListView;
@@ -63,7 +67,7 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         
         /*
          *
-         * Asistente de recepción
+         * Check-in assistant
          * 
          */
         
@@ -72,30 +76,49 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
             $viewManager->render(new CheckInAssistantStudentSearchView);
         });
         
-        // Student search (form POST)
-        $this->controllerInstance->post(CheckInAssistantStudentSearchView::VIEW_ROUTE, function () use ($viewManager) {
-            $viewManager->render(new CheckInAssistantStudentSearchView);
-        });
-
-        // Resumen de un usuario en el banco de libros y oferta de gestiones
-            // Donación: añadir una donación de libros
-            // Devolución: devolver un paquete de libros
-            // Solicitud: solicitar un paquete de libros
-            // Recogida: recoger un paquete de libros
-        
         // Student overview
         $this->controllerInstance->get(CheckInAssistantStudentOverviewView::VIEW_ROUTE, function (int $itemId) use ($viewManager) {
             $viewManager->render(new CheckInAssistantStudentOverviewView($itemId));
         });
-
-        // Finalización de gestiones (POST del formulario)
-        $this->controllerInstance->post('/bookbank/check-in/([0-9]+)/process/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        
+        // Donation lite view
+        $this->controllerInstance->get(CheckInAssistantDonationLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantDonationLiteView($studentId));
         });
-
-        // Finalización de gestiones (vista final de salida, redireccionada tras el POST)
-        $this->controllerInstance->post('/bookbank/check-in/([0-9]+)/done/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        
+        // Donation lite view form POST
+        $this->controllerInstance->get(CheckInAssistantDonationLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantDonationLiteView($studentId));
+        });
+        
+        // Pickup lite view
+        $this->controllerInstance->get(CheckInAssistantPickupLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantPickupLiteView($studentId, $requestId));
+        });
+        
+        // Pickup lite view form POST
+        $this->controllerInstance->get(CheckInAssistantPickupLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantPickupLiteView($studentId, $requestId));
+        });
+        
+        // Request lite view
+        $this->controllerInstance->get(CheckInAssistantRequestLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantRequestLiteView($studentId));
+        });
+        
+        // Request lite view form POST
+        $this->controllerInstance->get(CheckInAssistantRequestLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantRequestLiteView($studentId));
+        });
+        
+        // Return lite view
+        $this->controllerInstance->get(CheckInAssistantReturnLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantReturnLiteView($studentId, $requestId));
+        });
+        
+        // Return lite view form POST
+        $this->controllerInstance->get(CheckInAssistantReturnLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
+            $viewManager->render(new CheckInAssistantReturnLiteView($studentId, $requestId));
         });
         
         /*
