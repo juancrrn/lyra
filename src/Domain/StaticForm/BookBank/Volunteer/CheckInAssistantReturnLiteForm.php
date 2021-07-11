@@ -30,7 +30,7 @@ use Juancrrn\Lyra\Domain\User\UserRepository;
 class CheckInAssistantReturnLiteForm extends StaticFormModel
 {
 
-    private const FORM_ID = 'form-bookbank-volunteer-check-in-assistant-request-lite';
+    private const FORM_ID = 'form-bookbank-volunteer-check-in-assistant-return-lite';
     private const FORM_FIELDS_NAME_PREFIX = self::FORM_ID . '-';
 
     private $request;
