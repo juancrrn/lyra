@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\BookBank\Request\RequestRepository;
 use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\CheckInAssistantRequestLiteForm;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
@@ -39,19 +40,30 @@ class CheckInAssistantRequestLiteView extends ViewModel
 
         $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_VOLUNTEER ]);
 
+        $viewManager = $app->getViewManagerInstance();
+
         $userRepo = new UserRepository($app->getDbConn());
 
         if (! $userRepo->findById($studentId)) {
-            $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
+            $viewManager->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
         }
 
         $this->student = $userRepo->retrieveById($studentId, true);
 
         if (! $this->student->hasPermission(User::NPG_STUDENT)) {
-            $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
+            $viewManager->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
         }
 
-        // TODO Verify if student can create a request
+        // Verify if student can create requests
+        
+        $requestRepo = new RequestRepository($app->getDbConn());
+
+        if (count($requestRepo->findReturnsByStudentId($this->student->getId())) > 0) {
+            $viewManager->addErrorMessage(
+                'No se pueden crear nuevas solicitudes para este estudiante porque tiene paquetes pendientes de devolver.',
+                CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/'
+            );
+        }
 
         $this->form = new CheckInAssistantRequestLiteForm(self::VIEW_ROUTE_BASE . $this->student->getId() . '/requests/create/', $this->student->getId()); 
 

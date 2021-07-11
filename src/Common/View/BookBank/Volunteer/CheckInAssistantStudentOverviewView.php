@@ -92,12 +92,10 @@ class CheckInAssistantStudentOverviewView extends ViewModel
 
             'returns-count' => $this->returnsCount,
             'returns-accordion-id' => self::VIEW_ID . '-returns-accordion',
-            // Mostrar todas las devoluciones (solicitudes procesadas y con paquete en estado picked-up) y enlace a formulario "lite" para transformar a estado siguiente (solicitud procesada y paquete returned)
             'returns-content' => $this->getReturnsContent(),
 
             'pickups-count' => $this->pickupsCount,
             'pickups-accordion-id' => self::VIEW_ID . '-pickups-accordion',
-            // Mostrar todas las recogidas (solicitudes procesadas y con paquete en estado ready) y enlace a formulario "lite" para transformar (y modificar contenido) a estados siguientes (solicitud procesada y paquete a estados picked-up o rejected)
             'pickups-content' => $this->getPickupsContent(),
 
             'donations-btn-url' => $app->getUrl() . CheckInAssistantDonationLiteView::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/',
@@ -106,13 +104,6 @@ class CheckInAssistantStudentOverviewView extends ViewModel
             'requests-btn-url' => $requestsBtnUrl,
             'requests-btn-disabled-class' => $requestsBtnDisabledClass,
             'requests-btn-disabled-attributes' => $requestsBtnDisabledAttributes,
-
-            //'request-count' => 0,//$requestIdsCount,
-            //'request-and-lot-create-url' => '',//$app->getUrl() . RequestAndLotCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/requests/create/',
-            //'request-lot-list-human' => $this->generateRequestListItemsHtml(),
-            //'donation-count' => 0,//$donationIdsCount,
-            //'donation-create-url' => '',//$app->getUrl() . DonationCreateView::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/',
-            //'donation-list-human' => $this->generateDonationListItemsHtml()
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
