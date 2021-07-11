@@ -5,6 +5,7 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Domain\BookBank\Request\RequestRepository;
+use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\CheckInAssistantReturnLiteForm;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
@@ -67,6 +68,15 @@ class CheckInAssistantReturnLiteView extends ViewModel
             );
         }
 
+        $this->form = new CheckInAssistantReturnLiteForm(
+            self::VIEW_ROUTE_BASE . $studentId . '/requests/' . $requestId . '/return/',
+            $requestId
+        );
+
+        $this->form->handle();
+
+        $this->form->initialize();
+
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
     }
@@ -81,7 +91,8 @@ class CheckInAssistantReturnLiteView extends ViewModel
             'view-name' => 'Devolver paquete',
             'assistant-view-name' => CheckInAssistantStudentOverviewView::VIEW_NAME,
             'back-to-overview-url' => CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/',
-            'student-card' => $this->student->generateCard()
+            'student-card' => $this->student->generateCard(),
+            'form' => $this->form->getHtml()
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

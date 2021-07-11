@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="mb-5">
+            <p class="d-block text-primary mb-2">
+                <span class="d-inline-block align-middle strong material-icons-outlined me-2">check_circle</span>
+                <span class="d-inline-block align-middle strong">Comprueba los ejemplares devueltos</span>
+            </p>
+            <p class="mb-2 small">Comprueba que los ejemplares devueltos por el estudiante coinciden con los que aparecen en el paquete asociado, que aparece más abajo.</p>
+            <p class="small">Al guardar, el paquete se marcará automáticamente como devuelto.</p>
+        </div>
+
+        <hr>
+
+        <div class="mb-3">
+            <label class="form-label">Estado</label>
+            <select class="form-select mb-2" disabled="disabled">
+                #status-select-options-html#
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Nivel educativo</label>
+            <select class="form-select" disabled="disabled">
+                #education-level-select-options-html#
+            </select>
+        </div>
+        
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons-outlined d-inline-block align-middle me-2">inventory_2</span>
+            <span class="d-inline-block align-middle">Paquete asociado</span>
+        </h4>
+
+        <div id="#form-fields-name-prefix#associated-lot-container" class="associated-lot mb-4">
+            #associated-lot-html#
+        </div>
+
+        <div class="mb-4 row">
+            <div class="col"></div>
+            <div class="col-md-6 text-end">
+                <div class="mb-3">
+                    <p class="small text-primary">Al guardar, el paquete <strong>se marcará automáticamente como devuelto</strong>.</p>
+                </div>
+    
+                <button type="submit" class="btn btn-primary">
+                    <span class="material-icons-outlined">save</span>
+                    Guardar y volver
+                </button>
+            </div>
+        </div>
+        
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons-outlined d-inline-block align-middle me-2">info</span>
+            <span class="d-inline-block align-middle">Otros datos</span>
+        </h4>
+
+        <div class="mb-3">
+            <label class="form-label">Curso escolar</label>
+            <input type="text" class="form-control" value="#school-year-human#" disabled="disabled">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha y hora de creación</label>
+            <input type="text" class="form-control" value="#creation-date-human#" disabled="disabled">
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>

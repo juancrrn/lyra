@@ -26,10 +26,10 @@
 }
 
 .material-icons, .material-icons-outlined {
-    display: inline-block;
-    vertical-align: middle;
-    font-weight: inherit;
-    line-height: inherit;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
     font-size: inherit !important;
 }
 
