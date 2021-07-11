@@ -65,7 +65,7 @@ class DonationRepository implements Repository
         $locked = $item->isLocked();
 
         $stmt->bind_param(
-            'iisisi',
+            'iisissi',
             $id,
             $studentId,
             $creationDate,

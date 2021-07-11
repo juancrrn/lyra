@@ -4,6 +4,7 @@ namespace Juancrrn\Lyra\Common\View\BookBank\Volunteer;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
+use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\CheckInAssistantDonationLiteForm;
 use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
@@ -28,6 +29,8 @@ class CheckInAssistantDonationLiteView extends ViewModel
 
     private $student;
 
+    private $form;
+
     public function __construct(int $studentId)
     {
         $app = App::getSingleton();
@@ -48,6 +51,12 @@ class CheckInAssistantDonationLiteView extends ViewModel
             $app->getViewManagerInstance()->addErrorMessage('El parámetro de identificador de usuario es inválido.', '');
         }
 
+        $this->form = new CheckInAssistantDonationLiteForm(self::VIEW_ROUTE_BASE . $this->student->getId() . '/donations/create/', $this->student->getId()); 
+
+        $this->form->handle();
+
+        $this->form->initialize();
+
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
     }
@@ -62,7 +71,8 @@ class CheckInAssistantDonationLiteView extends ViewModel
             'view-name' => 'Crear donación',
             'assistant-view-name' => CheckInAssistantStudentOverviewView::VIEW_NAME,
             'back-to-overview-url' => CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/',
-            'student-card' => $this->generateStudentCard()
+            'student-card' => $this->generateStudentCard(),
+            'form' => $this->form->getHtml()
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="mb-4">
+            <label for="#form-fields-name-prefix#education-level" class="form-label">Nivel educativo</label>
+            <select name="#form-fields-name-prefix#education-level" id="#form-fields-name-prefix#education-level" class="form-select subject-list-search-education-level-filter">
+                #education-level-select-options#
+            </select>
+        </div>
+
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons-outlined d-inline-block align-middle me-2">inventory_2</span>
+            <span class="d-inline-block align-middle">Contenidos</span>
+        </h4>
+        <div class="form-text mb-3">Selecciona asignaturas para añadirlas a la donación. No puedes dejar vacía esta lista.</div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <label class="form-label" for="#form-fields-name-prefix#subject-search">Añadir asignaturas</label>
+                <input type="text" class="form-control subject-list-search" data-query-url="#query-url#" data-target-results="#form-fields-name-prefix#search-results" placeholder="Buscar asignaturas para añadir...">
+                <div class="subject-list-search-results card position-absolute d-none" style="z-index: 1000;" id="#form-fields-name-prefix#search-results" data-target-list="#form-fields-name-prefix#contents-list">
+                    <ul class="list-group list-group-flush"></ul>
+                </div>
+            </div>
+            <ul id="#form-fields-name-prefix#contents-list" data-checkbox-name="#checkbox-name#" class="list-group list-group-flush subject-list-editable">
+                #initial-contents-list-html#
+            </ul>
+        </div>
+
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons-outlined d-inline-block align-middle me-2">description</span>
+            <span class="d-inline-block align-middle">Otros datos</span>
+        </h4>
+
+        <div class="mb-3">
+            <label class="form-label">Curso escolar</label>
+            <input type="text" class="form-control" value="#school-year#" disabled="disabled">
+            <div class="form-text">Esta propiedad no puede modificarse.</div>
+        </div>
+        
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">
+                <span class="material-icons-outlined">save</span>
+                Guardar y volver
+            </button>
+        </div>
+    </div>
+    <div class="col-md-6"></div>
+</div>

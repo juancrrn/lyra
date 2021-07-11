@@ -71,7 +71,6 @@ $(() => {
                     'educationLevel': educationLevel
                 }),
                 success: (result) => {
-                    console.log($target.width());
                     $targetResults.css('width', $target.outerWidth());
                     $targetResults.removeClass('d-none').addClass('d-block');
                     $targetResultsList.empty();

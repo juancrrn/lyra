@@ -87,7 +87,7 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         });
         
         // Donation lite view form POST
-        $this->controllerInstance->get(CheckInAssistantDonationLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+        $this->controllerInstance->post(CheckInAssistantDonationLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
             $viewManager->render(new CheckInAssistantDonationLiteView($studentId));
         });
         
@@ -97,7 +97,7 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         });
         
         // Pickup lite view form POST
-        $this->controllerInstance->get(CheckInAssistantPickupLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
+        $this->controllerInstance->post(CheckInAssistantPickupLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
             $viewManager->render(new CheckInAssistantPickupLiteView($studentId, $requestId));
         });
         
@@ -107,7 +107,7 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         });
         
         // Request lite view form POST
-        $this->controllerInstance->get(CheckInAssistantRequestLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
+        $this->controllerInstance->post(CheckInAssistantRequestLiteView::VIEW_ROUTE, function (int $studentId) use ($viewManager) {
             $viewManager->render(new CheckInAssistantRequestLiteView($studentId));
         });
         
@@ -117,7 +117,7 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         });
         
         // Return lite view form POST
-        $this->controllerInstance->get(CheckInAssistantReturnLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
+        $this->controllerInstance->post(CheckInAssistantReturnLiteView::VIEW_ROUTE, function (int $studentId, int $requestId) use ($viewManager) {
             $viewManager->render(new CheckInAssistantReturnLiteView($studentId, $requestId));
         });
         
