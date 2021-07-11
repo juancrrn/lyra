@@ -22,8 +22,8 @@ class CheckInAssistantReturnLiteView extends ViewModel
     private const VIEW_RESOURCE_FILE    = 'views/bookbank/volunteer/view_check_in_assistant_return_lite';
     public  const VIEW_NAME             = 'Devolución - Asistente de recepción';
     public  const VIEW_ID               = 'bookbank-volunteering-check-in-assistant-return-lite';
-    public  const VIEW_ROUTE_BASIC      = '/bookbank/check-in/students/';
-    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASIC . '([0-9]+)/requests/([0-9]+)/return/';
+    public  const VIEW_ROUTE_BASE       = '/bookbank/check-in/students/';
+    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/requests/([0-9]+)/return/';
 
     public function __construct(int $studentId, int $requestId)
     {
