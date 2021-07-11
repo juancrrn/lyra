@@ -19,7 +19,7 @@ use Juancrrn\Lyra\Domain\User\User;
 use Juancrrn\Lyra\Domain\User\UserRepository;
 
 /**
- * Check-in assistant student search form
+ * Check-in assistant donation lite form
  * 
  * @package lyra
  *
