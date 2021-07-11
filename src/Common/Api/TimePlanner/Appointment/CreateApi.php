@@ -164,9 +164,15 @@ class CreateApi extends ApiModel
         }
 
         $emailDateTime =
-            $selectedDate->format(CommonUtils::HUMAN_DATE_FORMAT) .
+            strftime(
+                CommonUtils::HUMAN_DATE_FORMAT_STRF,
+                $selectedDate->getTimestamp()
+            ) .
             ' a las ' .
-            $selectedTime->format(CommonUtils::HUMAN_TIME_FORMAT);
+            strftime(
+                CommonUtils::HUMAN_TIME_FORMAT_STRF,
+                $selectedTime->getTimestamp()
+            );
 
         EmailUtils::sendTimePlannerAppointmentReservedMessage(
             $studentFirstName,
@@ -178,9 +184,15 @@ class CreateApi extends ApiModel
 
         $reminderMessage =
             'Por favor, anote su cita para el próximo día <strong>' .
-            $selectedDate->format(CommonUtils::HUMAN_DATE_FORMAT) .
+            strftime(
+                CommonUtils::HUMAN_DATE_FORMAT_STRF,
+                $selectedDate->getTimestamp()
+            ) .
             '</strong> a las <strong>' .
-            $selectedTime->format(CommonUtils::HUMAN_TIME_FORMAT) .
+            strftime(
+                CommonUtils::HUMAN_TIME_FORMAT_STRF,
+                $selectedTime->getTimestamp()
+            ) .
             '</strong>.';
 
         $apiManager->apiRespond(
