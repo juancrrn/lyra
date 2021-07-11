@@ -26,7 +26,7 @@ class PasswordResetProcessView extends ViewModel
     public  const VIEW_NOMBRE           = 'Establecer contraseña';
     public  const VIEW_ID               = 'auth-password-reset-process';
     public  const VIEW_ROUTE            = '/auth/reset/process/([0-9a-zA-Z]*)';
-    public  const VIEW_ROUTE_BASIC      = '/auth/reset/process/';
+    public  const VIEW_ROUTE_BASE       = '/auth/reset/process/';
 
     private $form;
 

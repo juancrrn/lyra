@@ -185,7 +185,7 @@ class EmailUtils
 			'Activar usuario',
 			'auth/email_activation',
 			array(
-				'activation-url' => App::getSingleton()->getUrl() . PasswordResetProcessView::VIEW_ROUTE_BASIC . $user->getToken()
+				'activation-url' => App::getSingleton()->getUrl() . PasswordResetProcessView::VIEW_ROUTE_BASE . $user->getToken()
 			)
 		);
 	}
@@ -221,7 +221,7 @@ class EmailUtils
 			'Restablecer contraseña',
 			'auth/email_password_reset',
 			array(
-				'reset-url' => App::getSingleton()->getUrl() . PasswordResetProcessView::VIEW_ROUTE_BASIC . $user->getToken()
+				'reset-url' => App::getSingleton()->getUrl() . PasswordResetProcessView::VIEW_ROUTE_BASE . $user->getToken()
 			)
 		);
 	}

@@ -23,8 +23,8 @@ class UserEditView extends ViewModel
     private const VIEW_RESOURCE_FILE    = 'views/app_manager/view_user_edit';
     public  const VIEW_NAME             = 'Editar usuario';
     public  const VIEW_ID               = 'app-manager-user-edit';
-    public  const VIEW_ROUTE_BASIC      = '/manage/users/';
-    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASIC . '([0-9]+)/edit/';
+    public  const VIEW_ROUTE_BASE       = '/manage/users/';
+    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/edit/';
 
     private $form;
 

@@ -86,7 +86,7 @@ class DonationEditView extends ViewModel
         $filling = [
             'app-url' => $app->getUrl(),
             'view-name' => $this->getName(),
-            'back-to-student-overview-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASIC . $this->donation->getStudentId() . '/overview/',
+            'back-to-student-overview-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . $this->donation->getStudentId() . '/overview/',
             'donation-id' => $this->donation->getId(),
             'donation-edit-form-html' => $this->form->getHtml()
         ];

@@ -87,14 +87,14 @@ class AppointmentListView extends ViewModel
                 if ($studentId) {
                     $govIdNotFoundNotice = '';
 
-                    $checkInAssistantUrl = $app->getUrl() . CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASIC . $studentId . '/overview/';
+                    $checkInAssistantUrl = $app->getUrl() . CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $studentId . '/overview/';
 
                     $actionButtons = <<< HTML
                     <p class="text-end"><a target="_blank" href="$checkInAssistantUrl" class="d-block btn btn-sm btn-primary mb-2">Atender</a></p>
                     HTML;
 
                     if ($app->getSessionManagerInstance()->getLoggedInUser()->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
-                        $studentOverviewUrl = $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASIC . $studentId . '/overview/';
+                        $studentOverviewUrl = $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . $studentId . '/overview/';
 
                         $actionButtons .= <<< HTML
                         <p class="text-end"><a target="_blank" href="$studentOverviewUrl" class="d-block btn btn-sm btn-secondary mb-2">Gestionar</a></p>

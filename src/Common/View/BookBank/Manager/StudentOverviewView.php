@@ -29,8 +29,8 @@ class StudentOverviewView extends ViewModel
     private const VIEW_RESOURCE_FILE    = 'views/bookbank/manager/view_student_overview';
     public  const VIEW_NAME             = 'Gestión de estudiante en banco de libros';
     public  const VIEW_ID               = 'bookbank-manage-student-overview';
-    public  const VIEW_ROUTE_BASIC      = '/bookbank/manage/students/';
-    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASIC . '([0-9]+)/overview/';
+    public  const VIEW_ROUTE_BASE       = '/bookbank/manage/students/';
+    public  const VIEW_ROUTE            = self::VIEW_ROUTE_BASE . '([0-9]+)/overview/';
 
     private $student;
 

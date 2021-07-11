@@ -85,7 +85,7 @@ class RequestAndLotEditView extends ViewModel
         $filling = [
             'app-url' => $app->getUrl(),
             'view-name' => $this->getName(),
-            'back-to-student-overview-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASIC . $this->request->getStudentId() . '/overview/',
+            'back-to-student-overview-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . $this->request->getStudentId() . '/overview/',
             'request-id' => $this->request->getId(),
             'request-edit-form-html' => $this->form->getHtml()
         ];

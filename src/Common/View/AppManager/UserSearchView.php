@@ -72,7 +72,7 @@ class UserSearchView extends ViewModel
                 'ajax-forms/common/part_user_search_form',
                 [
                     'query-url' => $app->getUrl() . UserSearchApi::API_ROUTE,
-                    'target-url' => $app->getUrl() . UserEditView::VIEW_ROUTE_BASIC . '{id}/edit/'
+                    'target-url' => $app->getUrl() . UserEditView::VIEW_ROUTE_BASE . '{id}/edit/'
                 ]
             )
         ];

@@ -67,7 +67,7 @@ class StudentSearchForm extends StaticFormModel
 
         // Si no hay ningún error, continuar.
         if (! $view->anyErrorMessages()) {
-            Http::redirect($app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASIC . $user->getId() . '/overview/');
+            Http::redirect($app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . $user->getId() . '/overview/');
         }
 
         $this->initialize();

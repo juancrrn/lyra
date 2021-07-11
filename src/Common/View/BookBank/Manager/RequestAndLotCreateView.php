@@ -66,7 +66,7 @@ class RequestAndLotCreateView extends ViewModel
         $filling = [
             'app-url' => $app->getUrl(),
             'view-name' => $this->getName(),
-            'back-to-student-overview-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASIC . $this->student->getId() . '/overview/',
+            'back-to-student-overview-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . $this->student->getId() . '/overview/',
             'request-and-lot-create-form-html' => $this->form->getHtml()
         ];
         

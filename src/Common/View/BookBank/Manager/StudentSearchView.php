@@ -60,7 +60,7 @@ class StudentSearchView extends ViewModel
                 'ajax-forms/common/part_user_search_form',
                 [
                     'query-url' => $app->getUrl() . StudentSearchApi::API_ROUTE,
-                    'target-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASIC . '{id}/overview/'
+                    'target-url' => $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . '{id}/overview/'
                 ]
             )
         ];
