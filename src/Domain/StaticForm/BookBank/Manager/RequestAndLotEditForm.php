@@ -98,18 +98,16 @@ class RequestAndLotEditForm extends StaticFormModel
 
         $newEducationLevel = $this->processNewEducationLevel($postedData[self::FORM_FIELDS_NAME_PREFIX . 'education-level']);
 
-        if (! isset($postedData[self::FORM_FIELDS_NAME_PREFIX . 'lot-contents'])) {
-            $viewManager->addErrorMessage('El paquete asociado no estar vacío. Si necesitas dejarlo así, marca la solicitud con un estado distinto a procesada.');
-        } else {
-
-            if ($newStatus == Request::STATUS_PROCESSED) {
+        if ($newStatus == Request::STATUS_PROCESSED) {
+            if (! isset($postedData[self::FORM_FIELDS_NAME_PREFIX . 'lot-contents'])) {
+                $viewManager->addErrorMessage('El paquete asociado no estar vacío. Si necesitas dejarlo así, marca la solicitud con un estado distinto a procesada.');
+            } else {
                 $newLotStatus = $this->processNewLotStatus($postedData[self::FORM_FIELDS_NAME_PREFIX . 'lot-status']);
                 $newLotContents = $this->processNewLotContents($postedData[self::FORM_FIELDS_NAME_PREFIX . 'lot-contents'], $newEducationLevel);
-            } else {
-                $newLotStatus = null;
-                $newLotContents = null;
             }
-
+        } else {
+            $newLotStatus = null;
+            $newLotContents = null;
         }
 
         if (! $viewManager->anyErrorMessages()) {
