@@ -124,6 +124,8 @@ class AppointmentListView extends ViewModel
                     $createUserA = <<< HTML
                     <p class="text-end"><a target="_blank" href="$createUserUrl" class="d-block btn btn-sm btn-secondary mb-2">Crear usuario</a></p>
                     HTML;
+                } else {
+                    $createUserA = '';
                 }
 
                 $actionButtons = <<< HTML
