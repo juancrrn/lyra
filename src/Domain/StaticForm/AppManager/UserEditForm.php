@@ -111,18 +111,22 @@ class UserEditForm extends StaticFormModel
         if (empty($newLastName)) {
             $viewManager->addErrorMessage('El campo de apellidos no puede estar vacío.');
         }
-
+        
         $newGovId = mb_strtolower($postedData[self::FORM_FIELDS_NAME_PREFIX . 'gov-id']) ?? null;
-
+        
         $userRepo = new UserRepository($app->getDbConn());
 
-        if (! empty($newGovId) && ($newGovId != mb_strtolower($this->user->getGovId()))) {
-            if (ValidationUtils::validateGovId($newGovId)) {
-                if ($userRepo->findByGovId($newGovId)) {
-                    $viewManager->addErrorMessage('Ya existe un usuario registrado con el NIF o NIE especificado.');
+        if (! empty($newGovId)) {
+            if ($newGovId != mb_strtolower($this->user->getGovId())) {
+                if (ValidationUtils::validateGovId($newGovId)) {
+                    if ($userRepo->findByGovId($newGovId)) {
+                        $viewManager->addErrorMessage('Ya existe un usuario registrado con el NIF o NIE especificado.');
+                    }
+                } else {
+                    $viewManager->addErrorMessage('El NIF o NIE introducido no es válido.');
                 }
             } else {
-                $viewManager->addErrorMessage('El NIF o NIE introducido no es válido.');
+                // Gov-id has not changed, do nothing
             }
         } else {
             $newGovId = null;

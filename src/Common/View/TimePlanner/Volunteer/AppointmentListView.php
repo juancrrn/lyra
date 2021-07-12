@@ -87,20 +87,28 @@ class AppointmentListView extends ViewModel
                 $studentId = $userRepo->findByGovId($appointment->getStudentGovId());
 
                 if ($studentId) {
+                    $student = $userRepo->retrieveById($studentId, true);
+
                     $govIdNotFoundNotice = '';
 
                     $checkInAssistantUrl = $app->getUrl() . CheckInAssistantStudentOverviewView::VIEW_ROUTE_BASE . $studentId . '/overview/';
 
-                    $actionButtons = <<< HTML
-                    <p class="text-end"><a target="_blank" href="$checkInAssistantUrl" class="d-block btn btn-sm btn-primary mb-2">Atender</a></p>
-                    HTML;
-
-                    if ($app->getSessionManagerInstance()->getLoggedInUser()->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
-                        $studentOverviewUrl = $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . $studentId . '/overview/';
-
-                        $actionButtons .= <<< HTML
-                        <p class="text-end"><a target="_blank" href="$studentOverviewUrl" class="d-block btn btn-sm btn-secondary mb-2">Gestionar</a></p>
+                    if (! $student->hasPermission(User::NPG_STUDENT)) {
+                        $actionButtons = <<< HTML
+                        <p class="border rounded border-danger p-2">Este usuario no tiene permisos de estudiante. Un gestor de la aplicación debe añadírselos para poder atenderlo.</p>
                         HTML;
+                    } else {
+                        $actionButtons = <<< HTML
+                        <p class="text-end"><a target="_blank" href="$checkInAssistantUrl" class="d-block btn btn-sm btn-primary mb-2">Atender</a></p>
+                        HTML;
+
+                        if ($app->getSessionManagerInstance()->getLoggedInUser()->hasPermission(User::NPG_BOOKBANK_MANAGER)) {
+                            $studentOverviewUrl = $app->getUrl() . StudentOverviewView::VIEW_ROUTE_BASE . $studentId . '/overview/';
+
+                            $actionButtons .= <<< HTML
+                            <p class="text-end"><a target="_blank" href="$studentOverviewUrl" class="d-block btn btn-sm btn-secondary mb-2">Gestionar</a></p>
+                            HTML;
+                        }
                     }
                 } else {
                     $govIdNotFoundNotice = '<p class="mt-1"><small class="text-muted">No se ha encontrado ningún usuario estudiante con este NIF o NIE.</small></p>';
