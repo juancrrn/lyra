@@ -219,6 +219,8 @@ class UserEditForm extends StaticFormModel
 
             $userRepo->update($updatedUser, $newPermissionGroupIds);
 
+            $this->user = $userRepo->retrieveById($this->user->getId(), true);
+
             $viewManager->addSuccessMessage('El usuario fue actualizado correctamente.');
         }
     }
