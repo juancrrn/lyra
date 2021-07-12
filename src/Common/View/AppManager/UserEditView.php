@@ -36,7 +36,7 @@ class UserEditView extends ViewModel
 
         $sessionManager->requirePermissionGroups([ User::NPG_APP_MANAGER ]);
 
-        $this->form = new UserEditForm(self::VIEW_ROUTE, $userId);
+        $this->form = new UserEditForm(self::VIEW_ROUTE_BASE . $userId . '/edit/', $userId);
 
         $this->form->handle();
 

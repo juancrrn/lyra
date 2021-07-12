@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\PermissionGroup;
 
 use DateTime;
+use JsonSerializable;
 use Juancrrn\Lyra\Common\CommonUtils;
 
 /**
@@ -15,7 +16,7 @@ use Juancrrn\Lyra\Common\CommonUtils;
  * @version 0.0.1
  */
 
-class PermissionGroup
+class PermissionGroup implements JsonSerializable
 {
 
     /**
@@ -140,7 +141,7 @@ class PermissionGroup
         return $this->description;
     }
 
-    public function getParent(): int
+    public function getParent(): null|int
     {
         return $this->parent;
     }
@@ -153,5 +154,17 @@ class PermissionGroup
     public function getCreatorId(): int
     {
         return $this->creatorId;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->getId(),
+            'type' => $this->getType(),
+            'shortName' => $this->getShortName(),
+            'fullName' => $this->getFullName(),
+            'description' => $this->getDescription(),
+            'parent' => $this->getParent(),
+        ];
     }
 }

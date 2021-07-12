@@ -7,7 +7,7 @@
         </h4>
         <div class="card p-4 mb-4">
             <div class="text-center">
-                <img class="rounded-circle mx-auto d-block mt-2 mb-3" style="max-width: 100px;" src="#user-image#" alt="">
+                <img class="rounded-circle mx-auto d-block mt-2 mb-3" style="max-width: 100px;" src="#image-url#" alt="">
             </div>
             
             <div class="mb-3">
@@ -30,9 +30,17 @@
             <span class="material-icons-outlined d-inline-block align-middle me-2">vpn_key</span>
             <span class="d-inline-block align-middle">Permisos</span>
         </h4>
+
         <div class="card mb-4">
-            <ul class="list-group list-group-flush">
-                #user-permission-group-list-human#
+            <div class="card-header">
+                <label class="form-label">Añadir grupos de permisos</label>
+                <input type="text" class="form-control permission-group-list-search" data-query-url="#query-url#" data-target-results="#prefix#permission-group-list-search-results" placeholder="Buscar grupos de permisos para añadir...">
+                <div class="permission-group-list-search-results card position-absolute d-none" style="z-index: 1000;" id="#prefix#permission-group-list-search-results" data-target-list="#prefix#permission-group-list">
+                    <ul class="list-group list-group-flush"></ul>
+                </div>
+            </div>
+            <ul class="list-group list-group-flush permission-group-list-editable" id="#prefix#permission-group-list" data-checkbox-name="#checkbox-name#">
+                #permission-group-list#
             </ul>
         </div>
     </div>
@@ -62,6 +70,7 @@
             <span class="material-icons-outlined d-inline-block align-middle me-2">security</span>
             <span class="d-inline-block align-middle">Seguridad</span>
         </h4>
+
         <div class="card mb-4 p-4">
             <div class="mb-3">
                 <label class="form-label">Fecha del último acceso</label>
@@ -88,65 +97,27 @@
         <div class="card mb-4 p-4">
             <div class="mb-3">
                 <label class="form-label">Estado de la cuenta</label>
-                <input type="text" class="form-control" disabled="disabled" value="#user-status-human#">
+                <select class="form-select" name="#prefix#status">
+                    #status-options#
+                </select>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Representante legal</label>
-                <input type="text" class="form-control" disabled="disabled" value="#user-representative-human#">
+                <label class="form-label">NIF o NIE del representante legal</label>
+                <input type="text" class="form-control" name="#prefix#representative-gov-id" value="#representative-gov-id#" placeholder="NIF o NIE del representante legal">
+                <p class="form-text">Introduce el NIF o NIE del representante legal, la asociacion se realizará de forma automática.</p>
+                <p class="form-text">Deja el campo vacío para eliminar la asociación.</p>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Fecha de registro</label>
-                <input type="text" class="form-control" disabled="disabled" value="#user-registration-date-human#">
+                <input type="text" class="form-control" disabled="disabled" value="#registration-date#">
             </div>
+        </div>
+        
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary">Guardar</button>
         </div>
     </div>
     <div class="col"></div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    id
-    gov-id
-    first-name
-    last-name
-    birth-date
-    email-address
-    phone-number
-    representative-id
-    registration-date
-    last-login-date
-    token
-    status
-
-activation
-password
-permission groups
-
-
-<div class="text-end">
-    <button type="submit" class="btn btn-primary">Guardar</button>
 </div>

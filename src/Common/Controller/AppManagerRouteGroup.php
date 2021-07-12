@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Common\Controller;
 
 use Exception;
+use Juancrrn\Lyra\Common\Api\AppManager\PermissionGroupsApi;
 use Juancrrn\Lyra\Common\Api\AppManager\UserSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
@@ -55,9 +56,19 @@ class AppManagerRouteGroup implements RouteGroupModel
             $apiManager->call(new UserSearchApi);
         });
         
-        // Listado de usuarios
+        // User edition
         $this->controllerInstance->get(UserEditView::VIEW_ROUTE, function (int $userId) use ($viewManager) {
             $viewManager->render(new UserEditView($userId));
+        });
+        
+        // User edition form POST
+        $this->controllerInstance->post(UserEditView::VIEW_ROUTE, function (int $userId) use ($viewManager) {
+            $viewManager->render(new UserEditView($userId));
+        });
+
+        // Permission groups API
+        $this->controllerInstance->post(PermissionGroupsApi::API_ROUTE, function () use ($apiManager) {
+            $apiManager->call(new PermissionGroupsApi);
         });
 
         /*

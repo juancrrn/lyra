@@ -113,9 +113,56 @@ class UserRepository implements Repository
         }
     }
 
-    public function update(): bool|int
+    public function update(User $updatedUser, array $newPermissionGroupIds): void
     {
-        throw new \Exception('Not implemented');
+        $query = <<< SQL
+        UPDATE
+            users
+        SET
+            gov_id = ?,
+            first_name = ?,
+            last_name = ?,
+            birth_date = ?,
+            email_address = ?,
+            phone_number = ?,
+            representative_id = ?,
+            status = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $govId              = $this->user->getGovId();
+        $firstName          = $this->user->getFirstName();
+        $lastName           = $this->user->getLastName();
+        $birthDate          = $this->user->getBirthDate();
+        $emailAddress       = $this->user->getEmailAddress();
+        $phoneNumber        = $this->user->getPhoneNumber();
+        $representativeId   = $this->user->getRepresentativeId();
+        $status             = $this->user->getStatus();
+        $id                 = $this->user->getId();
+        
+        $stmt->bind_param(
+            'ssssssisi',
+            $govId,
+            $firstName,
+            $lastName,
+            $birthDate,
+            $emailAddress,
+            $phoneNumber,
+            $representativeId,
+            $status,
+            $id
+        );
+        
+        $stmt->execute();
+
+        $stmt->close();
+
+        $this->updatePermissionGroupsWithIds($newPermissionGroupIds);
+
+        return;
     }
 
     /**
@@ -154,6 +201,11 @@ class UserRepository implements Repository
         $stmt->close();
 
         return $result;
+    }
+
+    public function updatePermissionGroupsWithIds(array $permissionGroupIds): void
+    {
+
     }
 
     /**
@@ -316,8 +368,6 @@ class UserRepository implements Repository
 
         return $return;
     }
-
-    
 
     public function searchStudents(string $query, ?bool $loadModel = false): array
     {
@@ -704,5 +754,87 @@ class UserRepository implements Repository
         $stmt->close();
 
         return $result;
+    }
+
+    public function deletePermissionGroupLink(int $userId, int $permissionGroupId): bool
+    {
+        $query = <<< SQL
+        DELETE FROM
+            user_permission_group_links
+        WHERE
+            user_id = ?
+        AND
+            permission_group_id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'ii',
+            $userId,
+            $permissionGroupId
+        );
+        
+        $result = $stmt->execute();
+
+        $stmt->close();
+
+        return $result;
+    }
+
+    public function createPermissionGroupLinks(int $userId, array $permissionGroups): void
+    {
+        foreach ($permissionGroups as $permissionGroup)
+            $this->createPermissionGroupLink($userId, $permissionGroup->getId());
+    }
+
+    public function deletePermissionGroupLinksWithIds(int $userId, array $permissionGroupIds): void
+    {
+        foreach ($permissionGroupIds as $permissionGroupId)
+            $this->createPermissionGroupLink($userId, $permissionGroupId);
+    }
+
+    public function updatePermissionGroupLinks(int $userId, array $permissionGroups): void
+    {
+        $ids = [];
+
+        foreach ($permissionGroups as $permissionGroup) {
+            $ids[] = $permissionGroup->getId();
+        }
+
+        $this->updatePermissionGroupLinksWithIds($userId, $ids);
+    }
+
+    public function updatePermissionGroupLinksWithIds(int $userId, array $permissionGroupIds): void
+    {
+        $currentPermissionGroups = $this->retrievePermissionGroupsById($userId);
+
+        // Permission groups to add
+        // $newPermissionGroups - $currentPermissionGroups
+
+        foreach ($permissionGroupIds as $newPermissionGroupId) {
+            $inArray = false;
+
+            foreach ($currentPermissionGroups as $currentPermissionGroup)
+                if ($currentPermissionGroup->getId() == $newPermissionGroupId)
+                    $inArray = true;
+
+            if (! $inArray)
+                $this->createPermissionGroupLink($userId, $newPermissionGroupId);
+        }
+
+        // Permission groups to delete
+        // $currentPermissionGroups - $newPermissionGroups
+
+        foreach ($currentPermissionGroups as $currentPermissionGroup) {
+            $inArray = false;
+
+            foreach ($permissionGroupIds as $newPermissionGroupId)
+                if ($newPermissionGroupId == $currentPermissionGroup->getId())
+                    $inArray = true;
+
+            if (! $inArray)
+                $this->deletePermissionGroupLink($userId, $currentPermissionGroup->getId());
+        }
     }
 }

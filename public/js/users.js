@@ -152,3 +152,149 @@ $(() => {
         });
     })
 })
+
+/*
+ * 
+ * User permission group lists
+ * 
+ */
+
+user.permissionGroupList = {};
+
+user.permissionGroupList.selector = '.permission-group-list-editable';
+user.permissionGroupList.inputSelector = '.permission-group-list-search';
+user.permissionGroupList.searchItemSelector = '.permission-group-search-item';
+user.permissionGroupList.resultsSelector = '.permission-group-list-search-results';
+user.permissionGroupList.itemSelector = '.permission-group-list-item';
+user.permissionGroupList.itemDeleteBtnSelector = user.permissionGroupList.itemSelector + ' .permission-group-list-delete-this-btn';
+
+user.permissionGroupList.itemTemplateSelector = '#app-manager-user-part-permission-group-list-item-editable';
+user.permissionGroupList.itemEmptyTemplateSelector = '#app-manager-user-part-permission-group-list-item-empty';
+user.permissionGroupList.itemEmptySelector = '.permission-group-list-item-empty';
+user.permissionGroupList.searchItemTemplateSelector = '#app-manager-user-part-permission-group-search-item';
+user.permissionGroupList.searchItemEmptyTemplateSelector = '#app-manager-user-part-permission-group-search-item-empty';
+
+
+user.permissionGroupList.constructItem = function (dataItem, checkBoxName)
+{
+    let $clone = $(document
+        .querySelector(user.permissionGroupList.itemTemplateSelector)
+        .content.firstElementChild.cloneNode(true));
+
+    console.log(dataItem);
+
+    $clone.attr('data-permission-group-id', dataItem.id);
+    $clone.find('input[name=\'' + checkBoxName + '[]\']').val(dataItem.id);
+    $clone.find('.t-full-name').text(dataItem.fullName);
+    $clone.find('.t-description').text(dataItem.description);
+
+    return $clone;
+}
+
+user.permissionGroupList.clearAllResultsLists = function ()
+{
+    $(user.permissionGroupList.resultsSelector).removeClass('d-block').addClass('d-none');
+    $(user.permissionGroupList.resultsSelector + ' ul.list-group').empty();
+}
+
+user.permissionGroupList.constructSearchItem = function (dataItem)
+{
+    let $clone = $(document
+        .querySelector(user.permissionGroupList.searchItemTemplateSelector)
+        .content.firstElementChild.cloneNode(true));
+
+    $clone.attr('data-permission-group-serialized', JSON.stringify(dataItem));
+    $clone.attr('data-permission-group-id', dataItem.id);
+    $clone.find('.t-full-name').text(dataItem.fullName);
+    $clone.find('.t-description').text(dataItem.description);
+
+    return $clone;
+}
+
+user.permissionGroupList.validateNotAlreadyAdded = function (dataItem, $targetList)
+{
+    const listItems = $targetList.find(user.permissionGroupList.itemSelector);
+
+    for (i = 0; i < listItems.length; i++) {
+        if ($(listItems[i]).data('permission-group-id') == dataItem.id) return false;
+    }
+    
+    return true;
+}
+
+$(() => {
+    $(user.permissionGroupList.selector).on('click', user.permissionGroupList.itemDeleteBtnSelector, (event) => {
+        $target = $(event.target);
+        $list = $target.closest(user.permissionGroupList.selector);
+        
+        $target.closest(user.permissionGroupList.itemSelector).remove();
+
+        if ($list.find(user.permissionGroupList.itemSelector).length == 0) {
+            var template = document.querySelector(user.permissionGroupList.itemEmptyTemplateSelector);
+            var clone = template.content.firstElementChild.cloneNode(true);
+            $list[0].appendChild(clone);
+        }
+    });
+    
+    $(user.permissionGroupList.inputSelector).on('keyup focus', (event) => {
+        const $target = $(event.target);
+        const requestUrl = $target.data('query-url');
+        const query = $target.val();
+
+        $targetList = $('#' + $target.data('target-list'));
+        $targetResults = $('#' + $target.data('target-results'));
+        $targetResultsList = $('#' + $target.data('target-results') + ' ul.list-group');
+
+        if (requestUrl && query) {
+            $.post({
+                url: requestUrl,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    'query': query
+                }),
+                success: (result) => {
+                    $targetResults.css('width', $target.outerWidth());
+                    $targetResults.removeClass('d-none').addClass('d-block');
+                    $targetResultsList.empty();
+
+                    if (result.data.length == 0) {
+                        var template = document.querySelector(user.permissionGroupList.searchItemEmptyTemplateSelector);
+                        var clone = template.content.firstElementChild.cloneNode(true);
+                        $targetResultsList[0].appendChild(clone);
+                    } else {
+                        for (let i = 0; i < result.data.length; i++) {
+                            $targetResultsList.append(user.permissionGroupList.constructSearchItem(result.data[i]));
+                        }
+                    }
+                }
+            });
+        }
+    });
+
+    $('*').not(
+        user.permissionGroupList.resultsSelector + ', ' +
+        user.permissionGroupList.resultsSelector + ' *, ' +
+        user.permissionGroupList.inputSelector
+    ).on('click', (event) => {
+        user.permissionGroupList.clearAllResultsLists();
+    });
+
+    $(user.permissionGroupList.resultsSelector).on('click', user.permissionGroupList.searchItemSelector, function () {
+        const $resultsList = $(this).closest(user.permissionGroupList.resultsSelector);
+        var $targetList = $('#' + $resultsList.data('target-list'));
+        const dataItem = $(this).data('permission-group-serialized');
+
+        if (user.permissionGroupList.validateNotAlreadyAdded(dataItem, $targetList)) {
+            const checkBoxName = $targetList.data('checkbox-name');
+
+            $targetList.find(user.permissionGroupList.itemEmptySelector).remove();
+
+            $targetList.append(user.permissionGroupList.constructItem(dataItem, checkBoxName));
+
+            user.permissionGroupList.clearAllResultsLists();
+        } else {
+            toast.error('El grupo de permisos seleccionado ya estaba añadido.');
+        }
+    });
+})

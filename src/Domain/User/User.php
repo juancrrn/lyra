@@ -179,7 +179,7 @@ class User implements JsonSerializable
         string      $emailAddress,
         string      $phoneNumber,
         ?int        $representativeId,
-        DateTime    $registrationDate,
+        ?DateTime   $registrationDate,
         ?DateTime   $lastLoginDate,
         ?string     $token,
         string      $status,
@@ -427,6 +427,22 @@ class User implements JsonSerializable
                     self::STATUS_RESET, self::STATUS_RESET_TITLE, self::STATUS_RESET_DESC
                 );
         }
+    }
+
+    public static function getStatusesForSelectOptions(): array
+    {
+        $array = [];
+
+        foreach (self::STATUSES as $statusValue) {
+            $array[$statusValue] = self::statusToHuman($statusValue)->getTitle();
+        }
+
+        return $array;
+    }
+
+    public static function validStatus(string $testStatus): bool
+    {
+        return in_array($testStatus, self::STATUSES);
     }
 
     public function generateCard(): string
