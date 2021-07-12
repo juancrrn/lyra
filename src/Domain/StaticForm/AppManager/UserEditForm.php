@@ -91,7 +91,6 @@ class UserEditForm extends StaticFormModel
     
     protected function process(array & $postedData): void
     {
-        dd($postedData);
         $app = App::getSingleton();
 
         $viewManager = $app->getViewManagerInstance();
