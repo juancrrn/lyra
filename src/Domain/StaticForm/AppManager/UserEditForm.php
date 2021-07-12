@@ -2,6 +2,7 @@
 
 namespace Juancrrn\Lyra\Domain\StaticForm\AppManager;
 
+use DateTime;
 use Juancrrn\Lyra\Common\Api\AppManager\PermissionGroupsApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
@@ -143,6 +144,15 @@ class UserEditForm extends StaticFormModel
 
         if (empty($newBirthDate)) {
             $viewManager->addErrorMessage('El campo de fecha de nacimiento no puede estar vacío.');
+        } else {
+            $newBirthDate = DateTime::createFromFormat(
+                CommonUtils::MYSQL_DATE_FORMAT,
+                $newBirthDate
+            );
+
+            if (! $newBirthDate) {
+                $viewManager->addErrorMessage('El campo de fecha de nacimiento debe contener una fecha válida. Por favor, utiliza el formato AAAA-MM-DD.');
+            }
         }
 
         $newStatus = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'status'] ?? null;
