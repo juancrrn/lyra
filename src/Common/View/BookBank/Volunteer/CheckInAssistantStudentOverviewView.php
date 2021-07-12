@@ -45,7 +45,7 @@ class CheckInAssistantStudentOverviewView extends ViewModel
 
         $sessionManager = $app->getSessionManagerInstance();
 
-        $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_MANAGER ]);
+        $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_VOLUNTEER ]);
 
         $userRepository = new UserRepository($app->getDbConn());
 
