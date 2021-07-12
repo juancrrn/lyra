@@ -115,7 +115,7 @@ class UserEditForm extends StaticFormModel
 
         $userRepo = new UserRepository($app->getDbConn());
 
-        if (! empty($newGovId)) {
+        if (! empty($newGovId) && ($newGovId != $this->user->getGovId())) {
             if (ValidationUtils::validateGovId($newGovId)) {
                 if ($userRepo->findByGovId($newGovId)) {
                     $viewManager->addErrorMessage('Ya existe un usuario registrado con el NIF o NIE especificado.');

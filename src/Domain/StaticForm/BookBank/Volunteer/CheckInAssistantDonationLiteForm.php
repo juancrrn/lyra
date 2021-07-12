@@ -60,7 +60,7 @@ class CheckInAssistantDonationLiteForm extends StaticFormModel
 
         $viewManager->addTemplateElement(
             'bookbank-common-subject-list-editable-item',
-            'bookbank\common\template_subject_list_editable_item',
+            'bookbank/common/template_subject_list_editable_item',
             [
                 'book-image-url' => '',
                 'title-human' => '',
@@ -73,7 +73,7 @@ class CheckInAssistantDonationLiteForm extends StaticFormModel
         
         $viewManager->addTemplateElement(
             'bookbank-common-subject-list-empty-item',
-            'bookbank\common\template_subject_list_empty_item',
+            'bookbank/common/template_subject_list_empty_item',
             []
         );
 
@@ -81,7 +81,7 @@ class CheckInAssistantDonationLiteForm extends StaticFormModel
 
         $viewManager->addTemplateElement(
             'bookbank-common-subject-search-item',
-            'bookbank\common\template_subject_search_item',
+            'bookbank/common/template_subject_search_item',
             [
                 'book-image-url' => '',
                 'title-human' => '',
@@ -93,7 +93,7 @@ class CheckInAssistantDonationLiteForm extends StaticFormModel
         
         $viewManager->addTemplateElement(
             'bookbank-common-subject-search-empty-item',
-            'bookbank\common\template_subject_search_empty_item',
+            'bookbank/common/template_subject_search_empty_item',
             []
         );
 
