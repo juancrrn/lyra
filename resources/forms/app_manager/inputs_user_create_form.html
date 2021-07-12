@@ -5,25 +5,20 @@
             <span class="material-icons-outlined d-inline-block align-middle me-2">face</span>
             <span class="d-inline-block align-middle">Identidad</span>
         </h4>
-        <div class="card p-4 mb-4">
-            <div class="text-center">
-                <img class="rounded-circle mx-auto d-block mt-2 mb-3" style="max-width: 100px;" src="#image-url#" alt="">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" class="form-control" required="required" name="#prefix#first-name" placeholder="Nombre">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Apellidos</label>
-                <input type="text" class="form-control" required="required" name="#prefix#last-name" placeholder="Apellidos">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">NIF o NIE</label>
-                <input type="text" class="form-control" required="required" name="#prefix#gov-id" placeholder="NIF o NIE">
-            </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" required="required" name="#prefix#first-name" placeholder="Nombre">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Apellidos</label>
+            <input type="text" class="form-control" required="required" name="#prefix#last-name" placeholder="Apellidos">
+        </div>
+        
+        <div class="mb-4">
+            <label class="form-label">NIF o NIE</label>
+            <input type="text" class="form-control" required="required" name="#prefix#gov-id" placeholder="NIF o NIE">
         </div>
 
         <h4 class="text-secondary mb-3">
@@ -31,7 +26,7 @@
             <span class="d-inline-block align-middle">Permisos</span>
         </h4>
 
-        <div class="card mb-4">
+        <div class="card">
             <div class="card-header">
                 <label class="form-label">Añadir grupos de permisos</label>
                 <input type="text" class="form-control permission-group-list-search" data-query-url="#query-url#" data-target-results="#prefix#permission-group-list-search-results" placeholder="Buscar grupos de permisos para añadir...">
@@ -49,21 +44,20 @@
             <span class="material-icons-outlined d-inline-block align-middle me-2">info</span>
             <span class="d-inline-block align-middle">Datos personales</span>
         </h4>
-        <div class="card mb-4 p-4">
-            <div class="mb-3">
-                <label class="form-label">Dirección de correo electrónico</label>
-                <input type="text" class="form-control" required="required" name="#prefix#email-address" placeholder="Dirección de correo electrónico">
-            </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Dirección de correo electrónico</label>
+            <input type="text" class="form-control" required="required" name="#prefix#email-address" placeholder="Dirección de correo electrónico">
+        </div>
 
-            <div class="mb-3">
-                <label class="form-label">Número de teléfono</label>
-                <input type="text" class="form-control" required="required" name="#prefix#phone-number" placeholder="Número de teléfono">
-            </div>
+        <div class="mb-3">
+            <label class="form-label">Número de teléfono</label>
+            <input type="text" class="form-control" required="required" name="#prefix#phone-number" placeholder="Número de teléfono">
+        </div>
 
-            <div>
-                <label class="form-label">Fecha de nacimiento</label>
-                <input type="date" class="form-control" required="required" name="#prefix#birth-date" placeholder="Fecha de nacimiento">
-            </div>
+        <div class="mb-4">
+            <label class="form-label">Fecha de nacimiento</label>
+            <input type="date" class="form-control" required="required" name="#prefix#birth-date" placeholder="Fecha de nacimiento">
         </div>
         
         <h4 class="text-secondary mb-3">
@@ -71,35 +65,35 @@
             <span class="d-inline-block align-middle">Seguridad</span>
         </h4>
 
-        <div class="card mb-4 p-4">
-            <div>
-                <label class="form-label">Contraseña</label>
-                <p class="form-text">Próximamente...</p>
-            </div>
+        <div class="mb-4">
+            <label class="form-label">Contraseña</label>
+            <p class="form-text">El usuario deberá establecer su contraseña al activar su cuenta a través del mensaje que recibirá por correo electrónico próximamente.</p>
         </div>
         
         <h4 class="text-secondary mb-3">
             <span class="material-icons-outlined d-inline-block align-middle me-2">how_to_reg</span>
             <span class="d-inline-block align-middle">Registro en #app-name#</span>
         </h4>
-        <div class="card mb-4 p-4">
-            <div class="mb-3">
-                <label class="form-label">Estado de la cuenta</label>
-                <select class="form-select" name="#prefix#status">
-                    #status-options#
-                </select>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">NIF o NIE del representante legal</label>
-                <input type="text" class="form-control" name="#prefix#representative-gov-id" placeholder="NIF o NIE del representante legal">
-                <p class="form-text">Introduce el NIF o NIE del representante legal, la asociacion se realizará de forma automática.</p>
-                <p class="form-text">Deja el campo vacío para eliminar la asociación.</p>
-            </div>
+        <div class="mb-3">
+            <label class="form-label">Estado de la cuenta</label>
+            <select class="form-select" name="#prefix#status">
+                #status-options#
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">NIF o NIE del representante legal</label>
+            <input type="text" class="form-control" name="#prefix#representative-gov-id" placeholder="NIF o NIE del representante legal">
+            <p class="form-text">Introduce el NIF o NIE del representante legal, la asociación se realizará de forma automática.</p>
+            <p class="form-text">Deja el campo vacío para eliminar la asociación.</p>
         </div>
         
         <div class="text-end">
-            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="submit" class="btn btn-primary">
+                <span class="material-icons-outlined">save</span>
+                Guardar
+            </button>
         </div>
     </div>
     <div class="col"></div>
