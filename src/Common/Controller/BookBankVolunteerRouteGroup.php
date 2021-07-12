@@ -13,6 +13,7 @@ use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantRequestLiteView
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantReturnLiteView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\LotFillingAssistantHomeView;
 use Juancrrn\Lyra\Common\View\TimePlanner\Volunteer\AppointmentListView;
 
 /**
@@ -123,18 +124,13 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         
         /*
          *
-         * Asistente de empaquetado
+         * Lot filling assistant
          * 
          */
 
-        // Inicio del asistente
-        $this->controllerInstance->post('/bookbank/lot-fill/welcome/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
-        });
-
-        // Rellenado de un paquete de libros
-        $this->controllerInstance->post('/bookbank/lot-fill/process/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        // Lot filling assistant home view
+        $this->controllerInstance->get(LotFillingAssistantHomeView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new LotFillingAssistantHomeView);
         });
     }
 }
