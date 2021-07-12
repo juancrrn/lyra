@@ -6,8 +6,10 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\ValidationUtils;
 use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
+use Juancrrn\Lyra\Common\View\AppManager\UserCreateView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentOverviewView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchView;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Domain\DomainUtils;
 use Juancrrn\Lyra\Domain\TimePlanner\Appointment\AppointmentRepository;
@@ -103,16 +105,30 @@ class AppointmentListView extends ViewModel
                 } else {
                     $govIdNotFoundNotice = '<p class="mt-1"><small class="text-muted">No se ha encontrado ningún usuario estudiante con este NIF o NIE.</small></p>';
                     
-                    $actionButtons = <<< HTML
-                    <p class="text-end"><a target="_blank" href="#" class="d-block btn btn-sm btn-primary mb-2">Crear usuario</a></p>
-                    HTML;
+                    if ($app->getSessionManagerInstance()->getLoggedInUser()->hasPermission(User::NPG_APP_MANAGER)) {
+                        $createUserUrl = $app->getUrl() . UserCreateView::VIEW_ROUTE;
+
+                        $actionButtons = <<< HTML
+                        <p class="text-end"><a target="_blank" href="$createUserUrl" class="d-block btn btn-sm btn-primary mb-2">Crear usuario</a></p>
+                        HTML;
+                    }
                 }
             } else {
                 $govIdNotFoundNotice = '<p class="mt-1"><small class="text-muted">Verificar NIF o NIE no especificado. Si no tiene, es necesario realizar una búsqueda por nombre, apellidos, número de teléfono o dirección de correo electrónico.</small></p>';
 
+                $searchUrl = $app->getUrl() . CheckInAssistantStudentSearchView::VIEW_ROUTE;
+
+                if ($app->getSessionManagerInstance()->getLoggedInUser()->hasPermission(User::NPG_APP_MANAGER)) {
+                    $createUserUrl = $app->getUrl() . UserCreateView::VIEW_ROUTE;
+
+                    $createUserA = <<< HTML
+                    <p class="text-end"><a target="_blank" href="$createUserUrl" class="d-block btn btn-sm btn-secondary mb-2">Crear usuario</a></p>
+                    HTML;
+                }
+
                 $actionButtons = <<< HTML
-                <p class="text-end"><a target="_blank" href="#" class="d-block btn btn-sm btn-primary mb-2">Buscar</a></p>
-                <p class="text-end"><a target="_blank" href="#" class="d-block btn btn-sm btn-secondary mb-2">Crear usuario</a></p>
+                <p class="text-end"><a target="_blank" href="$searchUrl" class="d-block btn btn-sm btn-primary mb-2">Buscar</a></p>
+                $createUserA
                 HTML;
             }
 
@@ -121,7 +137,7 @@ class AppointmentListView extends ViewModel
                 [
                     'id' => $appointment->getId(),
                     'student-full-name' => $appointment->getStudentFirstName() . ' ' . $appointment->getStudentLastName(),
-                    'student-gov-id' => $appointment->getStudentGovId(),
+                    'student-gov-id' => mb_strtoupper($appointment->getStudentGovId()),
                     'gov-id-not-found-notice' => $govIdNotFoundNotice,
                     'student-email-address' => $appointment->getStudentEmailAddress(),
                     'student-phone-number' => $appointment->getStudentPhoneNumber(),
