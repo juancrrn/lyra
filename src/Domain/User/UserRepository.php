@@ -155,7 +155,7 @@ class UserRepository implements Repository
 
         $stmt->close();
 
-        $this->updatePermissionGroupsWithIds($newPermissionGroupIds);
+        $this->updatePermissionGroupLinksWithIds($id, $newPermissionGroupIds);
 
         return;
     }
@@ -196,11 +196,6 @@ class UserRepository implements Repository
         $stmt->close();
 
         return $result;
-    }
-
-    public function updatePermissionGroupsWithIds(array $permissionGroupIds): void
-    {
-
     }
 
     /**
