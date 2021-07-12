@@ -130,7 +130,8 @@ class UserRepository implements Repository
         $govId              = $updatedUser->getGovId();
         $firstName          = $updatedUser->getFirstName();
         $lastName           = $updatedUser->getLastName();
-        $birthDate          = $updatedUser->getBirthDate();
+        $birthDate          = $updatedUser->getBirthDate() == null ? null :
+            $updatedUser->getBirthDate()->format(CommonUtils::MYSQL_DATE_FORMAT);
         $emailAddress       = $updatedUser->getEmailAddress();
         $phoneNumber        = $updatedUser->getPhoneNumber();
         $representativeId   = $updatedUser->getRepresentativeId();
