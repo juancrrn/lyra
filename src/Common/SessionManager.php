@@ -102,12 +102,20 @@ class SessionManager
     public function requireLoggedIn($api = false): void
     {
         if (! $this->isLoggedIn()) {
+            $app = App::getSingleton();
+
             if (! $api) {
-                ddl(null, null);
-                //Vista::encolaMensajeError('Necesitas haber iniciado sesión para acceder a este contenido.', '/sesion/iniciar/');
+                $viewManager = $app->getViewManagerInstance();
+
+                $viewManager->addErrorMessage('Debes haber iniciado sesión para acceder a este contenido.', '');
             } else {
-                ddl(null, null);
-                //HTTP::apiRespondError(401, ['No autenticado.']); // HTTP 401 Unauthorized (unauthenticated).
+                $apiManager = $app->getApiManagerInstance();
+
+                $apiManager->apiRespond(
+                    401, 
+                    null,
+                    [ 'Debes haber iniciado sesión para acceder a este contenido.' ]
+                );
             }
         }
     }
