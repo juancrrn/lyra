@@ -127,15 +127,15 @@ class UserRepository implements Repository
 
         $stmt = $this->db->prepare($query);
 
-        $govId              = $this->user->getGovId();
-        $firstName          = $this->user->getFirstName();
-        $lastName           = $this->user->getLastName();
-        $birthDate          = $this->user->getBirthDate();
-        $emailAddress       = $this->user->getEmailAddress();
-        $phoneNumber        = $this->user->getPhoneNumber();
-        $representativeId   = $this->user->getRepresentativeId();
-        $status             = $this->user->getStatus();
-        $id                 = $this->user->getId();
+        $govId              = $updatedUser->getGovId();
+        $firstName          = $updatedUser->getFirstName();
+        $lastName           = $updatedUser->getLastName();
+        $birthDate          = $updatedUser->getBirthDate();
+        $emailAddress       = $updatedUser->getEmailAddress();
+        $phoneNumber        = $updatedUser->getPhoneNumber();
+        $representativeId   = $updatedUser->getRepresentativeId();
+        $status             = $updatedUser->getStatus();
+        $id                 = $updatedUser->getId();
         
         $stmt->bind_param(
             'ssssssisi',
