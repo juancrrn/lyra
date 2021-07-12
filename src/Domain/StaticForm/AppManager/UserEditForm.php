@@ -55,6 +55,13 @@ class UserEditForm extends StaticFormModel
             $representativeGovId = '';
         }
 
+        $lastLoginDate =
+            $this->user->getLastLoginDate() == null ? 'Nunca' :
+            strftime(
+                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
+                $this->user->getLastLoginDate()->getTimestamp()
+            );
+
         return $viewManager->fillTemplate(
             'forms/app_manager/inputs_user_edit_form',
             [
@@ -71,10 +78,7 @@ class UserEditForm extends StaticFormModel
                 'email-address' => $this->user->getEmailAddress(),
                 'phone-number'  => $this->user->getPhoneNumber(),
                 'birth-date'    => $this->user->getBirthDate()->format(CommonUtils::MYSQL_DATE_FORMAT),
-                'last-login-date' => strftime(
-                    CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
-                    $this->user->getLastLoginDate()->getTimestamp()
-                ),
+                'last-login-date' => $lastLoginDate,
                 'status-options' => TemplateUtils::generateSelectOptions(
                     User::getStatusesForSelectOptions(),
                     $this->user->getStatus()
@@ -95,51 +99,62 @@ class UserEditForm extends StaticFormModel
 
         $viewManager = $app->getViewManagerInstance();
 
-        $newFirstName = $postedData['first-name'] ?? null;
+        $newFirstName = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'first-name'] ?? null;
 
         if (empty($newFirstName)) {
             $viewManager->addErrorMessage('El campo de nombre no puede estar vacío.');
         }
 
-        $newLastName = $postedData['last-name'] ?? null;
+        $newLastName = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'last-name'] ?? null;
 
         if (empty($newLastName)) {
             $viewManager->addErrorMessage('El campo de apellidos no puede estar vacío.');
         }
 
-        $newGovId = $postedData['gov-id'] ?? null;
-        $newGovId = ValidationUtils::validateGovId($newGovId) ? $newGovId : null;
+        $newGovId = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'gov-id'] ?? null;
 
-        $newEmailAddress = $postedData['email-address'] ?? null;
+        $userRepo = new UserRepository($app->getDbConn());
+
+        if (! empty($newGovId)) {
+            if (ValidationUtils::validateGovId($newGovId)) {
+                if ($userRepo->findByGovId($newGovId)) {
+                    $viewManager->addErrorMessage('Ya existe un usuario registrado con el NIF o NIE especificado.');
+                }
+            } else {
+                $viewManager->addErrorMessage('El NIF o NIE introducido no es válido.');
+            }
+        } else {
+            $newGovId = null;
+        }
+
+        $newEmailAddress = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'email-address'] ?? null;
 
         if (empty($newEmailAddress)) {
             $viewManager->addErrorMessage('El campo de correo electrónico no puede estar vacío.');
         }
 
-        $newPhoneNumber = $postedData['phone-number'] ?? null;
+        $newPhoneNumber = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'phone-number'] ?? null;
 
         if (empty($newPhoneNumber)) {
             $viewManager->addErrorMessage('El campo de número de teléfono no puede estar vacío.');
         }
 
-        $newBirthDate = $postedData['birth-date'] ?? null;
+        $newBirthDate = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'birth-date'] ?? null;
 
         if (empty($newBirthDate)) {
             $viewManager->addErrorMessage('El campo de fecha de nacimiento no puede estar vacío.');
         }
 
-        $newStatus = $postedData['status'] ?? null;
+        $newStatus = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'status'] ?? null;
 
         if (! User::validStatus($newStatus)) {
             $viewManager->addErrorMessage('Hubo un error al procesar el campo de estado.');
         }
 
-        $newRepresentativeGovId = $postedData['representative-gov-id'] ?? null;
+        $newRepresentativeGovId = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'representative-gov-id'] ?? null;
         $newRepresentativeGovId = $newRepresentativeGovId != '' ? $newRepresentativeGovId : null;
 
-        $userRepo = new UserRepository($app->getDbConn());
-
-        if (! $newRepresentativeGovId != null) {
+        if ($newRepresentativeGovId != null) {
             $newRepresentativeId = $userRepo->findByGovId($newRepresentativeGovId);
 
             if (! $newRepresentativeId) {
@@ -157,7 +172,7 @@ class UserEditForm extends StaticFormModel
             $newRepresentativeId = null;
         }
 
-        $newPermissionGroupIds = $postedData['permission-groups'] ?? null;
+        $newPermissionGroupIds = $postedData[self::FORM_FIELDS_NAME_PREFIX . 'permission-groups'] ?? null;
 
         $permissionGroupRepo = new PermissionGroupRepository($app->getDbConn());
 

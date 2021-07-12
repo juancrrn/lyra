@@ -38,13 +38,12 @@ class UserRepository implements Repository
      * 
      * @return bool|int
      */
-    public function insert(User $user, ?string $hashedPassword = null): bool|int
+    public function insert(User $user, ?string $hashedPassword = null, ?array $permissionGroupIds = null): bool|int
     {
         $query = <<< SQL
         INSERT INTO
             users
             (
-                id,
                 gov_id,
                 first_name,
                 last_name,
@@ -59,18 +58,16 @@ class UserRepository implements Repository
                 status
             )
         VALUES
-            ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+            ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
         SQL;
 
         $stmt = $this->db->prepare($query);
         
-        $id = $user->getId();
         $govId = $user->getGovId(); // Nullable
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();
         $birthDate = $user->getBirthDate()
             ->format(CommonUtils::MYSQL_DATE_FORMAT);
-        //$hashedPassword = ...;
         $emailAddress = $user->getEmailAddress();
         $phoneNumber = $user->getPhoneNumber();
         $representativeId = $user->getRepresentativeId(); // Nullable
@@ -84,8 +81,7 @@ class UserRepository implements Repository
         $status = $user->getStatus();
 
         $stmt->bind_param(
-            'isssssssissss',
-            $id,
+            'sssssssissss',
             $govId,
             $firstName,
             $lastName,
@@ -100,17 +96,15 @@ class UserRepository implements Repository
             $status
         );
         
-        $result = $stmt->execute();
+        $stmt->execute();
 
         $id = $this->db->insert_id;
 
         $stmt->close();
 
-        if ($result) {
-            return $id;
-        } else {
-            return false;
-        }
+        $this->createPermissionGroupLinksWithIds($id, $permissionGroupIds);
+
+        return $id;
     }
 
     public function update(User $updatedUser, array $newPermissionGroupIds): void
@@ -786,6 +780,12 @@ class UserRepository implements Repository
     {
         foreach ($permissionGroups as $permissionGroup)
             $this->createPermissionGroupLink($userId, $permissionGroup->getId());
+    }
+
+    public function createPermissionGroupLinksWithIds(int $userId, array $permissionGroupIds): void
+    {
+        foreach ($permissionGroupIds as $permissionGroupId)
+            $this->createPermissionGroupLink($userId, $permissionGroupId);
     }
 
     public function deletePermissionGroupLinksWithIds(int $userId, array $permissionGroupIds): void

@@ -9,6 +9,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
 use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
+use Juancrrn\Lyra\Common\View\AppManager\UserCreateView;
 use Juancrrn\Lyra\Common\View\AppManager\UserEditView;
 use Juancrrn\Lyra\Common\View\AppManager\UserSearchView;
 
@@ -54,6 +55,16 @@ class AppManagerRouteGroup implements RouteGroupModel
         // User search API
         $this->controllerInstance->post(UserSearchApi::API_ROUTE, function () use ($apiManager) {
             $apiManager->call(new UserSearchApi);
+        });
+        
+        // User creation
+        $this->controllerInstance->get(UserCreateView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new UserCreateView);
+        });
+        
+        // User creation form POST
+        $this->controllerInstance->post(UserCreateView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new UserCreateView);
         });
         
         // User edition

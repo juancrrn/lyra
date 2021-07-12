@@ -68,6 +68,7 @@ class UserSearchView extends ViewModel
 
         $filling = [
             'view-name' => $this->getName(),
+            'create-url' => $app->getUrl() . UserCreateView::VIEW_ROUTE,
             'user-search-form-html' => $viewManager->fillTemplate(
                 'ajax-forms/common/part_user_search_form',
                 [

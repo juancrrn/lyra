@@ -170,7 +170,7 @@ class User implements JsonSerializable
     private $permissionGroups;
 
     public function __construct(
-        int         $id,
+        ?int        $id,
         ?string     $govId,
         string      $firstName,
         string      $lastName,
