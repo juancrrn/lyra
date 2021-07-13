@@ -263,4 +263,21 @@ class EmailUtils
 			]
 		);
 	}
+
+	public static function sendLotFillingAssistantRequestUpdatedMessage(
+		User $user,
+		string $supportUrl,
+		string $supportUrlNice
+	): bool
+	{
+		return self::sendGenericMessage(
+			$user,
+			'Actualización de tu solicitud en el banco de libros',
+			'bookbank/volunteer/lot_filling_assistant_request_updated',
+			[
+				'support-url' => $supportUrl,
+				'support-url-nice' => $supportUrlNice
+			]
+		);
+	}
 }

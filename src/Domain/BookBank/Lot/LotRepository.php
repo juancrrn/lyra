@@ -82,6 +82,8 @@ class LotRepository implements Repository
 
         $stmt->close();
 
+        $item->setId($id);
+
         $itemContents = $item->getContents();
 
         if (is_array($itemContents) && ! empty($itemContents))

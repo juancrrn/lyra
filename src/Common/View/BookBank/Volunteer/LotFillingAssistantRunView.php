@@ -38,7 +38,7 @@ class LotFillingAssistantRunView extends ViewModel
 
         $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_VOLUNTEER ]);
 
-        $this->form = new LotFillingAssistantRankAndFillForm($app->getUrl() . self::VIEW_ROUTE);
+        $this->form = new LotFillingAssistantRankAndFillForm(self::VIEW_ROUTE);
 
         $this->form->handle();
 

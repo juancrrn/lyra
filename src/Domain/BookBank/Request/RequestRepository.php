@@ -125,6 +125,30 @@ class RequestRepository implements Repository
         $stmt->close();
     }
 
+    public function updateStatusById(int $id, string $newStatus): void
+    {
+        $query = <<< SQL
+        UPDATE
+            book_requests
+        SET
+            status = ?
+        WHERE
+            id = ?
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param(
+            'si',
+            $newStatus,
+            $id
+        );
+        
+        $stmt->execute();
+
+        $stmt->close();
+    }
+
     public function findById(int $testId): bool
     {
         $query = <<< SQL
