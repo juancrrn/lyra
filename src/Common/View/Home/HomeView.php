@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Common\View\Home;
 
 use Juancrrn\Lyra\Common\App;
+use Juancrrn\Lyra\Common\View\Auth\LoginView;
 use Juancrrn\Lyra\Common\View\ViewModel;
 
 /**
@@ -35,7 +36,8 @@ class HomeView extends ViewModel
 
         $filling = array(
             'app-name' => $app->getName(),
-            'app-url' => $app->getUrl()
+            'app-url' => $app->getUrl(),
+            'login-url' => $app->getUrl() . LoginView::VIEW_ROUTE
         );
 
         $app->getViewManagerInstance()->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);
