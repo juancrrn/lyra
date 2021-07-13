@@ -56,7 +56,7 @@ class LotFillingAssistantRunView extends ViewModel
 
         $filling = [
             'view-name' => $this->getName(),
-            'form' => ''
+            'form' => $this->form->getHtml()
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

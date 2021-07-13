@@ -92,8 +92,6 @@ class RequestRepository implements Repository
         throw new \Exception('Not implemented');
     }
 
-    
-
     public function updateStatusSpecificationAndEducationLevelById(
         int $id,
         string $newStatus,
@@ -267,6 +265,41 @@ class RequestRepository implements Repository
 
         return $items;
     }
+    public function findPending(): array
+    {
+        $app = App::getSingleton();
+
+        $schoolYear = $app->getSetting('school-year');
+
+        $query = <<< SQL
+        SELECT
+            id
+        FROM
+            book_requests
+        WHERE
+            status = 'book_request_status_pending'
+        AND
+            school_year = $schoolYear
+        ORDER BY
+            id
+        ASC
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $items = array();
+
+        while ($item = $result->fetch_object()) {
+            $items[] = $item->id;
+        }
+
+        $stmt->close();
+
+        return $items;
+    }
 
     public function retrieveById(int $id): Request
     {
@@ -302,6 +335,46 @@ class RequestRepository implements Repository
         $stmt->close();
         
         return $item;
+    }
+
+    public function retrieveByIds(array $ids): array
+    {
+        
+        $query = <<< SQL
+        SELECT
+            id,
+            student_id,
+            status,
+            creation_date,
+            creator_id,
+            education_level,
+            school_year,
+            specification,
+            locked
+        FROM
+            book_requests
+        WHERE
+            id = ?
+        LIMIT 1
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+
+        $items = [];
+
+        foreach ($ids as $id) {
+            $stmt->bind_param('i', $id);
+            
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            $items[] = Request::constructFromMysqliObject($result->fetch_object());
+        }
+
+        $stmt->close();
+        
+        return $items;
     }
 
     public function retrieveAll(): array

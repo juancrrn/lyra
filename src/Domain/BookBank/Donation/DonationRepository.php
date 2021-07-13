@@ -2,6 +2,7 @@
 
 namespace Juancrrn\Lyra\Domain\BookBank\Donation;
 
+use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Domain\BookBank\Donation\Donation;
 use Juancrrn\Lyra\Domain\BookBank\Subject\SubjectRepository;
@@ -204,6 +205,76 @@ class DonationRepository implements Repository
         $stmt->close();
 
         return $items;
+    }
+
+    public function countContentsByStudentIdThisYear(int $studentId): int
+    {
+        $thisSchoolYear = App::getSingleton()->getSetting('school-year');
+
+        $query = <<< SQL
+        SELECT
+            count(book_donation_contents.id) as num
+        FROM
+            book_donation_contents
+        WHERE
+            donation_id
+            IN (
+                SELECT
+                    id
+                FROM
+                    book_donations
+                WHERE
+                    student_id = ?
+                AND
+                    school_year = $thisSchoolYear
+            )
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $studentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $num = $result->fetch_object()->num;
+
+        $stmt->close();
+
+        return $num;
+    }
+
+    public function countContentsByStudentIdPastYears(int $studentId): int
+    {
+        $thisSchoolYear = App::getSingleton()->getSetting('school-year');
+
+        $query = <<< SQL
+        SELECT
+            count(book_donation_contents.id) as num
+        FROM
+            book_donation_contents
+        WHERE
+            donation_id
+            IN (
+                SELECT
+                    id
+                FROM
+                    book_donations
+                WHERE
+                    student_id = ?
+                AND
+                    school_year < $thisSchoolYear
+            )
+        SQL;
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $studentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $num = $result->fetch_object()->num;
+
+        $stmt->close();
+
+        return $num;
     }
 
     public function retrieveAll(): array

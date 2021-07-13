@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        #student-card#
+
+        <div class="mt-4 mb-4">
+            <p class="d-block text-primary mb-2">
+                <span class="d-inline-block align-middle strong material-icons-outlined me-2">check_circle</span>
+                <span class="d-inline-block align-middle strong">Empaquetado</span>
+            </p>
+            <p class="mb-2 small">Añade más abajo los paquetes que introduzcas en el paquete.</p>
+            <p class="small">Al guardar, el paquete se marcará automáticamente como preparado y se enviará un aviso al estudiante.</p>
+        </div>
+
+        <hr>
+
+        <div class="mt-4 mb-3">
+            <label class="form-label">Nivel educativo</label>
+            <select class="form-select subject-list-search-education-level-filter" disabled="disabled">
+                #education-level-select-options#
+            </select>
+            <div class="form-text">Este campo limita la búsqueda de asignaturas para añadir al paquete.</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Especificación</label>
+            <textarea class="form-control" disabled="disabled">#specification#</textarea>
+        </div>
+        
+        <h4 class="text-secondary mb-3">
+            <span class="material-icons-outlined d-inline-block align-middle me-2">inventory_2</span>
+            <span class="d-inline-block align-middle">Paquete asociado</span>
+        </h4>
+
+        <div>
+            <div class="accordion mb-4">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" disabled="disabled">
+                            <div class="container p-0">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2 font-monospace">
+                                        <span class="badge rounded-pill bg-secondary my-2"><i class="material-icons-outlined">tag</i> -</span>
+                                    </div>
+                                    <div class="col">
+                                        <p class="mb-1">Paquete preparado</p>
+                                        <p><small class="text-muted">Ahora mismo</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse show">
+                        <div class="accordion-body">
+                            <p class="mb-2">Contenidos</p>
+            
+                            <div class="card">
+                                <div class="card-header">
+                                    <label class="form-label" for="#prefix#subject-search">Añadir asignaturas</label>
+                                    <input type="text" class="form-control subject-list-search" data-query-url="#query-url#" data-target-results="#prefix#search-results" placeholder="Buscar asignaturas para añadir...">
+                                    <div class="subject-list-search-results card position-absolute d-none" style="z-index: 1000;" id="#prefix#search-results" data-target-list="#prefix#contents-list">
+                                        <ul class="list-group list-group-flush"></ul>
+                                    </div>
+                                </div>
+                                
+                                <ul id="#prefix#contents-list" data-checkbox-name="#checkbox-name#" class="list-group list-group-flush subject-list-editable">
+                                    #contents#
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4 row">
+            <div class="col"></div>
+            <div class="col-md-6 text-end">
+                <div class="mb-3">
+                    <p class="small text-primary">Al guardar, el paquete <strong>se marcará automáticamente como preparado</strong> y se enviará un aviso al estudiante.</p>
+                </div>
+    
+                <button type="submit" class="btn btn-primary">
+                    <span class="material-icons-outlined">save</span>
+                    Guardar y volver
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>
