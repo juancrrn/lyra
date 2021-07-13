@@ -289,6 +289,5 @@ class LotFillingAssistantRankAndFillForm extends StaticFormModel
         } else {
             $this->request = null;
         }
-        $this->request = null;
     }
 }
