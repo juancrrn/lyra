@@ -66,6 +66,13 @@ class ProfileView extends ViewModel
             );
         }
 
+        $lastLoginDate =
+            $this->user->getLastLoginDate() == null ? 'Nunca' :
+            strftime(
+                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
+                $this->user->getLastLoginDate()->getTimestamp()
+            );
+
         $filling = array(
             'app-name' => $app->getName(),
             'user-image' => $app->getUrl() . '/img/default-user-image.png',
@@ -77,10 +84,7 @@ class ProfileView extends ViewModel
                 CommonUtils::HUMAN_DATE_FORMAT_STRF,
                 $this->user->getBirthDate()->getTimestamp()
             ),
-            'user-last-login-date-human' => strftime(
-                CommonUtils::HUMAN_DATETIME_FORMAT_STRF,
-                $this->user->getLastLoginDate()->getTimestamp()
-            ),
+            'user-last-login-date-human' => $lastLoginDate,
             'user-status-human' => User::statusToHuman(
                 $this->user->getStatus()
             )->getTitle(),
