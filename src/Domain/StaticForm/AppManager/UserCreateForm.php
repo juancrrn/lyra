@@ -8,6 +8,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\CommonUtils;
 use Juancrrn\Lyra\Common\TemplateUtils;
 use Juancrrn\Lyra\Common\ValidationUtils;
+use Juancrrn\Lyra\Domain\Email\EmailUtils;
 use Juancrrn\Lyra\Domain\PermissionGroup\PermissionGroupRepository;
 use Juancrrn\Lyra\Domain\StaticForm\StaticFormModel;
 use Juancrrn\Lyra\Domain\User\User;
@@ -160,7 +161,9 @@ class UserCreateForm extends StaticFormModel
         }
 
         if (! $viewManager->anyErrorMessages()) {
-            $updatedUser = new User(
+            $token = $newGovId == null ? null : User::generateToken($newGovId);
+
+            $user = new User(
                 null,
                 $newGovId,
                 $newFirstName,
@@ -171,14 +174,22 @@ class UserCreateForm extends StaticFormModel
                 $newRepresentativeId,
                 new DateTime,
                 null,
-                null,
+                $token,
                 $newStatus,
                 null
             );
 
-            $userRepo->insert($updatedUser, null, $newPermissionGroupIds);
+            $userRepo->insert($user, null, $newPermissionGroupIds);
 
             $viewManager->addSuccessMessage('El usuario fue creado correctamente.');
+
+            if ($newGovId == null) {
+                $viewManager->addSuccessMessage('Dado que no se ha especificado NIF o NIE para el usuario, este no podrá iniciar sesión. Si se ha definido su representante legal, este podrá acceder a la información del usuario a través de su cuenta.');
+            } else {
+                EmailUtils::sendUserActivationMessage($user);
+
+                $viewManager->addSuccessMessage('Se envió un email al usuario para activar su cuenta.');
+            }
         }
     }
 

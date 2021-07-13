@@ -310,6 +310,11 @@ class User implements JsonSerializable
      * 
      */
 
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function setPermissionGroups(array $permissionGroups): void
     {
         $this->permissionGroups = $permissionGroups;

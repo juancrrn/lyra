@@ -38,7 +38,7 @@ class UserRepository implements Repository
      * 
      * @return bool|int
      */
-    public function insert(User $user, ?string $hashedPassword = null, ?array $permissionGroupIds = null): bool|int
+    public function insert(User $user, ?string $hashedPassword = null, ?array $permissionGroupIds = null): void
     {
         $query = <<< SQL
         INSERT INTO
@@ -100,11 +100,11 @@ class UserRepository implements Repository
 
         $id = $this->db->insert_id;
 
+        $user->setId($id);
+
         $stmt->close();
 
         $this->createPermissionGroupLinksWithIds($id, $permissionGroupIds);
-
-        return $id;
     }
 
     public function update(User $updatedUser, array $newPermissionGroupIds): void
