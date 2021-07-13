@@ -7,6 +7,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Domain\StaticForm\BookBank\Manager\StudentSearchForm;
 use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\CheckInAssistantStudentSearchForm;
+use Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer\LotFillingAssistantRankAndFillForm;
 use Juancrrn\Lyra\Domain\User\User;
 
 /**
@@ -19,19 +20,29 @@ use Juancrrn\Lyra\Domain\User\User;
  * @version 0.0.1
  */
 
-class LotFillingAssistantHomeView extends ViewModel
+class LotFillingAssistantRunView extends ViewModel
 {
     
-    private const VIEW_RESOURCE_FILE    = 'views/bookbank/volunteer/view_lot_filling_assistant_home';
+    private const VIEW_RESOURCE_FILE    = 'views/bookbank/volunteer/view_lot_filling_assistant_run';
     public  const VIEW_NAME             = 'Asistente de empaquetado';
-    public  const VIEW_ID               = 'bookbank-volunteer-lot-filling-assistant-home';
-    public  const VIEW_ROUTE            = '/bookbank/lot-filling/home/';
+    public  const VIEW_ID               = 'bookbank-volunteer-lot-filling-assistant-run';
+    public  const VIEW_ROUTE            = '/bookbank/lot-filling/run/';
+
+    private $form;
 
     public function __construct()
     {
-        $sessionManager = App::getSingleton()->getSessionManagerInstance();
+        $app = App::getSingleton();
+
+        $sessionManager = $app->getSessionManagerInstance();
 
         $sessionManager->requirePermissionGroups([ User::NPG_BOOKBANK_VOLUNTEER ]);
+
+        $this->form = new LotFillingAssistantRankAndFillForm($app->getUrl() . self::VIEW_ROUTE);
+
+        $this->form->handle();
+
+        $this->form->initialize();
 
         $this->name = self::VIEW_NAME;
         $this->id = self::VIEW_ID;
@@ -45,7 +56,7 @@ class LotFillingAssistantHomeView extends ViewModel
 
         $filling = [
             'view-name' => $this->getName(),
-            'run-url' => $app->getUrl() . LotFillingAssistantRunView::VIEW_ROUTE
+            'form' => ''
         ];
 
         $viewManager->renderTemplate(self::VIEW_RESOURCE_FILE, $filling);

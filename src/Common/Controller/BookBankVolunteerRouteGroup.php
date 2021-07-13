@@ -14,6 +14,7 @@ use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantReturnLiteView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\LotFillingAssistantHomeView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\LotFillingAssistantRunView;
 use Juancrrn\Lyra\Common\View\TimePlanner\Volunteer\AppointmentListView;
 
 /**
@@ -131,6 +132,16 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         // Lot filling assistant home view
         $this->controllerInstance->get(LotFillingAssistantHomeView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new LotFillingAssistantHomeView);
+        });
+
+        // Lot filling assistant run view
+        $this->controllerInstance->get(LotFillingAssistantRunView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new LotFillingAssistantRunView);
+        });
+
+        // Lot filling assistant run view form POST
+        $this->controllerInstance->post(LotFillingAssistantRunView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new LotFillingAssistantRunView);
         });
     }
 }
