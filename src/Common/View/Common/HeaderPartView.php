@@ -6,6 +6,7 @@ use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
 use Juancrrn\Lyra\Common\View\AppManager\UserSearchView;
 use Juancrrn\Lyra\Common\View\Auth\LoginView;
+use Juancrrn\Lyra\Common\View\LegalRep\RepresentedOverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\SubjectListView;
 use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
@@ -60,6 +61,16 @@ class HeaderPartView extends ViewModel
                     'Estudiante',
                     [
                         OverviewView::class
+                    ]
+                );
+            }
+
+            if ($user->hasPermission(User::NPG_LEGALREP)) {
+                $mainMenuBuffer .= $viewManager->generateNavBarItemDropdown(
+                    null,
+                    'Representante legal',
+                    [
+                        RepresentedOverviewView::class
                     ]
                 );
             }

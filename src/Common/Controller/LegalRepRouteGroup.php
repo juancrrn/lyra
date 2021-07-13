@@ -6,6 +6,7 @@ use Exception;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
 use Juancrrn\Lyra\Common\Controller\RouteGroupModel;
+use Juancrrn\Lyra\Common\View\LegalRep\RepresentedOverviewView;
 
 /**
  * Vistas de usuarios con permisos de representante legal de estudiantes
@@ -33,8 +34,8 @@ class LegalRepRouteGroup implements RouteGroupModel
         $viewManager = App::getSingleton()->getViewManagerInstance();
         
         // Listado de estudiantes representados
-        $this->controllerInstance->get('/self/represented/', function () use ($viewManager) {
-            throw new Exception('Route declared but not implemented.');
+        $this->controllerInstance->get(RepresentedOverviewView::VIEW_ROUTE, function () use ($viewManager) {
+            $viewManager->render(new RepresentedOverviewView);
         });
         
         // Listado de paquetes de un estudiante representado
