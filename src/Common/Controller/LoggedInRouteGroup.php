@@ -34,8 +34,8 @@ class LoggedInRouteGroup implements RouteGroupModel
         $viewManager = App::getSingleton()->getViewManagerInstance();
         
         // Cierre de sesión (POST del formulario)
-        $this->controllerInstance->post('/auth/logout/', function () use ($viewManager) {
-            (new LogoutForm('/auth/logout/'))->handle();
+        $this->controllerInstance->post(LogoutForm::FORM_LOGOUT_GLOBAL_ROUTE, function () use ($viewManager) {
+            (new LogoutForm(LogoutForm::FORM_LOGOUT_GLOBAL_ROUTE))->handle();
         });
         
         // Perfil propio

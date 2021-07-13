@@ -5,6 +5,7 @@ namespace Juancrrn\Lyra\Common\View\Common;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\View\AppManager\AppSettingsView;
 use Juancrrn\Lyra\Common\View\AppManager\UserSearchView;
+use Juancrrn\Lyra\Common\View\Auth\LoginView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\SubjectListView;
 use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
@@ -118,14 +119,14 @@ class HeaderPartView extends ViewModel
             );
 
             /* Logout form */
-            $logoutForm = new LogoutForm('/auth/logout/');
+            $logoutForm = new LogoutForm(LogoutForm::FORM_LOGOUT_GLOBAL_ROUTE);
             $logoutForm->handle();
             $logoutForm->initialize();
             $userMenuBuffer .= $viewManager->generateUserMenuItem($logoutForm->getHtml());
         } else {
-            /*$loginUrl = $app->getUrl() . '/auth/login/';
+            $loginUrl = $app->getUrl() . LoginView::VIEW_ROUTE;
 
-            $userMenuBuffer .= $viewManager->generateUserMenuItem("<a class=\"nav-link\" href=\"$loginUrl\">Iniciar sesión</a>", LoginView::class);*/
+            $userMenuBuffer .= $viewManager->generateUserMenuItem("<a class=\"nav-link\" href=\"$loginUrl\">Iniciar sesión</a>", LoginView::class);
         }
 
         $filling = array(

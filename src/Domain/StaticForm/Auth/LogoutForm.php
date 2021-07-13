@@ -20,6 +20,8 @@ class LogoutForm extends StaticFormModel
 
     private const FORM_ID = 'form-logout';
 
+    public const FORM_LOGOUT_GLOBAL_ROUTE = '/auth/logout/';
+
     public function __construct(string $action)
     {
         parent::__construct(self::FORM_ID, array('action' => $action));
