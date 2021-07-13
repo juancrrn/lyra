@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Domain\User;
 
 use DateTime;
+use Exception;
 use InvalidArgumentException;
 use JsonSerializable;
 use Juancrrn\Lyra\Common\App;
@@ -280,10 +281,13 @@ class User implements JsonSerializable
      */
     public function hasPermission(string $testPermissionGroupShortName): bool
     {
-        if (is_array($this->permissionGroups))
+        if (is_array($this->permissionGroups)) {
             foreach ($this->permissionGroups as $permissionGroup)
                 if ($permissionGroup->getShortName() == $testPermissionGroupShortName)
                     return true;
+        } else {
+            throw new Exception('No se cargaron los grupos de permisos del usuario.');
+        }
 
         return false;
     }

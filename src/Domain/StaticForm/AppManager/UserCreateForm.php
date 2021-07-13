@@ -134,7 +134,7 @@ class UserCreateForm extends StaticFormModel
                 $viewManager->addErrorMessage('El NIF o NIE de representante legal introducido no existe.');
                 $newRepresentativeId = null;
             } else {
-                $newRepresentative = $userRepo->retrieveById($newRepresentativeId);
+                $newRepresentative = $userRepo->retrieveById($newRepresentativeId, true);
 
                 if (! $newRepresentative->hasPermission(User::NPG_LEGALREP)) {
                     $viewManager->addErrorMessage('El representante legal cuyo NIF o NIE se ha introducido no tiene permisos para serlo.');
