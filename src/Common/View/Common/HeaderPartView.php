@@ -11,6 +11,7 @@ use Juancrrn\Lyra\Common\View\BookBank\Manager\StudentSearchView;
 use Juancrrn\Lyra\Common\View\BookBank\Manager\SubjectListView;
 use Juancrrn\Lyra\Common\View\BookBank\Student\OverviewView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchView;
+use Juancrrn\Lyra\Common\View\BookBank\Volunteer\LotFillingAssistantHomeView;
 use Juancrrn\Lyra\Common\View\Home\DashboardView;
 use Juancrrn\Lyra\Common\View\ViewModel;
 use Juancrrn\Lyra\Common\View\Home\HomeView;
@@ -81,7 +82,8 @@ class HeaderPartView extends ViewModel
                     'Voluntario BDL',
                     [
                         CheckInAssistantStudentSearchView::class,
-                        AppointmentListView::class
+                        AppointmentListView::class,
+                        LotFillingAssistantHomeView::class
                     ]
                 );
             }
