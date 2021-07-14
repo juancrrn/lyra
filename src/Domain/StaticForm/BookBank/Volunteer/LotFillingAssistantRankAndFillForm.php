@@ -5,6 +5,7 @@ namespace Juancrrn\Lyra\Domain\StaticForm\BookBank\Volunteer;
 use DateTime;
 use Exception;
 use Juancrrn\Lyra\Common\Api\BookBank\Common\SubjectSearchApi;
+use Juancrrn\Lyra\Common\Api\BookBank\Volunteer\LotLocatorApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Http;
 use Juancrrn\Lyra\Common\TemplateUtils;
@@ -124,6 +125,7 @@ class LotFillingAssistantRankAndFillForm extends StaticFormModel
             'forms/bookbank/volunteer/inputs_lot_filling_assistant_rank_and_fill_form',
             [
                 'request-id' => $this->request->getId(),
+                'lot-locator-url' => $app->getUrl() . LotLocatorApi::API_ROUTE_BASE . $this->request->getId() . '/locator/',
                 'student-card' => $this->student->generateCard(),
                 'prefix' => self::FORM_FIELDS_NAME_PREFIX,
                 'education-level-select-options' => $educationLevelSelectOptionsHtml,
