@@ -3,6 +3,7 @@
 namespace Juancrrn\Lyra\Common\Controller;
 
 use Exception;
+use Juancrrn\Lyra\Common\Api\BookBank\Volunteer\LotLocatorApi;
 use Juancrrn\Lyra\Common\Api\BookBank\Volunteer\StudentSearchApi;
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\Controller\Controller;
@@ -16,6 +17,7 @@ use Juancrrn\Lyra\Common\View\BookBank\Volunteer\CheckInAssistantStudentSearchVi
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\LotFillingAssistantHomeView;
 use Juancrrn\Lyra\Common\View\BookBank\Volunteer\LotFillingAssistantRunView;
 use Juancrrn\Lyra\Common\View\TimePlanner\Volunteer\AppointmentListView;
+use stdClass;
 
 /**
  * Vistas de usuarios con permisos de voluntario del banco de libros
@@ -142,6 +144,11 @@ class BookBankVolunteerRouteGroup implements RouteGroupModel
         // Lot filling assistant run view form POST
         $this->controllerInstance->post(LotFillingAssistantRunView::VIEW_ROUTE, function () use ($viewManager) {
             $viewManager->render(new LotFillingAssistantRunView);
+        });
+
+        // Lot locator API
+        $this->controllerInstance->get(LotLocatorApi::API_ROUTE, function (int $requestId) use ($apiManager) {
+            $apiManager->call(new LotLocatorApi($requestId));
         });
     }
 }

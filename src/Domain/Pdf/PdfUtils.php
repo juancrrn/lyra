@@ -4,11 +4,16 @@ namespace Juancrrn\Lyra\Domain\Pdf;
 
 use Juancrrn\Lyra\Common\App;
 use Juancrrn\Lyra\Common\TemplateUtils;
+use Juancrrn\Lyra\Domain\BookBank\Request\Request;
+use Juancrrn\Lyra\Domain\DomainUtils;
+use Juancrrn\Lyra\Domain\User\User;
 use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
 use Mpdf\HTMLParserMode;
+
+use function PHPSTORM_META\map;
 
 /**
  * Utilidades de PDF
@@ -71,7 +76,8 @@ class PdfUtils
             'common/part_header',
             array(
                 'app-name' => $app->getName(),
-                'app-url' => $app->getUrl()
+                'app-url' => $app->getUrl(),
+                'image-uri' => $app->getRoot() . '/resources/pdf/common/iax_badge.svg'
             )
         ));
         
@@ -90,26 +96,6 @@ class PdfUtils
         $mpdf->AddPage(mgt: 30, mgb: 20, mgl: 10, mgr: 10);
 
         return $mpdf;
-    }
-
-    public static function renderUserRegistrationRequestPdf(): void
-    {
-        $app = App::getSingleton();
-
-        $mpdf = self::generateGenericPdf();
-
-        $mpdf->SetTitle('Solicitud de registro de usuario - ' . $app->getName());
-
-        // TODO content
-        $mpdf->WriteHTML(self::generatePdfTemplateRender(
-            'auth/doc_registration_request',
-            array(
-                'app-name' => $app->getName(),
-                'app-url' => $app->getUrl()
-            )
-        ));
-
-        $mpdf->Output('lyra-solicitud-registro-usuario.pdf', Destination::INLINE);
     }
 
 	/**
@@ -132,4 +118,53 @@ class PdfUtils
 			realpath(App::getSingleton()->getRoot() . self::PDF_RESOURCES_PATH)
 		);
 	}
+
+    public static function renderUserRegistrationRequestPdf(): void
+    {
+        $app = App::getSingleton();
+
+        $mpdf = self::generateGenericPdf();
+
+        $mpdf->SetTitle('Solicitud de registro de usuario - ' . $app->getName());
+
+        // TODO content
+        $mpdf->WriteHTML(self::generatePdfTemplateRender(
+            'auth/doc_registration_request',
+            array(
+                'app-name' => $app->getName(),
+                'app-url' => $app->getUrl()
+            )
+        ));
+
+        $mpdf->Output('lyra-solicitud-registro-usuario.pdf', Destination::INLINE);
+    }
+
+    public static function renderLotLocatorPdf(
+        Request $request,
+        User $student
+    ): void
+    {
+        $app = App::getSingleton();
+
+        $mpdf = self::generateGenericPdf();
+
+        $mpdf->SetTitle('Solicitud de registro de usuario - ' . $app->getName());
+
+        // TODO content
+        $mpdf->WriteHTML(self::generatePdfTemplateRender(
+            'bookbank/volunteer/lot_locator',
+            array(
+                'app-name' => $app->getName(),
+                'app-url' => $app->getUrl(),
+                'student-full-name' => $student->getFullName(),
+                'student-gov-id' => $student->getGovId(true),
+                'request-id' => '# ' . $request->getId(),
+                'request-education-level' => DomainUtils::educationLevelToHuman(
+                    $request->getEducationLevel())->getTitle(),
+                'request-specification' => $request->getSpecification()
+            )
+        ));
+
+        $mpdf->Output('lyra-solicitud-registro-usuario.pdf', Destination::INLINE);
+    }
 }
